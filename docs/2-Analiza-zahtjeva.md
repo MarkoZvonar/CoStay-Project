@@ -150,9 +150,13 @@ Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost
 
 | ID | Tip | Opis ograničenja ili pretpostavke | Izvor | Inženjerska posljedica / Provjera |
 | --- | --- | --- | --- | --- |
-| C-01 | Ograničenje | [Fiksni tehnički ili procesni uvjet] | [Zadatak / Pravila] | [Utjecaj na arhitekturu i oblikovanje] |
-| AS-01 | Pretpostavka | [Očekivani uvjet, npr. o podacima ili okolini] | [Procjena tima] | [Kako i kada će se provjeriti valjanost] |
-|  |  |  |  |  |
+| C-01 | Ograničenje | Autentifikacija korisnika mora se provoditi putem OAuth 2.0 protokola (npr. Google ili GitHub račun) uz pružanje važeće adrese e-pošte i obaveznih osobnih podataka. | Odobreni zadatak | Zaštićeni dio aplikacije i izradu profila potrebno je projektirati oko OAuth pružatelja identiteta; provjeravati JWT/OAuth tokene i sprječavati neautentificirani pristup interaktivnim funkcionalnostima. |
+| C-02 | Ograničenje | Aplikacija mora biti izvedena kao web aplikacija prilagođena (responsive) zaslonima mobilnih uređaja, uz navigacijsku traku pri dnu s pet definiranih kartica (Discover, Search, Create, Inbox, Profile). | Odobreni zadatak | Frontend arhitekturu i CSS layout prilagoditi mobilnom prikazu; testirati odaziv i navigaciju na različitim razlučivostima zaslona. |
+| C-03 | Ograničenje | Komunikacija unutar kartice Inbox mora se odvijati u stvarnom vremenu. | Odobreni zadatak | Implementirati dvosmjernu komunikaciju u stvarnom vremenu (npr. korištenjem WebSockets protokola ili Server-Sent Events) te osigurati fallback u slučaju prekida veze. |
+| C-04 | Ograničenje | Vremensko ograničenje od 24 sata za odluku vlasnika objave nakon isteka krajnjeg roka mora se voditi na strani poslužitelja. | Odobreni zadatak | Implementirati pozadinske zadatke ( scheduled tasks) na poslužitelju koji provjeravaju rokove neovisno o dostavi e-pošte ili aktivnostima korisnika na klijentu. |
+| AS-01 | Pretpostavka | Vanjski servis za karte (npr. Google Maps API) dostupno i pouzdano pruža pretragu te validne geografske lokacije prilikom izrade objava. | Pretpostavka o vanjskoj integraciji | Implementirati rukovanje pogreškama u slučaju nedostupnosti vanjskog API-ja, provjeriti ponašanje sučelja pri unosu nepoznatih lokacija. |
+| AS-02 | Pretpostavka | Vanjski e-mail servis pouzdano isporučuje transakcijske obavijesti korisnicima na navedene e-mail adrese. | Pretpostavka o sustavu obavješćivanja | Testirati slanje obavijesti; u kodu osigurati da neuspjeh u slanju e-pošte ne blokira poslužiteljske procese automatskog brisanja ili promjene stanja objava. |
+| AS-03 | Pretpostavka | Korisnici unose točne datume dolaska, odlaska i krajnjeg roka, pri čemu je krajnji rok uvijek kronološki prije datuma polaska na putovanje. | Pretpostavka o podacima | Uvesti klijentske i poslužiteljske validacije formi na ekranu Create koje sprječavaju odabir roka koji je jednak ili kasniji od datuma dolaska. |
 <details>
 <summary><strong>Ograničenja nasuprot pretpostavkama</strong></summary>
 
