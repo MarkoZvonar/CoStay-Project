@@ -1,6 +1,6 @@
 # 1. Opseg projekta
 
-Kada tražimo smještaj za neko putovanje često pronađemo neki smještaj koji izgleda odlično, ali nam je preskup jer je namijenjen za više osoba. Platforma CoStay rješava taj problem tako što omogućava korisnicima da pronađu ljude koji su također zainteresirani za taj smještaj. Time se trošak dijeli na više ljudi i smještaj postaje jeftiniji. Pomoću platforme CoStay putnici će lakše pronaći smještaj i iznajmjivači će lakše pronaći goste.
+Kada tražimo smještaj za neko putovanje često pronađemo neki smještaj koji izgleda odlično, ali nam je preskup jer je namijenjen za više osoba. Platforma CoStay rješava taj problem tako što omogućava korisnicima da pronađu ljude koji su također zainteresirani za taj smještaj. Time se trošak dijeli na više ljudi i smještaj postaje jeftiniji. Pomoću platforme CoStay putnici će lakše pronaći smještaj i iznajmljivači će lakše pronaći goste.
 
 ## 1.1 Problem i cilj projekta
 
@@ -72,7 +72,7 @@ Ovaj pregled zadržite na razini opsega: navedite glavnu mogućnost i njezinu gr
 
 ## 1.4 Postojeći pristupi i opravdanost projekta
 
-Predstavljeni problem već dugo postoji. Ljudi bi često odustali od tih smještaja ako ne bi uspjeli skupiti dovoljno prijatelja da popune smještaj. Jedno od najčešćih rješenja je postavljanje upita na društvene mreže. Naša stranica je bolje rješenje problema jer služi isključivo za pronalaza smještaja, dok društvene mreže imaju različite svrhe. Osim toga naša stranica ima recenzije koje služe za procjenu kojim ljudima se može vjerovati, a kojima ne. Također, mi pružamo lakšu pretragu smještaja te preporuke smještaja koje smatramo da bi korisniku bile zanimljive.
+Predstavljeni problem već dugo postoji. Ljudi bi često odustali od tih smještaja ako ne bi uspjeli skupiti dovoljno prijatelja da popune smještaj. Jedno od najčešćih rješenja je postavljanje upita na društvene mreže. Naša stranica je bolje rješenje problema jer služi isključivo za pronalazak smještaja, dok društvene mreže imaju različite svrhe. Osim toga naša stranica ima recenzije koje služe za procjenu kojim ljudima se može vjerovati, a kojima ne. Također, mi pružamo lakšu pretragu smještaja te preporuke smještaja koje smatramo da bi korisniku bile zanimljive.
 
 <details>
 <summary><strong>Postojeći pristupi i opravdanost projekta</strong></summary>
