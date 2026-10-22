@@ -15,8 +15,28 @@ Primjeri koriste temu projekta CrisisMap. Neki namjerno sadrže korisne nedostat
 
 | ID | Opis | Prioritet | Izvor | Kriteriji prihvaćanja |
 | --- | --- | --- | --- | --- |
-| F-001 | [Funkcijski zahtjev/ponašanje sustava] | [Visok/Srednji/Nizak] | [Odobreni zadatak / zahtjev dionika / povratna informacija] | [Opažljivi rezultat] |
-|  |  |  |  |  |
+| F-001 | Sustav omogućuje registraciju i prijavu korisnika putem OAuth 2.0 protokola. | Visok | Odobreni zadatak | Korisnik se može registrirati i prijaviti putem podržanog pružatelja identiteta, primjerice Googlea ili GitHuba. Neprijavljeni korisnik ne može izvršavati funkcionalnosti koje zahtijevaju autentifikaciju. |
+| F-002 | Sustav omogućuje registriranim korisnicima upravljanje vlastitim profilom. | Visok | Zahtjev dionika | Profil prikazuje ime, prezime, mjesto stanovanja, profilnu sliku i ključne riječi koje opisuju karakter i interese korisnika. |
+| F-003 | Sustav omogućuje registriranim korisnicima izradu objava putovanja. | Visok | Povratna informacija | Korisnik može stvoriti objavu unosom datuma dolaska i odlaska, lokacije, slika smještaja, ukupne cijene, cijene po osobi, ciljanog broja osoba, opisa, ključnih riječi i krajnjeg roka za prijave. Vanjska poveznica na smještaj nije obavezna. |
+| F-004 | Sustav omogućuje uređivanje vlastitih objava putovanja. | Visok | Odobreni zadatak | Autor može pregledati i izmijeniti detalje vlastite objave. Korisnik ne može uređivati objave drugih korisnika. |
+| F-005 | Sustav omogućuje pregled dostupnih putovanja na kartici Discover. | Visok | Zahtjev dionika | Korisnik može pregledavati objave putovanja, a sustav mu preporučuje slične objave na temelju povijesti pregledavanja. Objave se učitavaju postupno tijekom pomicanja sadržaja. |
+| F-006 | Sustav omogućuje pretraživanje putovanja na kartici Search. | Visok | Povratna informacija | Korisnik može pretraživati objave prema lokaciji, datumu i ključnim riječima. Rezultati se prvenstveno prilagođavaju lokaciji i poklapanju ključnih riječi. |
+| F-007 | Sustav omogućuje registriranim korisnicima spremanje objava za kasniji pregled. | Srednji | Odobreni zadatak | Korisnik može spremiti objavu i naknadno pregledati popis spremljenih objava u svojem profilu. |
+| F-008 | Sustav omogućuje slanje zahtjeva za pridruživanje putovanju. | Visok | Zahtjev dionika | Registrirani korisnik može poslati zahtjev za pridruživanje otvorenoj objavi. Zahtjev dobiva početni status „na čekanju”, a korisnik može pregledati status vlastitih zahtjeva. |
+| F-009 | Sustav omogućuje autoru objave prihvaćanje ili odbijanje zahtjeva za pridruživanje. | Visok | Povratna informacija | Autor može prihvatiti ili odbiti zahtjeve do krajnjeg roka. Zahtjevi koji ostanu na čekanju nakon zatvaranja prijava automatski se odbijaju ako nisu uključeni u konačni popis sudionika. |
+| F-010 | Sustav automatski upravlja stanjima objava i brojem sudionika. | Visok | Odobreni zadatak | Objava prelazi između stanja „otvorena”, „popunjena”, „čeka odluku vlasnika”, „dogovorena”, „otkazana” i „izbrisana” prema definiranim pravilima. Broj potvrđenih sudionika uključuje autora i korisnike s prihvaćenim zahtjevima, dok se zahtjevi na čekanju ne računaju. |
+| F-011 | Sustav omogućuje vlasniku donošenje odluke o putovanju nakon isteka krajnjeg roka. | Visok | Zahtjev dionika | Ako nije prikupljen ciljani broj sudionika, vlasnik dobiva obavijest i ima 24 sata za potvrdu putovanja s manjom grupom ili brisanje objave. Ako ne odgovori, objava se automatski briše. Potvrda manje grupe dopuštena je samo ako uz autora postoji barem jedan drugi potvrđeni sudionik. |
+| F-012 | Sustav omogućuje izravnu komunikaciju korisnika putem kartice Inbox. | Visok | Povratna informacija | Korisnici mogu slati izravne poruke drugim korisnicima. Razgovor omogućuje komunikaciju u stvarnom vremenu. |
+| F-013 | Sustav automatski stvara grupni razgovor za dogovorena putovanja. | Visok | Odobreni zadatak | Kada objava prijeđe u stanje „dogovorena”, sustav stvara grupni razgovor za autora i konačno potvrđene sudionike. Korisnici izvan konačnog popisa nemaju pristup razgovoru. |
+| F-014 | Sustav omogućuje ocjenjivanje sudionika nakon zajedničkog putovanja. | Visok | Zahtjev dionika | Recenziju mogu ostaviti samo korisnici koji su bili na konačnom popisu sudionika istog dogovorenog putovanja, počevši od prvog dana nakon datuma povratka. Za svaki par korisnika i putovanje dopuštena je najviše jedna recenzija u svakom smjeru. |
+| F-015 | Sustav izračunava i prikazuje opću ocjenu korisnika. | Srednji | Povratna informacija | Profil prikazuje opću ocjenu izračunatu iz valjanih primljenih recenzija. Recenzije nisu dostupne za otkazane ili izbrisane objave. |
+| F-016 | Sustav omogućuje prijavljivanje neprimjerenog sadržaja ili korisničkih računa. | Visok | Odobreni zadatak | Registrirani korisnik može prijaviti objavu, poruku ili profil uz navođenje razloga, opcionalnog opisa i datuma zaprimanja. Prijava se evidentira sa svojim statusom. |
+| F-017 | Sustav omogućuje administratoru moderiranje sadržaja i upravljanje korisničkim računima. | Visok | Zahtjev dionika | Administrator može pregledavati i rješavati prijave, evidentirati obrazloženje odluke, uklanjati neprimjerene objave i poruke te suspendirati ili brisati račune prema definiranim pravilima. |
+| F-018 | Sustav automatski primjenjuje mjere protiv ponovljenih kršenja pravila. | Visok | Povratna informacija | Tri prihvaćene prijave protiv istog korisnika unutar 12 mjeseci pokreću privremenu suspenziju od sedam dana. Peta prihvaćena prijava pokreće obveznu administratorsku procjenu za dulju suspenziju ili uklanjanje računa. Administrator može intervenirati i ranije kod ozbiljnih kršenja. |
+| F-019 | Sustav omogućuje administratoru pregled statistike i izvoz podataka. | Srednji | Odobreni zadatak | Administrator može pregledati najpopularnije lokacije, prosječan broj dogovorenih putovanja, najpopularnije ključne riječi i graf broja objava kroz godinu te izvesti odabrane podatke u CSV formatu. |
+| F-020 | Sustav omogućuje automatsko slanje obavijesti e-poštom. | Visok | Zahtjev dionika | Korisnik prima obavijesti o odlukama vezanima uz zahtve za pridruživanje, promjenama statusa objava i potrebi donošenja odluke nakon isteka krajnjeg roka. Obavijest o odluci vlasnika sadrži rok od 24 sata i poveznicu na odgovarajuću objavu ili zaslon za donošenje odluke. |
+| F-021 | Sustav omogućuje unos lokacije uz pomoć vanjskog servisa za karte. | Srednji | Povratna informacija | Pri unosu lokacije sustav koristi vanjski API za karte, nudi prijedloge lokacija i omogućuje odabir lokacije za objavu. |
+| F-022 | Sustav omogućuje pregled javnih objava neregistriranim korisnicima. | Srednji | Odobreni zadatak | Neregistrirani korisnik može pregledavati dostupne objave na karticama Discover i Search, ali se mora registrirati ili prijaviti prije korištenja interaktivnih funkcionalnosti. |
 
 <details>
 <summary><strong>Izvori zahtjeva i kriteriji prihvaćanja</strong></summary>
@@ -53,8 +73,18 @@ Za složenu interakciju kratak scenarij *Given / When / Then* može pojasniti kr
 
 | ID | Opis | Prioritet | Izvor | Način provjere |
 | --- | --- | --- | --- | --- |
-| NF-01 | [Konkretan zahtjev (npr. odziv, sigurnost, pristupačnost)] | Visok / Srednji / Nizak | [Sigurnost / Uputa / SLA] | [Mjerenje / Testni scenarij / Pregled] |
-|  |  |  |  |  |
+| NF-01 | Aplikacija mora biti responzivna i prilagođena mobilnim uređajima. | Visok | Sigurnost | Ispitati prikaz i korištenje svih glavnih kartica na mobilnom uređaju i zaslonima različitih dimenzija. |
+| NF-02 | Sustav mora podržavati istodobni rad većeg broja korisnika. | Visok | Uputa | Provesti test opterećenja s većim brojem istodobnih korisnika i pratiti stabilnost sustava. Konkretan ciljani broj korisnika potrebno je dogovoriti. |
+| NF-03 | Komunikacija u kartici Inbox mora se odvijati u stvarnom vremenu. | Visok | SLA | Pokrenuti razgovor između dvaju korisnika te provjeriti pojavljuju li se poslane poruke drugom sudioniku bez potrebe za ručnim osvježavanjem stranice. |
+| NF-04 | Sustav mora pouzdano provoditi automatske promjene stanja objava. | Visok | Sigurnost | Ispitati prijelaze između stanja objava, uključujući popunjavanje kapaciteta, ponovno otvaranje nakon povlačenja sudjelovanja, isteka roka, dogovaranja, otkazivanja i brisanja. |
+| NF-05 | Sustav mora pouzdano provoditi vremenska ograničenja i automatske odluke. | Visok | Uputa | Testirati istek krajnjeg roka za prikupljanje suputnika i rok od 24 sata za odluku vlasnika, uključujući slučaj u kojem vlasnik ne odgovori. |
+| NF-06 | Sustav mora spriječiti višestruko ostavljanje recenzija za isti par korisnika na istom putovanju u istom smjeru. | Visok | SLA | Pokušati više puta poslati recenziju između istih korisnika za isto putovanje te provjeriti da je prihvaćena najviše jedna recenzija u svakom smjeru. |
+| NF-07 | Sustav mora provoditi autentifikaciju i autorizaciju prema korisničkim ulogama. | Visok | Sigurnost | Testirati pristup funkcionalnostima kao neregistrirani korisnik, registrirani korisnik i administrator te pokušati izvršiti radnje za koje korisnik nema ovlasti. |
+| NF-08 | Sustav mora osigurati ispravno ograničavanje pristupa grupnim razgovorima. | Visok | Uputa | Provjeriti da grupnom razgovoru mogu pristupiti samo autor i konačno potvrđeni sudionici dogovorenog putovanja. |
+| NF-09 | Sustav mora dosljedno izračunavati broj potvrđenih sudionika i cijenu po osobi. | Visok | SLA | Testirati izračun broja sudionika te ponovno izračunavanje cijene po osobi kada vlasnik potvrdi dogovor s manjom grupom. |
+| NF-10 | Sustav mora dosljedno evidentirati prijave sadržaja i poduzete administratorske mjere. | Visok | Sigurnost | Provjeriti bilježe li se statusi prijava, obrazloženja odluka i poduzete mjere te pokreću li se definirane posljedice nakon dosezanja propisanih pragova. |
+| NF-11 | Sustav mora podržavati pouzdanu integraciju s vanjskim servisom za karte i slanje e-pošte. | Srednji | Uputa | Testirati uobičajene zahtve prema vanjskom servisu te provjeriti ponašanje aplikacije kada vanjski servis privremeno nije dostupan. |
+| NF-12 | Sustav mora omogućiti dosljedan izvoz statističkih podataka u CSV formatu. | Srednji | SLA | Izvesti odabrane statističke podatke te provjeriti jesu li stupci, vrijednosti i zapisi u datoteci u skladu s odabranim podacima. |
 
 <details>
 <summary><strong>Nefunkcijski zahtjevi za analizu</strong></summary>
@@ -87,7 +117,13 @@ Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost
 
 | ID uloge ili aktera | Odnos prema sustavu | Relevantni zahtjevi |
 | --- | --- | --- |
-|  |  |  |
+| A-01 | Neregistrirani posjetitelj (Akter) — Osoba koja pregledava javno dostupne objave putovanja i pretražuje sadržaj bez prijave u sustav. | F-005, F-006, F-022, NF-01 |
+| A-02 | Registrirani korisnik (Akter) — Autentificirani korisnik koji stvara i uređuje objave, šalje zahtjeve za pridruživanje, komunicira u Inboxu te ostavlja recenzije. | F-001, F-002, F-003, F-004, F-007, F-008, F-009, F-011, F-012, F-014, F-015, F-016, F-020, F-021 |
+| A-03 | Autor objave / Vlasnik (Akter) — Posebna uloga registriranog korisnika u kontekstu vlastite objave; upravlja zahtjevima sudionika, donosi odluke o manjim grupama i vodi grupni razgovor. | F-003, F-004, F-009, F-010, F-011, F-013, NF-04, NF-05 |
+| A-04 | Administrator (Akter) — Ovlaštena osoba koja moderira sadržaj, rješava prijave neprimjerenog ponašanja, suspendira korisničke račune te izvozi analitičke podatke. | F-016, F-017, F-018, F-019, NF-07, NF-10, NF-12 |
+| A-05 | Vanjski servisi (Sustavni akter) — Vanjski API servisi koji komuniciraju sa sustavom (OAuth pružatelji identiteta poput Googlea/GitHuba i vanjski servis za karte). | F-001, F-021, NF-11 |
+| D-01 | Naručitelj / Dionik projekta (Dionik) — Osoba ili organizacija koja definira poslovne ciljeve, odobrava funkcionalnosti i prati uspješnost razvoja aplikacije (ne sudjeluje nužno u izravnom korištenju). | NF-02, NF-10, NF-11, NF-12 |
+| D-02 | Mentori / Nastavnici (Dionik) — Ocjenjivači projekta koji postavljaju formalne i tehničke kriterije kvalitete te evaluiraju konačnu implementaciju sustava. | Svi F i NF zahtjevi |
 
 <details>
 <summary><strong>Akteri i povezani zahtjevi</strong></summary>
@@ -114,9 +150,13 @@ Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost
 
 | ID | Tip | Opis ograničenja ili pretpostavke | Izvor | Inženjerska posljedica / Provjera |
 | --- | --- | --- | --- | --- |
-| C-01 | Ograničenje | [Fiksni tehnički ili procesni uvjet] | [Zadatak / Pravila] | [Utjecaj na arhitekturu i oblikovanje] |
-| AS-01 | Pretpostavka | [Očekivani uvjet, npr. o podacima ili okolini] | [Procjena tima] | [Kako i kada će se provjeriti valjanost] |
-|  |  |  |  |  |
+| C-01 | Ograničenje | Autentifikacija korisnika mora se provoditi putem OAuth 2.0 protokola (npr. Google ili GitHub račun) uz pružanje važeće adrese e-pošte i obaveznih osobnih podataka. | Odobreni zadatak | Zaštićeni dio aplikacije i izradu profila potrebno je projektirati oko OAuth pružatelja identiteta; provjeravati JWT/OAuth tokene i sprječavati neautentificirani pristup interaktivnim funkcionalnostima. |
+| C-02 | Ograničenje | Aplikacija mora biti izvedena kao web aplikacija prilagođena (responsive) zaslonima mobilnih uređaja, uz navigacijsku traku pri dnu s pet definiranih kartica (Discover, Search, Create, Inbox, Profile). | Odobreni zadatak | Frontend arhitekturu i CSS layout prilagoditi mobilnom prikazu; testirati odaziv i navigaciju na različitim razlučivostima zaslona. |
+| C-03 | Ograničenje | Komunikacija unutar kartice Inbox mora se odvijati u stvarnom vremenu. | Odobreni zadatak | Implementirati dvosmjernu komunikaciju u stvarnom vremenu (npr. korištenjem WebSockets protokola ili Server-Sent Events) te osigurati fallback u slučaju prekida veze. |
+| C-04 | Ograničenje | Vremensko ograničenje od 24 sata za odluku vlasnika objave nakon isteka krajnjeg roka mora se voditi na strani poslužitelja. | Odobreni zadatak | Implementirati pozadinske zadatke ( scheduled tasks) na poslužitelju koji provjeravaju rokove neovisno o dostavi e-pošte ili aktivnostima korisnika na klijentu. |
+| AS-01 | Pretpostavka | Vanjski servis za karte (npr. Google Maps API) dostupno i pouzdano pruža pretragu te validne geografske lokacije prilikom izrade objava. | Pretpostavka o vanjskoj integraciji | Implementirati rukovanje pogreškama u slučaju nedostupnosti vanjskog API-ja, provjeriti ponašanje sučelja pri unosu nepoznatih lokacija. |
+| AS-02 | Pretpostavka | Vanjski e-mail servis pouzdano isporučuje transakcijske obavijesti korisnicima na navedene e-mail adrese. | Pretpostavka o sustavu obavješćivanja | Testirati slanje obavijesti; u kodu osigurati da neuspjeh u slanju e-pošte ne blokira poslužiteljske procese automatskog brisanja ili promjene stanja objava. |
+| AS-03 | Pretpostavka | Korisnici unose točne datume dolaska, odlaska i krajnjeg roka, pri čemu je krajnji rok uvijek kronološki prije datuma polaska na putovanje. | Pretpostavka o podacima | Uvesti klijentske i poslužiteljske validacije formi na ekranu Create koje sprječavaju odabir roka koji je jednak ili kasniji od datuma dolaska. |
 <details>
 <summary><strong>Ograničenja nasuprot pretpostavkama</strong></summary>
 
