@@ -1,0 +1,59 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+.traka {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 70px;
+  width: 100%;
+  padding: 0 20px;
+
+  display: flex;
+  flex-direction: row;
+
+  justify-content: space-between;
+  align-items: center;
+
+  border-top: 1px solid black;
+}
+
+.traka a {
+  width: 60px;
+  height: 60px;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 4px;
+
+  text-decoration: none;
+  color: black;
+  font-size: 12px;
+}
+
+.traka a img {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  background-color: transparent;
+}
+
+.traka a span {
+  text-align: center;
+}
+
+.traka a:hover {
+  opacity: 0.7;
+}
+
+.traka a.aktivna {
+  border: 2px solid green;
+  border-radius: 8px;
+}
