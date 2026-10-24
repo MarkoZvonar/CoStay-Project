@@ -12,10 +12,8 @@ const BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
 
 // Provjera obaveznih varijabli okruženja
 if (
-  !process.env.GOOGLE_CLIENT_ID ||
-  !process.env.GOOGLE_CLIENT_SECRET ||
-  !process.env.GITHUB_CLIENT_ID ||
-  !process.env.GITHUB_CLIENT_SECRET ||
+  !process.env.SUPABASE_URL ||
+  !process.env.SUPABASE_ANON_KEY ||
   !process.env.SESSION_SECRET
 ) {
   throw new Error("Nedostaju obavezne vrijednosti u .env datoteci.");
@@ -30,13 +28,13 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Postavi na true u produkciji uz HTTPS
+      secure: false, // U produkciji postaviti na true uz HTTPS
       sameSite: "lax",
     },
   }),
 );
 
-// --- ZDRAVSTVENI ENDPOINT IZ TVOG PREDLOŠKA ---
+// Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "healthy" });
 });
@@ -105,7 +103,7 @@ app.use((error, req, res, next) => {
   res.status(500).send("Došlo je do greške. Pokušaj ponovno.");
 });
 
-// Stvaranje HTTP servera korištenjem Express aplikacije (Zadržava strukturu iz predloška)
+// Pokretanje servera
 const server = http.createServer(app);
 
 server.listen(port, "0.0.0.0", () => {
