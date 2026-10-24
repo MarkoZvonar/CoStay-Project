@@ -1,17 +1,14 @@
 import express from "express";
 import {
   googleLogin,
-  googleCallback,
   githubLogin,
-  githubCallback,
+  authCallback,
 } from "../controllers/authController.js";
 
 const router = express.Router();
 
 router.get("/google", googleLogin);
-router.get("/google/callback", googleCallback);
-
 router.get("/github", githubLogin);
-router.get("/github/callback", githubCallback);
+router.get("/callback", authCallback);
 
 export default router;
