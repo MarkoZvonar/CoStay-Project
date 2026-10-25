@@ -7,6 +7,7 @@ import authRoutes from "./routes/auth.js";
 dotenv.config();
 
 const app = express();
+app.use(express.json());
 const port = Number(process.env.PORT || 3000);
 const BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
 
