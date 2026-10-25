@@ -13,6 +13,7 @@
   height: 70px;
   width: 100%;
   padding: 0 20px;
+  background-color: whitesmoke;
 
   display: flex;
   flex-direction: row;
@@ -54,6 +55,11 @@
 }
 
 .traka a.aktivna {
-  border: 2px solid green;
-  border-radius: 8px;
+  background-color: #344e41;
+  color: white;
+  border-radius: 10px;
+}
+
+.traka a.aktivna img {
+  filter: brightness(0) invert(1);
 }
