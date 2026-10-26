@@ -117,3 +117,55 @@ export const setSession = async (req, res, next) => {
     next(error);
   }
 };
+// --- NOVO: registracija putem forme ---
+//Iz req.body čita ime, prezime, email, password, datum_rodenja, spol, mjesto_stanovanja.
+//Ako nedostaje ime, prezime, email ili lozinka, vraća grešku 400.
+//Poziva supabase.auth.signUp({ email, password }). Lozinka ide samo u Supabase Auth, a ne u tablicu KORISNIK.
+//Id novog korisnika upisuje u KORISNIK kao primarni ključ, uz ostale podatke. Prazna polja pretvara u null (datum_rodenja || null).
+//Ako insert padne, ispisuje grešku u terminal (console.error) i vraća je pregledniku.
+//Ako sve prođe, vraća 201 i { success: true }.
+
+export const register = async (req, res, next) => {
+  try {
+    const {
+      ime,
+      prezime,
+      email,
+      password,
+      datum_rodenja,
+      spol,
+      mjesto_stanovanja,
+    } = req.body;
+
+    if (!ime || !prezime || !email || !password) {
+      return res
+        .status(400)
+        .json({ error: "Ime, prezime, email i lozinka su obavezni." });
+    }
+
+    const { data, error } = await supabase.auth.signUp({ email, password });
+    if (error) return res.status(400).json({ error: error.message });
+    if (!data.user)
+      return res.status(400).json({ error: "Korisnik nije kreiran." });
+
+    const { error: insertError } = await supabase.from("KORISNIK").insert({
+      id_korisnik: data.user.id,
+      ime,
+      prezime,
+      datum_rodenja: datum_rodenja || null,
+      spol: spol || null,
+      mjesto_stanovanja: mjesto_stanovanja || null,
+      email,
+      profilna_slika_url: null,
+    });
+
+    if (insertError) {
+      console.error("Insert greška:", insertError);
+      return res.status(400).json({ error: insertError.message });
+    }
+
+    res.status(201).json({ success: true, id: data.user.id });
+  } catch (error) {
+    next(error);
+  }
+};

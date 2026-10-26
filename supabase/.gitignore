@@ -6,3 +6,11 @@
 .env.keys
 .env.local
 .env.*.local
+
+#supabase keys
+PORT=3000
+BASE_URL=http://localhost:3000
+SESSION_SECRET=neka_vrlo_dugacka_i_slucajna_tajna_rijec
+
+SUPABASE_URL=https://qmflytcppyzvcxmigekk.supabase.co
+SUPABASE_ANON_KEY=sb_publishable_lIiGQCdA8VPls2B4lm7h2Q_Dp8wFaW7
