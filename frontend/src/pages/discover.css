@@ -25,11 +25,11 @@ body {
   gap: 30px;
 }
 
+
 .naslov {
-  height: 90px;
-  min-height: 90px;
-  margin: 10px 20px 0;
-  padding: 0 25px;
+  min-height: 82px;
+  margin: 16px 24px 0;
+  padding: 0 30px;
 
   position: relative;
   display: flex;
@@ -37,106 +37,130 @@ body {
   justify-content: center;
 
   background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  border-radius: 18px;
+  box-shadow: 0 4px 18px rgba(38, 59, 48, 0.05);
 }
 
 .logo {
-  font-size: 42px;
-  font-weight: bold;
-  color: #344e41;
-  text-decoration: none;
-
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+
+  font-size: 34px;
+  font-weight: 800;
+  letter-spacing: -1.5px;
+  color: #344e41;
+  text-decoration: none;
 }
 
 .ikone {
   position: absolute;
-  right: 25px;
+  right: 24px;
 
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 .ikone a {
-  width: 44px;
-  height: 44px;
+  width: 42px;
+  height: 42px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  background-color: #f3f5f3;
+  background-color: #f2f5f1;
   border-radius: 12px;
-  transition: background-color 0.2s;
+  transition: background-color 0.2s, transform 0.2s;
 }
 
 .ikone a:hover {
-  background-color: #e2e8e3;
+  background-color: #e3eae3;
+  transform: translateY(-2px);
 }
 
 .ikone img {
-  width: 25px;
-  height: 25px;
+  width: 22px;
+  height: 22px;
   object-fit: contain;
 }
 
 .brojac {
-  min-height: 110px;
-  margin: 0 20px;
-  padding: 18px 24px;
+  margin: 0 24px;
+  padding: 28px 32px;
 
   display: flex;
   align-items: center;
-  gap: 18px;
 
-  background-color: white;
-  border-radius: 16px;
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
-}
-
-.brojacSlika {
-  width: 64px;
-  height: 64px;
-  flex-shrink: 0;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.brojacSlika img {
-  width: 64px;
-  height: 64px;
-  object-fit: cover;
-  border-radius: 14px;
+  background: linear-gradient(120deg, #ffffff 0%, #f4f7f3 100%);
+  border: 1px solid #e9eee8;
+  border-radius: 20px;
+  box-shadow: 0 4px 18px rgba(38, 59, 48, 0.04);
 }
 
 .brojacTekst {
+  width: 100%;
+  min-width: 0;
+
   display: flex;
   flex-direction: column;
-  gap: 7px;
-  min-width: 0;
+  align-items: flex-start;
+  gap: 12px;
 }
 
-.brojacTekst a:first-child {
-  font-size: 21px;
-  font-weight: bold;
+.brojacNadnaslov {
+  color: #68816d;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1.8px;
+}
+
+.brojacTekst h1 {
   color: #263b30;
-  text-decoration: none;
+  font-size: 30px;
+  font-weight: 750;
+  letter-spacing: -0.8px;
+  line-height: 1.25;
 }
 
-.brojacTekst a:last-child {
-  font-size: 15px;
-  color: #777;
-  text-decoration: none;
+.brojacDetalji {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 3px;
 }
 
+.brojacLokacija {
+  display: flex;
+  align-items: center;
+  gap: 9px;
 
+  color: #6b756d;
+  font-size: 14px;
+}
 
+.brojacLokacija img {
+  width: 25px;
+  height: 25px;
+  object-fit: cover;
+  border-radius: 7px;
+}
+
+.brojacBroj {
+  margin-left: auto;
+  padding: 9px 15px;
+
+  background-color: #344e41;
+  color: white;
+  border-radius: 10px;
+
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+}
 
 .tijelo {
   display: grid;
@@ -189,7 +213,6 @@ body {
   font-weight: bold;
 }
 
-/* Donji dio slike */
 .slikaDno {
   position: absolute;
   bottom: 0;
