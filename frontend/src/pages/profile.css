@@ -1,0 +1,444 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 25px;
+
+  width: 100%;
+  min-height: 100vh;
+
+  background-color: rgb(240, 237, 237);
+}
+
+.profilGornjiDio {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 25px;
+  margin-top: 20px;
+
+  width: calc(100% - 40px);
+  max-width: 1200px;
+  align-items: stretch;
+}
+
+
+.profilGornjiDio .profile,
+.profilGornjiDio .tagovi {
+  width: 100%;
+  max-width: none;
+  min-width: 0;
+  margin-top: 0;
+}
+
+@media (max-width: 800px) {
+  .profilGornjiDio {
+    grid-template-columns: minmax(0, 1fr);
+    width: calc(100% - 20px);
+    gap: 20px;
+  }
+}
+
+
+.profile {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+
+  width: calc(100% - 40px);
+  max-width: 900px;
+  margin-top: 20px;
+  padding: 30px;
+
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+
+  text-align: center;
+}
+
+.profilnaSlika {
+  width: 130px;
+  height: 130px;
+  flex-shrink: 0;
+
+  overflow: hidden;
+  border-radius: 50%;
+}
+
+.profilnaSlika img {
+  display: block;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+}
+
+.profilIme {
+  font-size: 28px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+.profilLokacija {
+  font-size: 16px;
+  color: darkgray;
+}
+
+.profilOpis {
+  max-width: 600px;
+  margin-top: 8px;
+
+  font-size: 16px;
+  line-height: 1.6;
+  color: #444;
+}
+
+.tagovi {
+  width: calc(100% - 40px);
+  max-width: 900px;
+  min-height: 80px;
+
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+
+.tagovi {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  width: calc(100% - 40px);
+  max-width: 900px;
+  padding: 25px;
+
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.tagoviNaslov {
+  font-size: 21px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+.tagoviUnos {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+}
+
+.tagoviInput {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  flex: 1;
+  min-width: 0;
+  height: 44px;
+  padding: 0 12px;
+
+  background-color: #f7f8f7;
+  border: 1px solid #e2e8e3;
+  border-radius: 9px;
+}
+
+.tagoviIkona {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  object-fit: contain;
+}
+
+.tagoviInput input {
+  width: 100%;
+  min-width: 0;
+
+  background-color: transparent;
+  font-size: 14px;
+  color: #263b30;
+}
+
+.tagoviInput input::placeholder {
+  color: #999;
+}
+
+.addGumb {
+  height: 44px;
+  padding: 0 24px;
+
+  background-color: #344e41;
+  border-radius: 9px;
+
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.addGumb:hover {
+  background-color: #263b30;
+}
+
+.listaTagova {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.listaTagova .tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  padding: 7px 10px 7px 14px;
+
+  background-color: #dcfce7;
+  border-radius: 20px;
+
+  color: #166534;
+  font-size: 14px;
+}
+
+.ukloniTag {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+
+  background-color: transparent;
+  border-radius: 50%;
+
+  color: #166534;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.ukloniTag:hover {
+  background-color: #bbf7d0;
+}
+
+.postoviSekcija {
+  width: calc(100% - 40px);
+  max-width: 1450px;
+  margin-bottom: 30px;
+}
+
+.postoviNaslov {
+  width: 100%;
+  margin: 0 0 20px 0;
+  padding-left: max(0px, calc((100% - 4 * 320px - 3 * 25px) / 2));
+
+  font-size: 24px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+.postovi {
+  display: grid;
+  grid-template-columns: repeat(4, 320px);
+  justify-content: center;
+  gap: 25px;
+  width: 100%;
+  min-height: 100px;
+}
+
+.postKartica {
+  width: 320px;
+  box-sizing: border-box;
+  padding: 12px;
+  background-color: white;
+  border-radius: 12px;
+}
+
+.postSlikaWrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-radius: 8px;
+}
+
+.postSlika {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.postDatum {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+
+  padding: 7px 10px;
+  background-color: white;
+  border-radius: 7px;
+
+  font-size: 14px;
+  font-weight: bold;
+  color: black;
+}
+
+.postNaziv {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.postLokacija {
+  margin-bottom: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.postCijena {
+  margin-top: 0;
+  font-size: 16px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+@media (max-width: 1399px) {
+  .postovi {
+    grid-template-columns: repeat(3, 320px);
+  }
+
+  .postoviNaslov {
+    padding-left: max(0px, calc((100% - 3 * 320px - 2 * 25px) / 2));
+  }
+}
+
+@media (max-width: 1049px) {
+  .postovi {
+    grid-template-columns: repeat(2, 320px);
+  }
+
+  .postoviNaslov {
+    padding-left: max(0px, calc((100% - 2 * 320px - 25px) / 2));
+  }
+}
+
+@media (max-width: 699px) {
+  .postoviSekcija {
+    width: calc(100% - 20px);
+  }
+
+  .postovi {
+    grid-template-columns: minmax(0, 320px);
+  }
+
+  .postoviNaslov {
+    padding-left: 0;
+  }
+
+  .postKartica {
+    width: 100%;
+  }
+}
+
+
+@media (max-width: 600px) {
+  .tagovi {
+    width: calc(100% - 20px);
+    padding: 18px;
+    gap: 15px;
+    border-radius: 12px;
+  }
+
+  .tagoviNaslov {
+    font-size: 18px;
+  }
+
+  .tagoviUnos {
+    gap: 8px;
+  }
+
+  .tagoviInput {
+    gap: 7px;
+    padding: 0 9px;
+  }
+
+  .tagoviInput input {
+    font-size: 12px;
+  }
+
+  .addGumb {
+    padding: 0 16px;
+  }
+
+  .listaTagova {
+    gap: 8px;
+  }
+
+  .listaTagova .tag {
+    padding: 7px 11px;
+    font-size: 13px;
+  }
+}
+
+
+@media (max-width: 600px) {
+  body {
+    gap: 20px;
+  }
+
+  .profile {
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    padding: 24px 18px;
+    border-radius: 12px;
+  }
+
+  .profilnaSlika {
+    width: 100px;
+    height: 100px;
+  }
+
+  .profilIme {
+    font-size: 23px;
+  }
+
+  .profilLokacija {
+    font-size: 14px;
+  }
+
+  .profilOpis {
+    font-size: 14px;
+  }
+
+  .tagovi {
+    width: calc(100% - 20px);
+  }
+
+  .postovi {
+    width: calc(100% - 20px);
+  }
+}

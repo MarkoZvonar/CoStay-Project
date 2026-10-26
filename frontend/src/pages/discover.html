@@ -13,18 +13,32 @@
   <body>
 
     <div class="naslov">
-      <a class="logo">CoStay</a>
+      <a class="logo" href="discover.html">CoStay</a>
+
       <div class="ikone">
-          <a href="discover.html" class="obavijestiGumb"><img src="../assets/notification.svg" alt="" /></a>
-          <a href="discover.html" class="izbornikGumb"><img src="../assets/menu.svg" alt="" /></a>
+        <a href="discover.html" class="obavijestiGumb" aria-label="Obavijesti">
+          <img src="../assets/notification.svg" alt="" />
+        </a>
+
+        <a href="discover.html" class="izbornikGumb" aria-label="Izbornik">
+          <img src="../assets/menu.svg" alt="" />
+        </a>
       </div>
     </div>
 
     <div class="brojac">
-      <div class="brojacSlika"><img src="../assets/brojacSlika.png" alt="" /></div>
       <div class="brojacTekst">
-        <a>6 matched stays found</a>
-        <a style="color:darkgray">Zagreb, Hrvatska</a>
+        <span class="brojacNadnaslov">TVOJI REZULTATI PRETRAGE</span>
+        <h1>Pronađi svoj sljedeći boravak.</h1>
+
+        <div class="brojacDetalji">
+          <div class="brojacLokacija">
+            <img src="../assets/brojacSlika.png" alt="" />
+            <span>Zagreb, Hrvatska</span>
+          </div>
+
+          <span class="brojacBroj">6 smještaja</span>
+        </div>
       </div>
     </div>
 
