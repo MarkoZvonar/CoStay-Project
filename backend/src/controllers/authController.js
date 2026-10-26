@@ -93,7 +93,7 @@ export const setSession = async (req, res, next) => {
     // 2. Obnavljamo sesiju zbog sigurnosti (Session Fixation zaštita)
     req.session.regenerate((sessionError) => {
       if (sessionError) return next(sessionError);
-
+      const isAdmin = user.email === "dora0495@gmail.com"; // Primjer provjere za admina - inače koristiti bazu
       // 3. Upisujemo podatke o korisniku u sesiju
       req.session.user = {
         id: user.id,
@@ -104,6 +104,7 @@ export const setSession = async (req, res, next) => {
           user.user_metadata?.name ||
           user.email,
         picture: user.user_metadata?.avatar_url || "",
+        role: isAdmin ? "admin" : "user", // Dodano: uloga korisnika
       };
 
       // 4. Snimamo sesiju i vraćamo OK odgovor frontendu

@@ -2,14 +2,23 @@ import http from "http";
 import express from "express";
 import session from "express-session";
 import dotenv from "dotenv";
+import path from "path";
+import { fileURLToPath } from "url";
 import authRoutes from "./routes/auth.js";
+import apiRoutes from "./routes/api.js";
 
 dotenv.config();
 
 const app = express();
-app.use(express.json());
 const port = Number(process.env.PORT || 3000);
 const BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
+
+// Definiranje __dirname za ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+// Putanja do foldera s login stranicom i CSS-om
+const frontendPagesPath = path.join(__dirname, "../../frontend/src/pages");
 
 // Provjera obaveznih varijabli okruženja
 if (
@@ -19,6 +28,10 @@ if (
 ) {
   throw new Error("Nedostaju obavezne vrijednosti u .env datoteci.");
 }
+
+// Middleware
+app.use(express.json());
+app.use(express.static(frontendPagesPath)); // Poslužuje statičke datoteke (login.html, login.css) iz frontend/src/pages
 
 // Konfiguracija sesije
 app.use(
@@ -34,6 +47,9 @@ app.use(
     },
   }),
 );
+
+// API rute
+app.use("/api", apiRoutes);
 
 // Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {
@@ -55,28 +71,20 @@ function escapeHtml(value) {
   );
 }
 
-// Početna stranica
+// Početna stranica (prikazuje profil ako je prijavljen, inače preusmjerava na /login)
 app.get("/", (req, res) => {
-  if (req.session.user) {
-    return res.send(`
-      <h1>Bok, ${escapeHtml(req.session.user.name || "korisniče")}!</h1>
-      <p>Prijavljen preko: <strong>${escapeHtml(req.session.user.provider)}</strong></p>
-      <p>${escapeHtml(req.session.user.email || "Email nije dostupan")}</p>
-      ${
-        req.session.user.picture
-          ? `<img src="${escapeHtml(req.session.user.picture)}" alt="Profilna slika" width="100" height="100" style="border-radius: 50%; object-fit: cover;" />`
-          : "<p>Korisnik nema profilnu sliku.</p>"
-      }
-      <p><a href="/logout">Odjava</a></p>
-    `);
+  if (!req.session.user) {
+    return res.redirect("/login");
   }
+  res.sendFile(path.join(frontendPagesPath, "discover.html"));
+});
 
-  res.send(`
-    <h1>Dobrodošao!</h1>
-    <p>Odaberi način prijave:</p>
-    <p><a href="/auth/google">Prijavi se s Googleom</a></p>
-    <p><a href="/auth/github">Prijavi se s GitHubom</a></p>
-  `);
+// Ruta za login stranicu
+app.get("/login", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(frontendPagesPath, "login.html"));
 });
 
 // Registracija auth ruta
