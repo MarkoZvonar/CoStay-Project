@@ -5,14 +5,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CoStay</title>
 
-    <link rel="stylesheet" href="signup.css">
+    <link rel="stylesheet" href="signup2.css">
 </head>
 <body>
     <div id="reg-box">
         <h2 class="naslov">Napravi CoStay račun</h2>
-        <h1 class="opis">Unesi svoje podatke za registraciju.</h1>
+        <h1 class="opis">Sve si bliže avanturama!</h1>
+        <div id="progress">
+            <a id="prog1">████</a>
+            <a id="prog2">████</a>
+            <a id="prog3">████</a>
+        </div>
         
-        <form id="form" action="/" method="POST">
+        <form id="form" action="/signup3" method="POST">
             <div id="name">
                 <label for="ime">Ime:</label>
                 <input type="text" id="ime" name="ime" required>
@@ -20,12 +25,6 @@
                 <label for="prezime">Prezime:</label>
                 <input type="text" id="prezime" name="prezime" required>
             </div>
-
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
 
             <label for="birthday">Datum rođenja:</label>
             <input type="date" id="birthday" name="birthday">
@@ -41,15 +40,12 @@
                 </label>
             </div>
 
-            <button type="submit">Registracija</button>
+            <button type="submit">Sljedeći korak</button>
         </form>
 
         <div id="login-container">
             <div class="link">
-                <p><a href="/">Nastavi kao Guest</a></p>
-            </div>
-            <div class="link">
-                <p><a href="/">Otiđi na log in</a></p>
+                <p><a href="/signup1">Vrati se</a></p>
             </div>
         </div>
     </div>

@@ -1,0 +1,194 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  outline: none;
+  border: none;
+}
+
+* {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+*::-webkit-scrollbar {
+  display: none;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    min-height: 100vh;
+    gap: 30px;
+    background-color: rgb(240, 237, 237);
+}
+
+#reg-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    max-height: 90vh;
+    width: 50vw;
+    margin: 0;
+    padding: 4rem;
+
+    background-color: white;
+    border-radius: 16px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.naslov {
+    font-size: 3rem;
+    color: #344e41;
+
+    margin-bottom: 1rem;
+}
+
+#login-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    
+    gap: 2rem;
+    
+    height: 100vh;
+}
+
+button {
+    display: block;
+    padding: 0.8rem 1.5rem;
+
+    background-color: rgb(183, 182, 182);
+    color: #344e41;
+    text-decoration: none;
+    text-align: center;
+
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    transition: background-color 0.2s ease;
+
+    margin-top: 2rem;
+}
+
+button:hover {
+    background-color: #444;
+    color: white;
+}
+
+.link a {
+    display: block;
+    padding: 0.8rem 1.5rem;
+
+    background-color: rgb(183, 182, 182);
+    color: #344e41;
+    text-decoration: none;
+    text-align: center;
+
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    transition: background-color 0.2s ease;
+}
+
+.link a:hover {
+    background-color: #444;
+    color: white;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+.opis{
+    font-size: 1.5rem;
+
+    margin-bottom: 1rem;
+}
+
+#progress {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    font-weight:900;
+
+    margin-bottom: 3rem;
+}
+
+#prog1,
+#prog2,
+#prog3 {
+    color: green;
+}
+
+textarea {
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: 1rem;
+    resize: vertical;
+    box-sizing: border-box;
+
+    border: 1px solid rgb(148, 137, 137);
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 1rem;
+    color: #1e293b;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+label[for="opis"] {
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
+}
+
+#tagovi {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    border: none;
+    padding: 0;
+}
+
+#tagovi legend {
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+
+#tagovi label {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+#tagovi input {
+    accent-color: #58816a;
+}
+
+#form button {
+    font-family: inherit;
+}
