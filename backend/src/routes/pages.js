@@ -6,7 +6,40 @@ router.get("/", (req, res) => {
   if (!req.session.user) {
     return res.redirect("/start");
   }
+  // citamo iz "korisnik" tablica i provjeravamo je li sign up zavrsen, ako nije redirect na signup2
+  res.redirect("/discover");
+});
+// Start stranica
+router.get("/discover", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
   res.render("discover");
+});
+router.get("/create", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.render("create");
+});
+router.get("/inbox", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.render("inbox");
+});
+
+router.get("/search", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.render("search");
+});
+router.get("/profile", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.render("profile");
 });
 
 // Start stranica
