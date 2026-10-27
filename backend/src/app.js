@@ -1,24 +1,24 @@
-import http from "http";
-import express from "express";
-import session from "express-session";
-
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+
+// Definiranje __dirname za ES module
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+dotenv.config({ path: path.join(__dirname, "../.env") });
+
+import http from "http";
+import express from "express";
+import session from "express-session";
 
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
 
-dotenv.config();
-
 const app = express();
 const port = Number(process.env.PORT || 3000);
 const BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
-
-// Definiranje __dirname za ES module
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 // Putanja do foldera s EJS predlošcima i CSS-om
 const frontendSrcPath = path.join(__dirname, "../../frontend/src");
