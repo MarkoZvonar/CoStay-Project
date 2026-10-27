@@ -74,9 +74,17 @@ function escapeHtml(value) {
 // Početna stranica (prikazuje profil ako je prijavljen, inače preusmjerava na /login)
 app.get("/", (req, res) => {
   if (!req.session.user) {
-    return res.redirect("/login");
+    return res.redirect("/start");
   }
   res.sendFile(path.join(frontendPagesPath, "discover.html"));
+});
+
+//Ruta za početnu stranicu (start.html)
+app.get("/start", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(frontendPagesPath, "start.html"));
 });
 
 // Ruta za login stranicu
@@ -85,6 +93,13 @@ app.get("/login", (req, res) => {
     return res.redirect("/");
   }
   res.sendFile(path.join(frontendPagesPath, "login.html"));
+});
+// Ruta za signup stranicu
+app.get("/signup", (req, res) => {
+  if (req.session.user) {
+    return res.redirect("/");
+  }
+  res.sendFile(path.join(frontendPagesPath, "signup.html"));
 });
 
 // Registracija auth ruta
