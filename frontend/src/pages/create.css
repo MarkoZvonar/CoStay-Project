@@ -1,0 +1,160 @@
+/* Pratimo osnovna pravila i pozadinu iz ostalih stranica (Profile, Discover, Inbox) */
+body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgb(240, 237, 237);
+  padding-bottom: 90px; /* Prostor na dnu da fiksirani navbar ne prekriva gumb */
+}
+
+/* Glavni spremnik forme s istim vizualnim identitetom kao kartica na profilu ili inboxu */
+.createTijelo {
+  width: calc(100% - 40px);
+  max-width: 800px;
+  margin-top: 25px;
+  padding: 30px;
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+/* Naslov stranice identičan stilu naslova u Inboxu i na Profilu */
+.createNaslov {
+  margin-bottom: 25px;
+  font-size: 32px;
+  font-weight: bold;
+  color: #344e41;
+  text-align: center;
+}
+
+/* Struktura forme */
+.createForma {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
+}
+
+/* Rešetka (Grid) za elemente u istoj liniji - npr. dolazak/odlazak i cijena/osobe */
+.formRow {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+/* Stiliziranje oznaka polja (labels) */
+.formGroup label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+/* Unosna polja (input) i tekstualno područje (textarea) u stilu polja s profila */
+.formGroup input,
+.formGroup textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #f7f8f7;
+  border: 1px solid #e2e8e3;
+  border-radius: 9px;
+  font-size: 14px;
+  color: #263b30;
+  font-family: Arial, sans-serif;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.formGroup input::placeholder,
+.formGroup textarea::placeholder {
+  color: #999999;
+}
+
+/* Efekt kada korisnik klikne na polje za unos */
+.formGroup input:focus,
+.formGroup textarea:focus {
+  background-color: #ffffff;
+  border-color: #344e41;
+}
+
+.formGroup textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+/* Glavni gumb za objavu koji odgovara gumbima s profila, inboxa i discovera */
+.submitGumb {
+  width: 100%;
+  height: 48px;
+  margin-top: 10px;
+  background-color: #344e41;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 9px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+.submitGumb:hover {
+  background-color: #263b30;
+}
+
+.submitGumb:active {
+  transform: scale(0.99);
+}
+
+.formGroup label.obavezno::after {
+  content: " *";
+  color: #ff385c; /* Možeš staviti crvenu ili neku istaknutu boju */
+  font-weight: bold;
+}
+
+/* Mobilna prilagodba (Responzivnost) za manje ekrane */
+@media (max-width: 600px) {
+  .createTijelo {
+    width: calc(100% - 20px);
+    margin-top: 15px;
+    padding: 20px 16px;
+    border-radius: 12px;
+  }
+
+  .createNaslov {
+    font-size: 24px;
+    margin-bottom: 18px;
+  }
+
+  .formRow {
+    grid-template-columns: minmax(
+      0,
+      1fr
+    ); /* Prebacuje parna polja jedno ispod drugog na mobitelu */
+    gap: 18px;
+  }
+
+  .formGroup label {
+    font-size: 13px;
+  }
+
+  .formGroup input,
+  .formGroup textarea {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .submitGumb {
+    height: 44px;
+    font-size: 15px;
+  }
+}
