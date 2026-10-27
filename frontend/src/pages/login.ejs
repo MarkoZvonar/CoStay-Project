@@ -1,39 +1,39 @@
 <!DOCTYPE html>
 <html lang="hr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoStay</title>
 
-    <link rel="stylesheet" href="login.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/pages/login.css" />
+  </head>
+  <body>
     <div id="login-box">
-        <h1 class="naslov">Dobrodošli u CoStay!</h1>
+      <h1 class="naslov">Dobrodošli u CoStay!</h1>
 
-        <form id="form" action="/profile" method="POST">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
+      <form id="form" action="/profile" method="POST">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required />
 
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
 
-            <button type="submit">Sljedeći korak</button>
-        </form>
-        
-        <div id="login-container">
-            <div id="login-row">
-                <div class="link">
-                    <p><a href="/auth/google">Prijavi se s Googleom</a></p>
-                </div>
-                <div class="link">
-                    <p><a href="/auth/github">Prijavi se s GitHubom</a></p>
-                </div>
-            </div>
-            <div class="link">
-                <p><a href="/">Vrati se</a></p>
-            </div>
+        <button type="submit">Sljedeći korak</button>
+      </form>
+
+      <div id="login-container">
+        <div id="login-row">
+          <div class="link">
+            <p><a href="/auth/google">Prijavi se s Googleom</a></p>
+          </div>
+          <div class="link">
+            <p><a href="/auth/github">Prijavi se s GitHubom</a></p>
+          </div>
         </div>
+        <div class="link">
+          <p><a href="/">Vrati se</a></p>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

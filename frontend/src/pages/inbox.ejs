@@ -1,11 +1,10 @@
-
 <!doctype html>
 <html lang="hr">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./inbox.css" />
-    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="/pages/inbox.css" />
+    <link rel="stylesheet" href="/pages/main.css" />
 
     <title>Inbox</title>
   </head>
@@ -16,8 +15,13 @@
     <main class="inboxTijelo">
       <h1 class="inboxNaslov">Inbox</h1>
 
-      <button class="buddyZahtjevi "id="buddyGumb" type="button" aria-expanded="false">
-        <img src="../assets/users-round.svg" alt=" "class="buddySlika"/>
+      <button
+        class="buddyZahtjevi"
+        id="buddyGumb"
+        type="button"
+        aria-expanded="false"
+      >
+        <img src="../assets/users-round.svg" alt=" " class="buddySlika" />
         <div class="buddyTekst">
           <h2>Buddy requests</h2>
           <p>3 pending buddy requests</p>
@@ -59,7 +63,11 @@
 
         <div class="porukeLista">
           <a href="#" class="poruka">
-            <img src="../assets/probnaSlikaKartica.jpg" alt="" class="osobaSlika"/>
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt=""
+              class="osobaSlika"
+            />
             <div class="porukaTekst">
               <h3>John Pork</h3>
               <p>Answer the phone!!</p>
@@ -68,7 +76,11 @@
           </a>
 
           <a href="#" class="poruka">
-            <img src="../assets/probnaSlikaKartica.jpg" alt="" class="osobaSlika"/>
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt=""
+              class="osobaSlika"
+            />
             <div class="porukaTekst">
               <h3>John Pork</h3>
               <p>Hello!</p>
@@ -77,7 +89,11 @@
           </a>
 
           <a href="#" class="poruka">
-            <img src="../assets/probnaSlikaKartica.jpg" alt="" class="osobaSlika"/>
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt=""
+              class="osobaSlika"
+            />
             <div class="porukaTekst">
               <h3>John Pork</h3>
               <p>Asnwer!</p>
@@ -86,14 +102,17 @@
           </a>
 
           <a href="#" class="poruka">
-            <img src="../assets/probnaSlikaKartica.jpg" alt="" class="osobaSlika"/>
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt=""
+              class="osobaSlika"
+            />
             <div class="porukaTekst">
               <h3>John Pork</h3>
               <p>Answer the phone!</p>
             </div>
             <span class="porukaVrijeme">10:24</span>
           </a>
-
         </div>
       </section>
     </main>
@@ -110,10 +129,7 @@
       buddyGumb.addEventListener("click", function () {
         zahtjeviLista.hidden = !zahtjeviLista.hidden;
 
-        buddyGumb.setAttribute(
-          "aria-expanded",
-          !zahtjeviLista.hidden
-        );
+        buddyGumb.setAttribute("aria-expanded", !zahtjeviLista.hidden);
 
         buddyStrelica.textContent = zahtjeviLista.hidden ? "⌄" : "⌃";
       });

@@ -3,8 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./search.css" />
-    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="/pages/search.css" />
+    <link rel="stylesheet" href="/pages/main.css" />
     <title>Search</title>
   </head>
 
@@ -12,59 +12,63 @@
     <div class="naslov">
       <a class="logo">Pretraga objava</a>
       <div class="ikone">
-          <a href="discover.html" class="obavijestiGumb"><img src="../assets/notification.svg" alt="" /></a>
-          <a href="discover.html" class="izbornikGumb"><img src="../assets/menu.svg" alt="" /></a>
+        <a href="discover.html" class="obavijestiGumb"
+          ><img src="../assets/notification.svg" alt=""
+        /></a>
+        <a href="discover.html" class="izbornikGumb"
+          ><img src="../assets/menu.svg" alt=""
+        /></a>
       </div>
     </div>
 
     <form id="form" action="/" method="POST">
       <label for="Location">Location:</label>
-      <input type="text" id="location" name="location">
+      <input type="text" id="location" name="location" />
 
       <div id="date">
         <div id="in">
           <label for="checkin">Datum dolaska:</label>
-          <input type="date" id="checkin" name="checkin">
+          <input type="date" id="checkin" name="checkin" />
         </div>
 
         <div id="out">
           <label for="checkout">Datum odlaska:</label>
-          <input type="date" id="checkout" name="checkout">
+          <input type="date" id="checkout" name="checkout" />
         </div>
       </div>
 
       <div>
         <a>Tagovi:</a>
         <label>
-          <input type="checkbox" name="plaza">
+          <input type="checkbox" name="plaza" />
           Plaža
         </label>
 
         <div id="cijena">
           <label>
-            <input type="radio" name="cijena" value="skupo">
+            <input type="radio" name="cijena" value="skupo" />
             Skupo
           </label>
           <label>
-            <input type="radio" name="cijena" value="jeftino">
+            <input type="radio" name="cijena" value="jeftino" />
             Jeftino
           </label>
         </div>
 
         <div id="pozicija">
           <label>
-              <input type="radio" name="pozicija" value="gore">
-              Gore
+            <input type="radio" name="pozicija" value="gore" />
+            Gore
           </label>
           <label>
-              <input type="radio" name="pozicija" value="dolje">
-              Dolje
+            <input type="radio" name="pozicija" value="dolje" />
+            Dolje
           </label>
         </div>
       </div>
 
       <label for="organizator">Organizator:</label>
-      <input type="text" id="organizator" name="organizator">
+      <input type="text" id="organizator" name="organizator" />
 
       <button type="submit">Traži</button>
     </form>

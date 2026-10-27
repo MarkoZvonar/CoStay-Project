@@ -3,142 +3,170 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="./profile.css" />
-    <link rel="stylesheet" href="./main.css" />
+    <link rel="stylesheet" href="/pages/profile.css" />
+    <link rel="stylesheet" href="/pages/main.css" />
     <title>Profile</title>
   </head>
 
-<body>
-  <div class="profilGornjiDio">
+  <body>
+    <div class="profilGornjiDio">
+      <div class="profile">
+        <div class="profilnaSlika">
+          <img src="../assets/probnaSlikaKartica.jpg" alt="Profilna slika" />
+        </div>
 
-    <div class="profile">
-      <div class="profilnaSlika">
-        <img src="../assets/probnaSlikaKartica.jpg" alt="Profilna slika" />
+        <div class="profilIme">Igor Hekterovic</div>
+
+        <div class="profilLokacija">Zagreb, Hrvatska</div>
+
+        <div class="profilOpis">
+          Student sam koji voli putovati, upoznavati nove ljude i otkrivati
+          zanimljiva mjesta. Uvijek sam za nova iskustva i dobra druženja!
+        </div>
       </div>
 
-      <div class="profilIme">
-        Igor Hekterovic
-      </div>
+      <div class="tagovi">
+        <div class="tagoviNaslov">Travel Keywords</div>
 
-      <div class="profilLokacija">
-        Zagreb, Hrvatska
-      </div>
+        <div class="tagoviUnos">
+          <div class="tagoviInput">
+            <img class="tagoviIkona" src="../assets/tags.svg" alt="" />
+            <input type="text" placeholder="Add a travel keyword..." />
+          </div>
 
-      <div class="profilOpis">
-        Student sam koji voli putovati, upoznavati nove ljude
-        i otkrivati zanimljiva mjesta. Uvijek sam za nova
-        iskustva i dobra druženja!
+          <button class="addGumb">Add</button>
+        </div>
+
+        <div class="listaTagova">
+          <span class="tag">
+            Adventure
+            <button
+              class="ukloniTag"
+              type="button"
+              aria-label="Ukloni Adventure"
+            >
+              ×
+            </button>
+          </span>
+
+          <span class="tag">
+            Nature
+            <button class="ukloniTag" type="button" aria-label="Ukloni Nature">
+              ×
+            </button>
+          </span>
+
+          <span class="tag">
+            Beach
+            <button class="ukloniTag" type="button" aria-label="Ukloni Beach">
+              ×
+            </button>
+          </span>
+
+          <span class="tag">
+            City Break
+            <button
+              class="ukloniTag"
+              type="button"
+              aria-label="Ukloni City Break"
+            >
+              ×
+            </button>
+          </span>
+        </div>
       </div>
     </div>
 
-    <div class="tagovi">
-      <div class="tagoviNaslov">
-        Travel Keywords
-      </div>
+    <div class="postoviSekcija">
+      <h2 class="postoviNaslov">My Posted Requests</h2>
 
-      <div class="tagoviUnos">
-        <div class="tagoviInput">
-          <img class="tagoviIkona" src="../assets/tags.svg" alt="" />
-          <input type="text" placeholder="Add a travel keyword..." />
+      <div class="postovi">
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
         </div>
 
-        <button class="addGumb">Add</button>
-      </div>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
 
-      <div class="listaTagova">
-        <span class="tag">
-          Adventure
-          <button class="ukloniTag" type="button" aria-label="Ukloni Adventure">×</button>
-        </span>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
 
-        <span class="tag">
-          Nature
-          <button class="ukloniTag" type="button" aria-label="Ukloni Nature">×</button>
-        </span>
-
-        <span class="tag">
-          Beach
-          <button class="ukloniTag" type="button" aria-label="Ukloni Beach">×</button>
-        </span>
-
-        <span class="tag">
-          City Break
-          <button class="ukloniTag" type="button" aria-label="Ukloni City Break">×</button>
-        </span>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="../assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
       </div>
     </div>
 
-  </div>
+    <div id="navbar"></div>
 
-
-  <div class="postoviSekcija">
-    <h2 class="postoviNaslov">My Posted Requests</h2>
-
-    <div class="postovi">
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-
-      <div class="postKartica">
-        <div class="postSlikaWrapper">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Post image" class="postSlika"/>
-          <p class="postDatum">Jan 11-13</p>
-        </div>
-        <h3 class="postNaziv">Adventure in the Mountains</h3>
-        <p class="postLokacija">Dolomites, Italy</p>
-        <p class="postCijena">250 €</p>
-      </div>
-    </div>
-  </div>
-
-
-  <div id="navbar"></div>
-
-  <script src="../components/navbar.js"></script>
-</body>
-
+    <script src="../components/navbar.js"></script>
+  </body>
 </html>

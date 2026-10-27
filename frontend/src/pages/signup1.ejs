@@ -1,49 +1,49 @@
 <!DOCTYPE html>
 <html lang="hr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoStay</title>
 
-    <link rel="stylesheet" href="signup1.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/pages/signup1.css" />
+  </head>
+  <body>
     <div id="reg-box">
-        <h2 class="naslov">Napravi CoStay račun</h2>
-        <h1 class="opis">Prvi korak prema putovanjima!</h1>
-        <div id="progress">
-            <a id="prog1">████</a>
-            <a id="prog2">████</a>
-            <a id="prog3">████</a>
+      <h2 class="naslov">Napravi CoStay račun</h2>
+      <h1 class="opis">Prvi korak prema putovanjima!</h1>
+      <div id="progress">
+        <a id="prog1">████</a>
+        <a id="prog2">████</a>
+        <a id="prog3">████</a>
+      </div>
+
+      <form id="form" action="/signup2" method="POST">
+        <label for="email">Email:</label>
+        <input type="text" id="email" name="email" required />
+
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required />
+
+        <button type="submit">Sljedeći korak</button>
+      </form>
+
+      <div id="login-container" class="container">
+        <div class="link">
+          <p><a href="/auth/google">Google registracija</a></p>
         </div>
-        
-        <form id="form" action="/signup2" method="POST">
-            <label for="email">Email:</label>
-            <input type="text" id="email" name="email" required>
-
-            <label for="password">Password:</label>
-            <input type="password" id="password" name="password" required>
-
-            <button type="submit">Sljedeći korak</button>
-        </form>
-
-        <div id="login-container" class="container">
-            <div class="link">
-                <p><a href="/auth/google">Google registracija</a></p>
-            </div>
-            <div class="link">
-                <p><a href="/auth/github">Github registracija</a></p>
-            </div>
+        <div class="link">
+          <p><a href="/auth/github">Github registracija</a></p>
         </div>
+      </div>
 
-        <div id="other-container" class="container">
-            <div class="link">
-                <p><a href="/">Vrati se</a></p>
-            </div>
-            <div class="link">
-                <p><a href="/login">Otiđi na log in</a></p>
-            </div>
+      <div id="other-container" class="container">
+        <div class="link">
+          <p><a href="/">Vrati se</a></p>
         </div>
+        <div class="link">
+          <p><a href="/login">Otiđi na log in</a></p>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

@@ -1,53 +1,53 @@
 <!DOCTYPE html>
 <html lang="hr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>CoStay</title>
 
-    <link rel="stylesheet" href="signup2.css">
-</head>
-<body>
+    <link rel="stylesheet" href="/pages/signup2.css" />
+  </head>
+  <body>
     <div id="reg-box">
-        <h2 class="naslov">Napravi CoStay račun</h2>
-        <h1 class="opis">Sve si bliže avanturama!</h1>
-        <div id="progress">
-            <a id="prog1">████</a>
-            <a id="prog2">████</a>
-            <a id="prog3">████</a>
+      <h2 class="naslov">Napravi CoStay račun</h2>
+      <h1 class="opis">Sve si bliže avanturama!</h1>
+      <div id="progress">
+        <a id="prog1">████</a>
+        <a id="prog2">████</a>
+        <a id="prog3">████</a>
+      </div>
+
+      <form id="form" action="/signup3" method="POST">
+        <div id="name">
+          <label for="ime">Ime:</label>
+          <input type="text" id="ime" name="ime" required />
+
+          <label for="prezime">Prezime:</label>
+          <input type="text" id="prezime" name="prezime" required />
         </div>
-        
-        <form id="form" action="/signup3" method="POST">
-            <div id="name">
-                <label for="ime">Ime:</label>
-                <input type="text" id="ime" name="ime" required>
 
-                <label for="prezime">Prezime:</label>
-                <input type="text" id="prezime" name="prezime" required>
-            </div>
+        <label for="birthday">Datum rođenja:</label>
+        <input type="date" id="birthday" name="birthday" />
 
-            <label for="birthday">Datum rođenja:</label>
-            <input type="date" id="birthday" name="birthday">
-
-            <div id="spol">
-                <label>
-                    <input type="radio" name="spol" value="man">
-                    Muškarac
-                </label>
-                <label>
-                    <input type="radio" name="spol" value="woman">
-                    Žena
-                </label>
-            </div>
-
-            <button type="submit">Sljedeći korak</button>
-        </form>
-
-        <div id="login-container">
-            <div class="link">
-                <p><a href="/signup1">Vrati se</a></p>
-            </div>
+        <div id="spol">
+          <label>
+            <input type="radio" name="spol" value="man" />
+            Muškarac
+          </label>
+          <label>
+            <input type="radio" name="spol" value="woman" />
+            Žena
+          </label>
         </div>
+
+        <button type="submit">Sljedeći korak</button>
+      </form>
+
+      <div id="login-container">
+        <div class="link">
+          <p><a href="/signup1">Vrati se</a></p>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>

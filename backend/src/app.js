@@ -21,7 +21,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 // Putanja do foldera s EJS predlošcima i CSS-om
-const frontendPagesPath = path.join(__dirname, "../../frontend/src/pages");
+const frontendSrcPath = path.join(__dirname, "../../frontend/src");
+const frontendPagesPath = path.join(frontendSrcPath, "pages");
 
 // Provjera obaveznih varijabli okruženja
 if (
@@ -39,7 +40,7 @@ app.set("views", frontendPagesPath);
 // Middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Važno za čitanje podataka iz formi
-app.use(express.static(frontendPagesPath)); // Poslužuje statičke datoteke (CSS, slike) iz frontend/src/pages
+app.use(express.static(frontendSrcPath));
 
 // Konfiguracija sesije
 app.use(
