@@ -31,7 +31,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 1rem;
 
     max-height: 90vh;
     min-width: 50vw;
@@ -46,9 +45,11 @@ body {
 .naslov {
     font-size: 3rem;
     color: #344e41;
+
+    margin-bottom: 1rem;
 }
 
-#login-container {
+.container {
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -112,19 +113,33 @@ button:hover {
 
 .opis{
     font-size: 1.5rem;
+
+    margin-bottom: 1rem;
 }
 
-#name{
+#progress {
     display: flex;
+    flex-direction: row;
     align-items: center;
     justify-content: center;
-    flex-direction: row;
     gap: 1rem;
+
+    font-weight:900;
+
+    margin-bottom: 2rem;
+}
+
+#prog1 {
+    color: green;
+}
+
+#prog2,
+#prog3 {
+    color: grey;
 }
 
 #form input[type="text"],
-#form input[type="password"],
-#form input[type="date"] {
+#form input[type="password"] {
     width: 100%;
     min-width: 0;
     padding: 0.75rem;
@@ -139,48 +154,17 @@ button:hover {
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-#form > label,
-#name > label {
+#form > label{
     font-size: 1rem;
     font-weight: 600;
     color: black;
 }
 
 #form input[type="text"]:focus,
-#form input[type="password"]:focus,
-#form input[type="date"]:focus {
+#form input[type="password"]:focus{
     outline: none;
     border-color: #3478f6;
     box-shadow: 0 0 0 3px rgba(52, 120, 246, 0.13);
-}
-
-#spol {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5vw;
-
-    width: 30vw;
-    height: 7vh;
-
-    margin: 8px 0;
-    padding: 1rem;
-
-    background: #e5e7e8;
-    border: 1px solid #d1d7de;
-    border-radius: 10px;
-
-    font-size: 1rem;
-    font-weight: 600;
-    color: black;
-}
-
-#spol input[type="radio"] {
-    width: 17px;
-    height: 17px;
-    margin: 0;
-    accent-color: #3478f6;
-    cursor: pointer;
 }
 
 #form button {

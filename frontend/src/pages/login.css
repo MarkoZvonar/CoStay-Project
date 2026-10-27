@@ -32,7 +32,7 @@ body {
     align-items: center;
     justify-content: center;
 
-    max-height: 50vh;
+    max-height: 80vh;
     min-width: 50vw;
     margin: 0;
     padding: 4rem;
@@ -45,6 +45,9 @@ body {
 .naslov {
     font-size: 3rem;
     color: #344e41;
+
+    margin-bottom: 3rem;
+
 }
 
 #login-container {
@@ -75,13 +78,77 @@ body {
     text-align: center;
 
     border-radius: 0.75rem;
-    font-size: 1rem;
+    font-size: 1.5rem;
     font-weight: 600;
 
     transition: background-color 0.2s ease;
 }
 
 .link a:hover {
+    background-color: #444;
+    color: white;
+}
+
+#form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+
+    margin-bottom: 2rem;
+}
+
+#form input[type="text"],
+#form input[type="password"] {
+    width: 100%;
+    min-width: 0;
+    padding: 0.75rem;
+
+    border: 1px solid rgb(148, 137, 137);
+    border-radius: 9px;
+
+    font-family: inherit;
+    font-size: 1rem;
+    color: #1e293b;
+
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+#form > label{
+    font-size: 1rem;
+    font-weight: 600;
+    color: black;
+}
+
+#form input[type="text"]:focus,
+#form input[type="password"]:focus{
+    outline: none;
+    border-color: #3478f6;
+    box-shadow: 0 0 0 3px rgba(52, 120, 246, 0.13);
+}
+
+#form button {
+    font-family: inherit;
+}
+
+button {
+    display: block;
+    padding: 0.8rem 1.5rem;
+
+    background-color: rgb(183, 182, 182);
+    color: #344e41;
+    text-decoration: none;
+    text-align: center;
+
+    border-radius: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 600;
+
+    transition: background-color 0.2s ease;
+}
+
+button:hover {
     background-color: #444;
     color: white;
 }

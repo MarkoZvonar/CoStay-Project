@@ -10,6 +10,16 @@
 <body>
     <div id="login-box">
         <h1 class="naslov">Dobrodošli u CoStay!</h1>
+
+        <form id="form" action="/profile" method="POST">
+            <label for="email">Email:</label>
+            <input type="text" id="email" name="email" required>
+
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" required>
+
+            <button type="submit">Sljedeći korak</button>
+        </form>
         
         <div id="login-container">
             <div id="login-row">
@@ -21,7 +31,7 @@
                 </div>
             </div>
             <div class="link">
-                <p><a href="/">Nastavi kao Guest</a></p>
+                <p><a href="/">Vrati se</a></p>
             </div>
         </div>
     </div>

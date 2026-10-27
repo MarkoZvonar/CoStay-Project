@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CoStay</title>
+
+    <link rel="stylesheet" href="signup3.css">
+</head>
+<body>
+    <div id="reg-box">
+        <h2 class="naslov">Napravi CoStay račun</h2>
+        <h1 class="opis">Zadnji korak...</h1>
+        <div id="progress">
+            <a id="prog1">████</a>
+            <a id="prog2">████</a>
+            <a id="prog3">████</a>
+        </div>
+        
+        <form id="form" action="/discover" method="POST">
+            <label for="opis">Opis:</label>
+            <textarea id="opis" name="opis" rows="5" cols="40" placeholder="Unesi opis..."></textarea>
+
+            <fieldset id="tagovi">
+                <legend>Tagovi</legend>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="plaza">
+                    Plaža
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="bazen">
+                    Bazen
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="planine">
+                    Planine
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="povijest">
+                    Povijest
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="kultura">
+                    Kultura
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="foodie">
+                    Foodie
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="Sport">
+                    Sport
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="Geek">
+                    Geek
+                </label>
+
+                <label>
+                    <input type="checkbox" name="tagovi" value="Geek">
+                    Party
+                </label>
+            </fieldset>
+
+            <button type="submit">Registracija</button>
+        </form>
+
+        <div id="login-container">
+            <div class="link">
+                <p><a href="/signup2">Vrati se</a></p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
