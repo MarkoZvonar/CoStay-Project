@@ -18,134 +18,159 @@
 body {
   display: flex;
   flex-direction: column;
-  background-color: rgb(240, 237, 237);
-
+  align-items: center;
   width: 100%;
-  height: 110vh;
-  gap: 1rem;
+  min-height: 100vh;
+  background-color: rgb(240, 237, 237);
+  padding-bottom: 90px;
 }
 
-.naslov {
-  height: 90px;
-  min-height: 90px;
-  margin: 10px 20px 0;
-  padding: 0 25px;
-
-  position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
+#tijelo {
+  width: calc(100% - 40px);
+  max-width: 800px;
+  margin-top: 25px;
+  padding: 30px;
   background-color: white;
   border-radius: 16px;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
-.logo {
-  font-size: 42px;
+.naslov {
+  margin-bottom: 25px;
+  font-size: 32px;
   font-weight: bold;
   color: #344e41;
-  text-decoration: none;
-
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-
-.ikone {
-  position: absolute;
-  right: 25px;
-
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.ikone a {
-  width: 44px;
-  height: 44px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  background-color: #f3f5f3;
-  border-radius: 12px;
-  transition: background-color 0.2s;
-}
-
-.ikone a:hover {
-  background-color: #e2e8e3;
-}
-
-.ikone img {
-  width: 25px;
-  height: 25px;
-  object-fit: contain;
+  text-align: center;
 }
 
 #form {
   display: flex;
-  align-items: center;
-  justify-content: center;
   flex-direction: column;
-  gap: 2rem;
-
-  margin: 2rem auto 2rem;
-
-  color: #344e41;
-  font-size: 2rem;
-
-  width: 80vw;
+  gap: 18px;
 }
 
-button {
-  display: block;
-  padding: 0.8rem 1.5rem;
-
-  background-color: rgb(183, 182, 182);
-  color: #344e41;
-  text-decoration: none;
-  text-align: center;
-
-  border-radius: 0.75rem;
-  font-size: 1.5rem;
-  font-weight: 600;
-  font-family: inherit;
-
-  transition: background-color 0.2s ease;
-}
-
-button:hover {
-  background-color: #444;
-  color: white;
-}
-
-#form input[type="text"],
-#form input[type="date"] {
-    width: 100%;
-    min-width: 10vw;
-    max-width: 40vw;
-    padding: 0.75rem;
-
-    border: 1px solid rgb(148, 137, 137);
-    border-radius: 9px;
-
-    font-family: inherit;
-    font-size: 1rem;
-    color: #1e293b;
-
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-
-#form > label {
-  margin-bottom: -1rem;
+.formGrupa {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  width: 100%;
 }
 
 #date {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 15px;
+  width: 100%;
+}
+
+label {
+  font-size: 14px;
+  font-weight: bold;
+  color: #263b30;
+}
+
+.formGrupa input,
+.formGrupa textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background-color: #f7f8f7;
+  border: 1px solid #e2e8e3;
+  border-radius: 9px;
+  font-size: 14px;
+  color: #263b30;
+  font-family: Arial, sans-serif;
+  transition:
+    border-color 0.2s,
+    background-color 0.2s;
+}
+
+.formGrupa input::placeholder,
+.formGrupa textarea::placeholder {
+  color: #999999;
+}
+
+.formGrupa input:focus,
+.formGrupa textarea:focus {
+  background-color: #ffffff;
+  border-color: #344e41;
+}
+
+.formGrupa textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+button {
+  width: 100%;
+  height: 48px;
+  margin-top: 10px;
+  background-color: #344e41;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 9px;
+  cursor: pointer;
+  transition:
+    background-color 0.2s,
+    transform 0.1s;
+}
+
+button:hover {
+  background-color: #263b30;
+}
+
+button:active {
+  transform: scale(0.99);
+}
+
+.tagovi {
   display: flex;
   flex-direction: row;
-  gap: 5rem;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 20px;
+  background-color: #ffffff;
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  font-family: Arial, sans-serif;
+}
+
+.tagovi > a {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1f2937;
+  text-decoration: none;
+}
+
+.tagovi label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  border: 1px solid #d3dbd1;
+  border-radius: 8px;
+  background-color: #fafbf9;
+  color: #374151;
+  font-size: 14px;
+  cursor: pointer;
+  transition: background-color 0.2s, border-color 0.2s;
+}
+
+.tagovi label {
+  background-color: #f6fdf4;
+  border-color: #39931e;
+}
+
+.tagovi input[type="checkbox"] {
+  accent-color: #1a810d;
+  cursor: pointer;
+  margin: 0;
+}
+
+.tagovi #cijena,
+.tagovi #pozicija {
+  padding-top: 4px;
 }
 
 @media (max-width: 900px) {

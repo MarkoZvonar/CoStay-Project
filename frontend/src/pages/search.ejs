@@ -37,43 +37,76 @@
         </div>
       </div>
 
-      <div>
-        <a>Tagovi:</a>
-        <label>
-          <input type="checkbox" name="plaza" />
-          Plaža
-        </label>
+      <form id="form" action="/" method="POST">
+        <div class="formGrupa">
+          <label for="Location">Location:</label>
+          <input type="text" id="location" name="location" />
+        </div>
 
-        <div id="cijena">
+        <div id="date" class="formGrupa">
+          <div id="in">
+            <label for="checkin">Datum dolaska:</label>
+            <input type="date" id="checkin" name="checkin" />
+          </div>
+
+          <div id="out">
+            <label for="checkout">Datum odlaska:</label>
+            <input type="date" id="checkout" name="checkout" />
+          </div>
+        </div>
+
+        <div class="tagovi">
+          <a>Tagovi:</a>
           <label>
-            <input type="radio" name="cijena" value="skupo" />
-            Skupo
+            <input type="checkbox" name="plaza" />
+            Plaža
           </label>
+
           <label>
-            <input type="radio" name="cijena" value="jeftino" />
-            Jeftino
+            <input type="checkbox" name="plaza" />
+            Planina
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Nightlife
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Chill
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Sport
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Grad
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Staromodno
+          </label>
+
+          <label>
+            <input type="checkbox" name="plaza" />
+            Moderno
           </label>
         </div>
 
-        <div id="pozicija">
-          <label>
-            <input type="radio" name="pozicija" value="gore" />
-            Gore
-          </label>
-          <label>
-            <input type="radio" name="pozicija" value="dolje" />
-            Dolje
-          </label>
+        <div class="formGrupa">
+          <label for="organizator">Organizator:</label>
+          <input type="text" id="organizator" name="organizator" />
         </div>
-      </div>
 
-      <label for="organizator">Organizator:</label>
-      <input type="text" id="organizator" name="organizator" />
+        <button type="submit">Traži</button>
+      </form>
+    </main>
 
-      <button type="submit">Traži</button>
-    </form>
-
-    <div class="tijelo"></div>
     <div id="navbar"></div>
 
     <%- include('../components/navbar') %>
