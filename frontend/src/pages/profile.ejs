@@ -12,10 +12,10 @@
     <div class="profilGornjiDio">
       <div class="profile">
         <div class="profilnaSlika">
-          <img src="../assets/probnaSlikaKartica.jpg" alt="Profilna slika" />
+          <img src="/assets/probnaSlikaKartica.jpg" alt="Profilna slika" />
         </div>
 
-        <div class="profilIme">Igor Hekterovic</div>
+        <div class="profilIme"><%= ime %> <%= prezime %></div>
 
         <div class="profilLokacija">Zagreb, Hrvatska</div>
 
@@ -30,7 +30,7 @@
 
         <div class="tagoviUnos">
           <div class="tagoviInput">
-            <img class="tagoviIkona" src="../assets/tags.svg" alt="" />
+            <img class="tagoviIkona" src="/assets/tags.svg" alt="" />
             <input type="text" placeholder="Add a travel keyword..." />
           </div>
 
@@ -84,7 +84,7 @@
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
-              src="../assets/probnaSlikaKartica.jpg"
+              src="/assets/probnaSlikaKartica.jpg"
               alt="Post image"
               class="postSlika"
             />
@@ -97,7 +97,7 @@
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
-              src="../assets/probnaSlikaKartica.jpg"
+              src="/assets/probnaSlikaKartica.jpg"
               alt="Post image"
               class="postSlika"
             />
@@ -110,21 +110,7 @@
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
-              src="../assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="../assets/probnaSlikaKartica.jpg"
+              src="/assets/probnaSlikaKartica.jpg"
               alt="Post image"
               class="postSlika"
             />
@@ -138,7 +124,7 @@
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
-              src="../assets/probnaSlikaKartica.jpg"
+              src="/assets/probnaSlikaKartica.jpg"
               alt="Post image"
               class="postSlika"
             />
@@ -152,7 +138,21 @@
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
-              src="../assets/probnaSlikaKartica.jpg"
+              src="/assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="/assets/probnaSlikaKartica.jpg"
               alt="Post image"
               class="postSlika"
             />
@@ -167,6 +167,6 @@
 
     <div id="navbar"></div>
 
-    <script src="../components/navbar.js"></script>
+    <%- include('../components/navbar') %>
   </body>
 </html>
