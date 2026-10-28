@@ -6,7 +6,7 @@ komentare s uputama i ogledne <details> blokove te prije predaje izbrišite ovu
 napomenu. Nemojte kopirati nastavni primjer kao rezultat svojeg projekta.
 -->
 
-# [Naziv aplikacije]
+# CoStay
 
 <details>
 <summary>Zašto je ovaj odjeljak važan</summary>
@@ -15,13 +15,13 @@ Započnite README nazivom svojeg projekta i sažetim opisom njegove svrhe. Naziv
 
 </details>
 
-[U jednoj rečenici navedite što aplikacija omogućuje svojim korisnicima.]
+CoStay je web-aplikacija koja korisnicima omogućuje objavljivanje planiranih putovanja i pridruživanje postojećim putovanjima radi pronalaska suputnika i dijeljenja troškova smještaja.
 
 **Projekt na kolegiju:** Ovu je aplikaciju razvio studentski tim u sklopu kolegija [Programsko inženjerstvo](https://www.fer.unizg.hr/predmet/proinz) na Fakultetu elektrotehnike i računarstva Sveučilišta u Zagrebu (FER).
 
 ## Opis aplikacije
 
-[U dvije ili tri rečenice objasnite problem, ciljane korisnike i glavnu korist svoje aplikacije. Trenutačne funkcionalnosti navedite odvojeno od planiranih; opišite stvarni opseg umjesto obećanih mogućnosti.]
+Mnogi ljubitelji putovanja suočavaju se s problemom pronalaska suputnika s kojima bi mogli podijeliti troškove smještaja. CoStay je usmjeren na povezivanje putnika i pronalazak odgovarajućeg društva za zajedničko putovanje. Na taj način korisnici mogu pronaći osobe sa sličnim interesima i planovima putovanja te jednostavnije organizirati zajednički boravak uz podjelu troškova.
 
 **Ključne funkcionalnosti**
 
