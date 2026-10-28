@@ -47,7 +47,6 @@ router.get("/signup3", (req, res) => {
   res.render("signup3");
 });
 
-// Odjava
 router.get("/logout", (req, res, next) => {
   req.session.destroy((error) => {
     if (error) return next(error);
