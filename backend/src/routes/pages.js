@@ -138,7 +138,6 @@ router.post("/signup3", (req, res) => {
   res.redirect("/");
 });
 
-// Odjava
 router.get("/logout", (req, res, next) => {
   req.session.destroy((error) => {
     if (error) return next(error);
