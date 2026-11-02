@@ -27,19 +27,32 @@
         </div>
 
         <label for="birthday">Datum rođenja:</label>
-        <input type="date" id="birthday" name="birthday" />
+        <input type="date" id="birthday" name="birthday" required />
 
         <div id="spol">
           <label>
-            <input type="radio" name="spol" value="man" />
+            <input type="radio" name="spol" value="muški" required />
             Muškarac
           </label>
+
           <label>
-            <input type="radio" name="spol" value="woman" />
+            <input type="radio" name="spol" value="ženski" required />
             Žena
           </label>
-        </div>
 
+          <label>
+            <input type="radio" name="spol" value="ostalo" required />
+            Ostalo
+          </label>
+        </div>
+        <label for="mjesto_stanovanja">Mjesto stanovanja:</label>
+
+        <input
+          type="text"
+          id="mjesto_stanovanja"
+          name="mjesto_stanovanja"
+          required
+        />
         <button type="submit">Sljedeći korak</button>
       </form>
 

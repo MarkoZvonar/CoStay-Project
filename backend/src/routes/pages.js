@@ -1,6 +1,12 @@
 import express from "express";
 const router = express.Router();
+function requireIdentity(req, res, next) {
+  if (!req.session.user?.id) {
+    return res.redirect("/login");
+  }
 
+  next();
+}
 // Početna stranica (discover)
 router.get("/", (req, res) => {
   if (
@@ -103,32 +109,72 @@ router.post("/signup1", (req, res) => {
   // Za sada samo preusmjeravamo na signup2
   res.redirect("/signup2");
 });
-router.get("/signup2", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/");
-  }
+router.get("/signup2", requireIdentity, (req, res) => {
   res.render("signup2");
 });
-router.post("/signup2", (req, res) => {
-  // Ovdje možete obraditi podatke iz forme, npr. spremiti ih u bazu podataka
-  const { ime } = req.body;
-  const { prezime } = req.body;
-  const { birthday } = req.body;
-  const { spol } = req.body;
+router.post("/signup2", requireIdentity, (req, res) => {
+  // Prihvaćamo samo tekstualne vrijednosti.
+  const tekst = (vrijednost) =>
+    typeof vrijednost === "string" ? vrijednost.trim() : "";
+  const ime = tekst(req.body.ime);
+  const prezime = tekst(req.body.prezime);
+  const birthday = tekst(req.body.birthday);
+  const spol = tekst(req.body.spol);
+  const mjestoStanovanja = tekst(req.body.mjesto_stanovanja);
+  if (!ime || !prezime || !mjestoStanovanja) {
+    return res
+      .status(400)
+      .send("Ime, prezime i mjesto stanovanja su obavezni.");
+  }
+  if (!["muški", "ženski", "ostalo"].includes(spol)) {
+    return res.status(400).send("Odaberi valjanu vrijednost za spol.");
+  }
+  // Provjeravamo format i postoji li taj datum.
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(birthday)) {
+    return res.status(400).send("Unesi valjan datum rođenja.");
+  }
+  const datum = new Date(`${birthday}T00:00:00Z`);
+  const danas = new Date().toISOString().slice(0, 10);
+  if (
+    Number.isNaN(datum.getTime()) ||
+    datum.toISOString().slice(0, 10) !== birthday ||
+    birthday > danas
+  ) {
+    return res
+      .status(400)
+      .send("Datum rođenja mora biti valjan i ne smije biti u budućnosti.");
+  }
+  // Provjera ima li osoba najmanje 18 godina.
+  const danasDatum = new Date();
+  let dob = danasDatum.getUTCFullYear() - datum.getUTCFullYear();
+  const mjesecRazlika = danasDatum.getUTCMonth() - datum.getUTCMonth();
+
+  if (
+    mjesecRazlika < 0 ||
+    (mjesecRazlika === 0 && danasDatum.getUTCDate() < datum.getUTCDate())
+  ) {
+    dob--;
+  }
+
+  if (dob < 18) {
+    return res
+      .status(400)
+      .send("Za registraciju moraš imati najmanje 18 godina.");
+  }
+
+  // Podatke zasad spremamo samo kao nacrt u sesiju.
   req.session.ime = ime;
   req.session.prezime = prezime;
   req.session.birthday = birthday;
   req.session.spol = spol;
-  // Za sada samo preusmjeravamo na signup3
-  res.redirect("/signup3");
+  req.session.mjesto_stanovanja = mjestoStanovanja;
+
+  return res.redirect("/signup3");
 });
-router.get("/signup3", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/");
-  }
+router.get("/signup3", requireIdentity, (req, res) => {
   res.render("signup3");
 });
-router.post("/signup3", (req, res) => {
+router.post("/signup3", requireIdentity, (req, res) => {
   // Ovdje možete obraditi podatke iz forme, npr. spremiti ih u bazu podataka
   const { opis } = req.body;
   const { tagovi } = req.body;
