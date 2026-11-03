@@ -106,7 +106,7 @@ async function fixture(options = {}) {
       ? {}
       : {
           user: { id: user },
-          supabaseAccessToken: options.noToken ? undefined : "test-token",
+          accessToken: options.noToken ? undefined : "test-token",
         };
     next();
   });
