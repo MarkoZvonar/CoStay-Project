@@ -52,10 +52,7 @@ router.get("/create", (req, res) => {
     spol: req.session.spol,
   });
 });
-router.get("/inbox", (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/");
-  }
+router.get("/inbox", requireIdentity, (req, res) => {
   res.render("inbox");
 });
 

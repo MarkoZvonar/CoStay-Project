@@ -1,6 +1,10 @@
 import express from "express";
+import { createUserClient } from "../config/supabase.js";
+import { createInboxRouter } from "./inbox.js";
 
 const router = express.Router();
+
+router.use("/inbox", createInboxRouter(createUserClient));
 
 router.get("/current-user", (req, res) => {
   if (req.session && req.session.user) {

@@ -106,6 +106,8 @@ export const setSession = async (req, res, next) => {
         picture: user.user_metadata?.avatar_url || "",
         role: isAdmin ? "admin" : "user", // Dodano: uloga korisnika
       };
+      // Token ostaje na poslužitelju i koristi se za upite s korisnikovim RLS pravima.
+      req.session.supabaseAccessToken = accessToken;
 
       // 4. Snimamo sesiju i vraćamo OK odgovor frontendu
       req.session.save((saveError) => {
