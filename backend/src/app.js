@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { refreshSession } from "./middleware/refreshSession.js";
 
 // Definiranje __dirname za ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -56,6 +57,7 @@ app.use(
     },
   }),
 );
+app.use(refreshSession);
 // rute
 app.use("/api", apiRoutes);
 app.use("/", pageRoutes);

@@ -12,7 +12,12 @@
     <main class="createTijelo">
       <h1 class="createNaslov">Create Travel Post</h1>
 
-      <form class="createForma" id="createForm">
+      <form
+        action="/api/posts"
+        method="POST"
+        class="createForma"
+        id="createForm"
+      >
         <!-- Lokacija -->
         <div class="formGroup">
           <label for="lokacija" class="obavezno">Location</label>
@@ -121,5 +126,7 @@
     <div id="navbar"></div>
 
     <%- include('../components/navbar') %>
+
+    <script src="create.js"></script>
   </body>
 </html>
