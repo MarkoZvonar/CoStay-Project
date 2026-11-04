@@ -60,10 +60,15 @@
               <div class="slikaDno">
                 <div class="lokacija">
                   <span class="lokacijaIkona">📍</span>
-                  <span><%= smjestaj.id_lokacija ? (smjestaj.id_lokacija.grad + ', ' + smjestaj.id_lokacija.drzava) : 'Zagreb, Hrvatska' %></span>
+                  <span>
+                    <%= smjestaj.id_lokacije
+                      ? smjestaj.id_lokacije.ime_lokacije + ', ' + smjestaj.id_lokacije.ime_drzave
+                      : 'Nepoznata lokacija' %>
+                  </span>
                 </div>
-
-                <div class="cijena"><%= smjestaj.ukupna_cijena ? Math.round(smjestaj.ukupna_cijena / 2) : 120 %> € <span>/ noć</span></div>
+                <div class="cijena">
+                  <%= smjestaj.ukupna_cijena %> €
+                </div>
               </div>
             </div>
 
@@ -79,6 +84,23 @@
               <% } else { %>
                 <span class="tag">Smještaj</span>
               <% } %>
+            </div>
+
+                        <!-- 3. dio: Kapacitet -->
+            <div class="karticaKapacitet">
+              <div class="kapacitetStavka">
+                <span class="kapacitetNaslov">Ukupni kapacitet</span>
+                <span class="kapacitetVrijednost">
+                  <%= smjestaj.ukupni_kapacitet %> osoba
+                </span>
+              </div>
+
+              <div class="kapacitetStavka">
+                <span class="kapacitetNaslov">Preostala mjesta</span>
+                <span class="kapacitetVrijednost">
+                  <%= smjestaj.preostalih_mjesta %> osoba
+                </span>
+              </div>
             </div>
 
             <!-- 3. dio: Kontakt -->
