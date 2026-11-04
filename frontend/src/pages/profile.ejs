@@ -12,16 +12,15 @@
     <div class="profilGornjiDio">
       <div class="profile">
         <div class="profilnaSlika">
-          <img src="/assets/probnaSlikaKartica.jpg" alt="Profilna slika" />
+          <img src="<%= profilnaSlikaUrl || '/assets/probnaSlikaKartica.jpg'%>" alt="Profilna slika" />
         </div>
 
         <div class="profilIme"><%= ime %> <%= prezime %></div>
 
-        <div class="profilLokacija">Zagreb, Hrvatska</div>
+        <div class="profilLokacija"><%= mjestoStanovanja %></div>
 
         <div class="profilOpis">
-          Student sam koji voli putovati, upoznavati nove ljude i otkrivati
-          zanimljiva mjesta. Uvijek sam za nova iskustva i dobra druženja!
+          <%= opis %>
         </div>
 
         <a href="/logout">Odjava</a>
