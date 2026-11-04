@@ -132,57 +132,6 @@ router.get("/inbox", requireRegistered, (req, res) => {
   });
 });
 
-router.get("/profile", requireRegistered, async(req, res, next) => {
-  const accessToken = req.session.accessToken;
-
-  if(!accessToken) {
-    return res
-      .status(401)
-      .send('Potrebna je nova prijava. <a href="/logout">Odjavi se</a>');
-  }
-
-  try {
-    const korisnickiSupabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    );
-
-    const { data: korisnik, error } = await korisnickiSupabase
-      .from("KORISNIK")
-      .select("ime,prezime,mjesto_stanovanja,profilna_slika_url,opis")
-      .eq("id_korisnik", req.session.user.id)
-      .maybeSingle();
-
-    if (error) return next(error);
-
-    if(!korisnik) {
-      return res.status(404).send("Profil nije pronađen.");
-    }
-
-    return res.render("profile", {
-      ime: korisnik.ime || "",
-      prezime: korisnik.prezime || "",
-      mjestoStanovanja: korisnik.mjesto_stanovanja || "",
-      profilnaSlikaUrl: korisnik.profilna_slika_url || "",
-      opis: korisnik.opis || "",
-    });
-  } catch (error) {
-    next(error);
-  }
-});
-
 // Start stranica
 router.get("/start", (req, res) => {
   if (req.session.user) {

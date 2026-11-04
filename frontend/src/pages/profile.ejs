@@ -39,41 +39,16 @@
         </div>
 
         <div class="listaTagova">
-          <span class="tag">
-            Adventure
-            <button
-              class="ukloniTag"
-              type="button"
-              aria-label="Ukloni Adventure"
-            >
+          <% if(tagovi.length !== 0) { %>
+            <% tagovi.forEach((tag) => {%>
+              <span class="tag">
+                <%= tag.ime_tag %>
+                <button class="ukloniTag" type="button" aria-label="Ukloni <%= tag.ime_tag %>">
               ×
             </button>
           </span>
-
-          <span class="tag">
-            Nature
-            <button class="ukloniTag" type="button" aria-label="Ukloni Nature">
-              ×
-            </button>
-          </span>
-
-          <span class="tag">
-            Beach
-            <button class="ukloniTag" type="button" aria-label="Ukloni Beach">
-              ×
-            </button>
-          </span>
-
-          <span class="tag">
-            City Break
-            <button
-              class="ukloniTag"
-              type="button"
-              aria-label="Ukloni City Break"
-            >
-              ×
-            </button>
-          </span>
+            <% }); %>
+          <% } %>
         </div>
       </div>
     </div>
