@@ -21,42 +21,99 @@
       </div>
     </div>
 
-    <form id="form" action="/" method="POST">
-      <label for="Location">Location:</label>
-      <input type="text" id="location" name="location" />
-
-      <div id="date">
-        <div id="in">
-          <label for="checkin">Datum dolaska:</label>
-          <input type="date" id="checkin" name="checkin" />
-        </div>
-
-        <div id="out">
-          <label for="checkout">Datum odlaska:</label>
-          <input type="date" id="checkout" name="checkout" />
-        </div>
-      </div>
-
-      <form id="form" action="/" method="POST">
+    <% if (query == 0) { %>
+      <form id="form" action="/search" method="POST">
         <div class="formGrupa">
-          <label for="Location">Location:</label>
+          <label for="location">Location:</label>
           <input type="text" id="location" name="location" />
         </div>
 
-        <div id="date" class="formGrupa">
-          <div id="in">
-            <label for="checkin">Datum dolaska:</label>
+        <div id="date">
+          <div id="in" class="formGrupa">
+            <label for="checkin">Date of Arrival:</label>
             <input type="date" id="checkin" name="checkin" />
+
+            <div class="radio">
+              <label class="radio-option">
+                  <input type="radio" name="rcheckin" value="before">
+                  Before
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcheckin" value="exact" checked>
+                  Exact
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcheckin" value="after">
+                  After
+              </label>
+            </div>
           </div>
 
-          <div id="out">
-            <label for="checkout">Datum odlaska:</label>
+          <div id="out" class="formGrupa">
+            <label for="checkout">Date of Departure:</label>
             <input type="date" id="checkout" name="checkout" />
+
+            <div class="radio">
+              <label class="radio-option">
+                  <input type="radio" name="rcheckout" value="before">
+                  Before
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcheckout" value="exact" checked>
+                  Exact
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcheckout" value="after">
+                  After
+              </label>
+            </div>
           </div>
         </div>
 
+        <div id="date">
+          <div class="formGrupa">
+            <label for="price">Max Price:</label>
+            <input type="number" id="price" name="price" />
+
+            <div class="radio">
+              <label class="radio-option">
+                  <input type="radio" name="rprice" value="min">
+                  Min
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rprice" value="exact" checked>
+                  Exact
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rprice" value="max">
+                  Max
+              </label>
+            </div>
+          </div>
+
+          <div class="formGrupa">
+            <label for="capacity">Capacity:</label>
+            <input type="number" id="capacity" name="capacity" />
+
+            <div class="radio">
+              <label class="radio-option">
+                  <input type="radio" name="rcapacity" value="min">
+                  Min
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcapacity" value="exact" checked>
+                  Exact
+              </label>
+              <label class="radio-option">
+                  <input type="radio" name="rcapacity" value="max">
+                  Max
+              </label>
+            </div>
+          </div>          
+        </div>
+
         <div class="tagovi">
-          <a>Tagovi:</a>
+          <a>Tags:</a>
           <label>
             <input type="checkbox" name="plaza" />
             Plaža
@@ -105,7 +162,59 @@
 
         <button type="submit">Traži</button>
       </form>
-    </main>
+
+    <% } else { %>
+      <div class="brojac">
+        <div class="brojacTekst">
+          <span class="brojacNadnaslov">TVOJI REZULTATI PRETRAGE</span>
+          <h1>Pronađi svoj sljedeći boravak.</h1>
+
+          <div class="brojacDetalji">
+            <div class="brojacLokacija">
+              <img src="/assets/brojacSlika.png" alt="" />
+              <span>Zagreb, Hrvatska</span>
+            </div>
+
+            <span class="brojacBroj">6 smještaja</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="tijelo">
+        <% data.forEach((item) => { %>
+          <% if (item.keep) { %>
+            <div class="kartica">
+              <!-- 1. dio: Slika, datum, lokacija i cijena -->
+              <div class="karticaSlika">
+                <img src="/assets/probnaSlikaKartica.jpg" alt="Slika smještaja" />
+
+                <div class="datum"><%= item.check_in %></div>
+                <div class="datum"><%= item.check_out %></div>
+
+                <div class="slikaDno">
+                  <div class="lokacija">
+                    <span class="lokacijaIkona">📍</span>
+                    <span><%= item.LOKACIJA.ime_lokacije %></span>
+                  </div>
+
+                  <div class="cijena"><%= Number(item.ukupna_cijena / item.ukupni_kapacitet).toFixed(2) %> € <span>/ noć</span></div>
+                </div>
+              </div>
+
+              <!-- 3. dio: Kontakt -->
+              <div class="karticaKontakt">
+                <div class="organizator">
+                  <span class="organizatorNaslov">Organizator</span>
+                  <span class="organizatorIme"><%= item.KORISNIK.ime %> <%= item.KORISNIK.prezime %></span>
+                </div>
+
+                <button class="messageGumb">Message</button>
+              </div>
+            </div>
+          <% } %>
+        <% }) %>
+      </div>
+    <% } %>
 
     <div id="navbar"></div>
 

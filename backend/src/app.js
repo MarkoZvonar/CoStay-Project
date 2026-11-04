@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
+import { refreshSession } from "./middleware/refreshSession.js";
 
 // Definiranje __dirname za ES module
 const __filename = fileURLToPath(import.meta.url);
@@ -15,6 +16,7 @@ import session from "express-session";
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
+import searchRoutes from "./routes/search.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -56,10 +58,12 @@ app.use(
     },
   }),
 );
+app.use(refreshSession);
 // rute
 app.use("/api", apiRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
+app.use("/search", searchRoutes);
 
 // Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {
