@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/pages/profile.css" />
     <link rel="stylesheet" href="/pages/main.css" />
+    <script src="/pages/profile.js" defer></script>
     <title>Profile</title>
   </head>
 
@@ -32,23 +33,26 @@
         <div class="tagoviUnos">
           <div class="tagoviInput">
             <img class="tagoviIkona" src="/assets/tags.svg" alt="" />
-            <input type="text" placeholder="Add a travel keyword..." />
+            <input id="unosTaga" type="text" list="ponudeniTagovi" placeholder="Add a travel keyword..." autocomplete="off"/>
+            <datalist id="ponudeniTagovi">
+              <!-- tu js dodaje ponudene tagove iz baze -->
+            </datalist>
           </div>
 
-          <button class="addGumb">Add</button>
+          <button id="dodajTag" class="addGumb">Add</button>
         </div>
 
-        <div class="listaTagova">
-          <% if(tagovi.length !== 0) { %>
-            <% tagovi.forEach((tag) => {%>
-              <span class="tag">
-                <%= tag.ime_tag %>
-                <button class="ukloniTag" type="button" aria-label="Ukloni <%= tag.ime_tag %>">
+        <p id="tagoviPoruka" hidden></p>
+
+        <div id="listaTagova" class="listaTagova">
+          <% tagovi.forEach((tag) => {%>
+            <span class="tag">
+              <%= tag.ime_tag %>
+              <button id="<%= tag.id_tag %>" class="ukloniTag" type="button" aria-label="Ukloni <%= tag.ime_tag %>">
               ×
-            </button>
-          </span>
-            <% }); %>
-          <% } %>
+              </button>
+            </span>
+          <% }); %>
         </div>
       </div>
     </div>
