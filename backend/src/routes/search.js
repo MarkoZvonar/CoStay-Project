@@ -27,18 +27,29 @@ router.post("/", async (req, res) => {
     process.env.SUPABASE_ANON_KEY
   );
 
-  const { data, error } = await supabase
+  let { data, error } = await supabase
     .from('OBJAVA')
     .select(`
       KORISNIK!id_autor (
         ime,
-        prezime),
+        prezime
+      ),
       LOKACIJA!id_lokacije (
-        ime_lokacije),
+        ime_lokacije,
+        ime_drzave
+      ),
       check_in,
       check_out,
       ukupna_cijena,
-      ukupni_kapacitet`)
+      ukupni_kapacitet,
+      preostalih_mjesta,
+      id_objava,
+      OBJAVA_TAG!id_objava (
+        TAG!id_tag (
+          ime_tag
+        )
+      )
+    `);
 
   if (error) {
     return res.status(500).send(error.message);
@@ -84,6 +95,40 @@ router.post("/", async (req, res) => {
       return;
     }
   });
+
+  data = data.filter(item => item.keep);
+
+  let rtags = [];
+  if (req.body.tags) {
+    if (typeof req.body.tags === "string") {
+      rtags.push(req.body.tags);
+    } else {
+      rtags = req.body.tags;
+    }
+  }
+
+  if (req.body.tags) {
+    data.forEach(item => {
+      let tags = item.OBJAVA_TAG.map(tag => tag.TAG.ime_tag);
+      // ODKOMENTIRAJ AKO ZELIS DA SE MORAJU SVI TAGOVI PODUDARATI I NE SMIJE BITI NIJEDAN NEOZNACENI TAG
+      // if (tags.length !== rtags.length) {
+      //   item.keep = false;
+      //   return;
+      // }
+      let counter = 0;
+      rtags.forEach(tag => {
+        if (tags.includes(tag)) {
+          counter++;
+        }
+      })
+      if (counter !== rtags.length) {
+        item.keep = false;
+        return;
+      }
+    });
+  }
+
+  data = data.filter(item => item.keep);
 
   res.render("search", {
     query: 1,
