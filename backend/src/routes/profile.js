@@ -167,4 +167,37 @@ router.post("/tags", requireRegistered, async (req, res, next) => {
     }
 });
 
+//ruta koja brise tag s profila
+router.delete("/tags/:id", requireRegistered, async(req, res, next) => {
+    try {
+        const korisnickiSupabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    persistSession: false,
+                    autoRefreshToken: false,
+                    detectSessionInUrl: false,
+                },
+                global: {
+                    headers: {
+                    Authorization: `Bearer ${req.session.accessToken}`,
+                    },
+                },
+            },
+        );
+
+        const {error} = await korisnickiSupabase
+            .from("KORISNIK_TAGOVI")
+            .delete()
+            .eq("id_korisnik", req.korisnik.id_korisnik)
+            .eq("id_tag", req.params.id);
+
+        if (error) return next(error);
+        return res.status(204).end();
+    } catch(error) {
+        next(error);
+    }
+});
+
 export default router;

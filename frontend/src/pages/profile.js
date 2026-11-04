@@ -15,6 +15,7 @@ function showMessage(text) {
     }
 }
 
+//dohvaca iz backenda sve tagove i dodaje ih na stranicu
 async function getAllTags() {
     try {
         const response = await fetch("/profile/tags");
@@ -102,6 +103,32 @@ dodajTag.addEventListener("click", async () => {
         showMessage(error.message);
     } finally {
         dodajTag.disabled = false;
+    }
+});
+
+listaTagova.addEventListener("click", async(event) => {
+    const gumb = event.target.closest(".ukloniTag");
+    
+    if(!gumb) return;
+    showMessage("");
+
+    gumb.disabled = true;
+
+    try {
+        const response = await fetch("/profile/tags/" + gumb.id,
+            {method: "DELETE"});
+
+        if (response.redirected) {
+            throw new Error("Potrebna je nova prijava.");
+        } else if (!response.ok) {
+            throw new Error("Uklanjanje taga nije uspjelo.");
+        }
+
+        gumb.closest(".tag").remove();
+    } catch (error) {
+        showMessage(error.message);
+    } finally {
+        gumb.disabled = false;
     }
 });
 
