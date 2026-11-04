@@ -7,7 +7,7 @@ const router = express.Router();
 // GET /discover
 router.get("/", requireRegistered, async (req, res, next) => {
   try {
-    // 1. Kreiranje Supabase klijenta s tokenom prijavljenog korisnika
+    // 1. Kreiranje Supabase klijenta
     const korisnickiSupabase = createClient(
       process.env.SUPABASE_URL,
       process.env.SUPABASE_ANON_KEY,
@@ -25,24 +25,17 @@ router.get("/", requireRegistered, async (req, res, next) => {
       },
     );
 
-    // 2. Dohvat ID-ja prijavljenog korisnika
+    // 2. ID prijavljenog korisnika
     const idKorisnik = req.korisnik.id_korisnik;
 
-    console.log("Prijavljeni korisnik:", idKorisnik);
-
-    // 3. Dohvat tagova prijavljenog korisnika
+    // 3. Dohvat tagova korisnika
     const { data: korisnikTagovi, error: tagoviError } =
       await korisnickiSupabase
         .from("KORISNIK_TAGOVI")
         .select("id_tag")
         .eq("id_korisnik", idKorisnik);
 
-    if (tagoviError) {
-      console.error("Greška kod dohvata korisničkih tagova:", tagoviError);
-      return next(tagoviError);
-    }
-
-    console.log("Korisnički tagovi:", korisnikTagovi);
+    if (tagoviError) return next(tagoviError);
 
     const tagIds = korisnikTagovi.map((t) => t.id_tag);
 
@@ -56,28 +49,22 @@ router.get("/", requireRegistered, async (req, res, next) => {
           .select("id_objava")
           .in("id_tag", tagIds);
 
-      if (objTagError) {
-        console.error("Greška kod dohvata veza objava-tag:", objTagError);
-        return next(objTagError);
-      }
+      if (objTagError) return next(objTagError);
 
-      console.log("Veze objava-tag:", objavaTagovi);
+      const objavaIds = [
+        ...new Set(objavaTagovi.map((ot) => ot.id_objava)),
+      ];
 
-      // Uklanjanje duplikata ID-jeva objava
-      const objavaIds = [...new Set(objavaTagovi.map((ot) => ot.id_objava))];
-
-      console.log("ID-jevi objava:", objavaIds);
-
-      // 5. Dohvat objava s pripadajućim podacima
+      // 5. Dohvat objava i povezanih podataka
       if (objavaIds.length > 0) {
         const { data: dohvaceneObjave, error: objavaError } =
           await korisnickiSupabase
             .from("OBJAVA")
-            .select(
-              `
+            .select(`
               *,
               id_lokacije (
                 ime_lokacije,
+                ime_drzave,
                 latitude,
                 longitude
               ),
@@ -90,21 +77,15 @@ router.get("/", requireRegistered, async (req, res, next) => {
                   ime_tag
                 )
               )
-            `,
-            )
+            `)
             .in("id_objava", objavaIds)
             .eq("status_objave", "otvorena");
 
-        if (objavaError) {
-          console.error("Greška kod dohvata objava:", objavaError);
-          return next(objavaError);
-        }
+        if (objavaError) return next(objavaError);
 
         objave = dohvaceneObjave || [];
       }
     }
-
-    console.log("Dohvaćene objave:", objave);
 
     // 6. Prikaz Discover stranice
     return res.render("discover", {
@@ -116,6 +97,7 @@ router.get("/", requireRegistered, async (req, res, next) => {
       smjestaji: objave,
       brojac: objave.length,
     });
+
   } catch (error) {
     console.error("Neočekivana greška u Discover ruti:", error);
     next(error);
