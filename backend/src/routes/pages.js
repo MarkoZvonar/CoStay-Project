@@ -124,15 +124,6 @@ router.get("/inbox", requireRegistered, (req, res) => {
   });
 });
 
-router.get("/search", (req, res) => {
-  res.render("search", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
 router.get("/profile", requireRegistered, (req, res) => {
   res.render("profile", {
     ime: req.session.ime || "",

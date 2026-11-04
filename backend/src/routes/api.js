@@ -3,22 +3,7 @@ import { supabase } from "../config/supabase.js";
 
 const router = express.Router();
 
-// Postojeća ruta za provjeru korisnika
-router.get("/current-user", (req, res) => {
-  if (req.session && req.session.user) {
-    res.status(200).json({
-      loggedIn: true,
-      user: req.session.user,
-    });
-  } else {
-    res.status(200).json({
-      loggedIn: false,
-      user: { role: "guest" },
-    });
-  }
-});
-
-// Nova ruta za kreiranje objave prema vašoj shemi baze
+// Nova ruta za kreiranje objave prilagođena vašoj shemi baze i postojećim lokacijama
 router.post("/posts", async (req, res, next) => {
   try {
     // 1. Provjera je li korisnik prijavljen
@@ -44,7 +29,7 @@ router.post("/posts", async (req, res, next) => {
       opis,
     } = req.body;
 
-    // Osnovna validacija
+    // Osnovna validacija obaveznih polja
     if (
       !lokacija ||
       !datumDolaska ||
@@ -59,32 +44,26 @@ router.post("/posts", async (req, res, next) => {
         .json({ error: "Molimo ispunite sva obavezna polja." });
     }
 
-    // 3. Provjera ili unos lokacije u tablicu LOKACIJA
-    let { data: existingLokacija } = await supabase
-      .from("lokacija")
+    // 3. Provjera postoji li odabrana lokacija u tablici LOKACIJA (isključivo Zagreb, Pula, Split, Opatija)
+    let { data: existingLokacija, error: lokacijaQueryError } = await supabase
+      .from("LOKACIJA")
       .select("id_lokacije")
       .eq("ime_lokacije", lokacija.trim())
       .single();
 
-    let lokacijaId;
-
-    if (!existingLokacija) {
-      const { data: newLokacija, error: lokacijaError } = await supabase
-        .from("lokacija")
-        .insert([{ ime_lokacije: lokacija.trim() }])
-        .select("id_lokacije")
-        .single();
-
-      if (lokacijaError) throw lokacijaError;
-      lokacijaId = newLokacija.id_lokacije;
-    } else {
-      lokacijaId = existingLokacija.id_lokacije;
+    if (lokacijaQueryError || !existingLokacija) {
+      return res.status(400).json({
+        error:
+          "Odabrana lokacija ne postoji u bazi. Molimo odaberite jedan od ponuđenih gradova.",
+      });
     }
+
+    const lokacijaId = existingLokacija.id_lokacije;
 
     // 4. Unos objave u tablicu OBJAVA
     const kapacitet = Number(brojOsoba);
     const { data: postData, error: postError } = await supabase
-      .from("objava")
+      .from("OBJAVA")
       .insert([
         {
           id_autor: autorId,
@@ -94,8 +73,8 @@ router.post("/posts", async (req, res, next) => {
           ukupna_cijena: Number(ukupnaCijena),
           ukupni_kapacitet: kapacitet,
           preostalih_mjesta: kapacitet, // Na početku su sva mjesta slobodna
-          opis: opis,
-          booking_url: vanjskiOglas || null,
+          opis: opis.trim(),
+          booking_url: vanjskiOglas ? vanjskiOglas.trim() : null,
           rok_prijave: krajnjiRok,
           status_objave: "otvorena",
         },
@@ -114,7 +93,7 @@ router.post("/posts", async (req, res, next) => {
         .filter(Boolean);
       for (const slikaUrl of slikeList) {
         await supabase
-          .from("objava_slika")
+          .from("OBJAVA_SLIKA")
           .insert([{ id_objava: objavaId, url_slika: slikaUrl }]);
       }
     }
@@ -127,7 +106,7 @@ router.post("/posts", async (req, res, next) => {
         .filter(Boolean);
       for (const imeTag of tagoviList) {
         let { data: existingTag } = await supabase
-          .from("tag")
+          .from("TAG")
           .select("id_tag")
           .eq("ime_tag", imeTag)
           .single();
@@ -135,7 +114,7 @@ router.post("/posts", async (req, res, next) => {
         let tagId;
         if (!existingTag) {
           const { data: newTag, error: tagErr } = await supabase
-            .from("tag")
+            .from("TAG")
             .insert([{ ime_tag: imeTag }])
             .select("id_tag")
             .single();
@@ -148,24 +127,19 @@ router.post("/posts", async (req, res, next) => {
 
         if (tagId) {
           await supabase
-            .from("objava_tag")
+            .from("OBJAVA_TAG")
             .insert([{ id_tag: tagId, id_objava: objavaId }]);
         }
       }
     }
 
-    // 7. Uspješan povratak frontendu
-    return res
-      .status(201)
-      .json({ success: true, message: "Objava uspješno kreirana!" });
+    //redirecta nas na profile page
+    return res.redirect(303, "/profile");
   } catch (err) {
     console.error("Greška kod kreiranja objave:", err.message);
-    return res
-      .status(500)
-      .json({
-        error:
-          "Došlo je do pogreške na poslužitelju prilikom spremanja objave.",
-      });
+    return res.status(500).json({
+      error: "Došlo je do pogreške na poslužitelju prilikom spremanja objave.",
+    });
   }
 });
 
