@@ -103,15 +103,7 @@ router.get("/", async (req, res, next) => {
   }
 });
 // Start stranica
-router.get("/discover", (req, res) => {
-  res.render("discover", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
+
 router.get("/create", requireRegistered, (req, res) => {
   res.render("create", {
     ime: req.session.ime || "",
