@@ -18,6 +18,7 @@ import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
 import discoverRoutes from "./routes/discover.js";
 import searchRoutes from "./routes/search.js";
+import discoverGuestRoutes from "./routes/discoverGuest.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -64,6 +65,7 @@ app.use(refreshSession);
 app.use("/api", apiRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
+app.use("/discover/guest", discoverGuestRoutes);
 app.use("/discover", discoverRoutes);
 app.use("/search", searchRoutes);
 
