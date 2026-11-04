@@ -16,6 +16,7 @@ import session from "express-session";
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
+import searchRoutes from "./routes/search.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -62,6 +63,7 @@ app.use(refreshSession);
 app.use("/api", apiRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
+app.use("/search", searchRoutes);
 
 // Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {
