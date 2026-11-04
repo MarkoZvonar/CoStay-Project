@@ -5,7 +5,7 @@ Implementirani su popis postojećih izravnih razgovora, pregled zadnjih 100 poru
 ## Priprema baze
 
 1. Pregledaj i pokreni `migrations/20261102_inbox_message_time.sql` u Supabase SQL Editoru. Dopuna dodaje vrijeme poruke i indekse. Stvarno vrijeme i redoslijed starih poruka nisu poznati; kod jednakih vremena koristi se UUID kao dosljedan dodatni redoslijed.
-2. Korisnik je potvrdio da je `KORISNIK.id_korisnik = auth.users.id`. Profil ipak mora postojati u KORISNIK. Na registraciji i prijavi radi drugi član tima; dogovor za integraciju naveden je ispod.
+2. Korisnik je potvrdio da je `KORISNIK.id_korisnik = auth.users.id`. Profil ipak mora postojati u KORISNIK. Registracija sprema profil, a inbox provjerava odgovara li prijavljenom računu.
 3. Za početni razgovor pregledaj `inbox-test-conversation.sql`, zamijeni tri oznake stvarnim ID-jevima pa izvrši jednom. Razgovor se povezuje s postojećom objavom jer je `RAZGOVOR.id_objava NOT NULL`. Ako postoje razgovori s oba sudionika, ovaj korak preskoči.
 4. Pregledaj i pokreni `migrations/20261102_inbox_membership_policy.sql` kao postgres kroz SQL Editor. Dopuna ispravlja rekurziju prikazanog SELECT pravila za SUGOVORNIK. Kod ne isključuje RLS i ne koristi service-role ključ.
 5. Pokreni aplikaciju iz backend mape naredbom `npm start`. Ponovno se prijavi kako bi nova sesija sadržavala pristupni token pa otvori `/inbox`.
@@ -37,18 +37,18 @@ where schemaname = 'public'
 
 Za daljnji razvoj inboxa nije potrebno čekati završetak prijave. Za isprobavanje sa stvarnim računima kolegičin dio treba:
 
-- nakon uspješne i provjerene Supabase prijave spremiti `req.session.user.id = user.id` i `req.session.supabaseAccessToken = accessToken` u poslužiteljsku Express sesiju; to već radi izmijenjeni `authController.js`;
+- nakon uspješne i provjerene Supabase prijave spremiti `req.session.user.id = user.id` i `req.session.accessToken = accessToken` u poslužiteljsku Express sesiju; to već radi izmijenjeni `authController.js`;
 - osigurati da u KORISNIK postoji dovršen profil s istim ID-jem;
 - zadržati sesijski kolačić `app.sid` i omogućiti prijavljenom korisniku pristup `/inbox`;
-- pri odjavi uništiti sesiju; ako se uvede automatsko obnavljanje Supabase tokena, osvježeni access token treba ažurirati i u poslužiteljskoj sesiji.
+- pri odjavi uništiti sesiju; middleware `refreshSession` prije API ruta obnavlja token i zapisuje ga u isto polje sesije koje čita inbox.
 
 Token ne spremati u `req.session.user` jer endpoint `/api/current-user` vraća taj objekt pregledniku. Ne uvoditi zajednički Supabase klijent s promjenjivim korisničkim tokenom: inbox koristi zaseban klijent po zahtjevu.
 
-Kad prijava bude gotova, usporediti auth controller, middleware i oblik sesije s ovim dogovorom. Ne uvoditi privremeni javni pristup inboxu radi testiranja.
+Ruta `/inbox` koristi `requireRegistered` i otvara inbox korisniku s dovršenim profilom. API provjerava valjani token, postojanje profila i članstvo u razgovoru.
 
 ## Ograničenja
 
-Supabase token ostaje na poslužitelju. Svaki zahtjev ima zaseban Supabase klijent s korisnikovim tokenom; `getUser` provjerava njegov identitet. Po isteku tokena korisnik se mora ponovno prijaviti; automatsko obnavljanje sesije nije dio ove promjene. Postojeće ostale rute i nedovršeni tijek registracije nisu prepravljeni.
+Supabase token ostaje na poslužitelju. Svaki zahtjev ima zaseban Supabase klijent s korisnikovim tokenom; `getUser` provjerava njegov identitet. Ako obnova sesije više nije moguća, korisnik se mora ponovno prijaviti.
 
 API ne prima ID pošiljatelja od preglednika i dodatno provjerava članstvo, ali RLS i dalje mora zasebno štititi izravne pozive bazi. Stvarna integracija s udaljenom bazom još nije potvrđena: prethodni pokušaj čitanja strukture s konfiguriranim ključem vratio je HTTP 401. Ako se to ponovi, provjeri SUPABASE_URL i SUPABASE_ANON_KEY u lokalnom backend/.env bez dijeljenja ključeva u chatu.
 

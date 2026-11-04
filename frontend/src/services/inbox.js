@@ -19,13 +19,15 @@ async function api(url, options = {}) {
     povezivanjeNedovrseno = true;
     throw new Error("Prijava je istekla. Ponovno se prijavi za pristup porukama.");
   }
-  const podaci = await odgovor.json();
   if (!odgovor.ok) {
+    const podaci = odgovor.headers.get("content-type")?.includes("application/json")
+      ? await odgovor.json()
+      : {};
     povezivanjeNedovrseno = odgovor.status === 503;
     throw new Error(podaci.error || "Zahtjev nije uspio. Pokušaj ponovno.");
   }
   povezivanjeNedovrseno = false;
-  return podaci;
+  return odgovor.json();
 }
 
 function prazno(element, tekst) {

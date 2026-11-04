@@ -16,7 +16,7 @@ export function createInboxRouter(createClient) {
   });
   router.use(requireAuth);
   router.use(async (req, res, next) => {
-    const token = req.session.supabaseAccessToken;
+    const token = req.session.accessToken;
     if (!token) return res.status(401).json({ error: "Ponovno se prijavi za pristup porukama." });
     try {
       const db = createClient(token);
