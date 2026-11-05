@@ -4,6 +4,11 @@ const dodajTag = document.getElementById("dodajTag");
 const tagoviPoruka = document.getElementById("tagoviPoruka");
 const listaTagova = document.getElementById("listaTagova");
 
+const tabMojeObjave = document.getElementById("tabMojeObjave");
+const tabSpremljeneObjave = document.getElementById("tabSpremljeneObjave");
+const mojeObjave = document.getElementById("mojeObjave");
+const spremljeneObjave = document.getElementById("spremljeneObjave");
+
 let sviTagovi = [];
 
 function showMessage(text) {
@@ -131,5 +136,22 @@ listaTagova.addEventListener("click", async(event) => {
         gumb.disabled = false;
     }
 });
+
+//promjena foldera my postef requests/saved posts
+tabMojeObjave.addEventListener("click", () => {
+    mojeObjave.hidden = false;
+    spremljeneObjave.hidden = true;
+
+    tabMojeObjave.className = "postoviTabAktivan";
+    tabSpremljeneObjave.className = "postoviTab";
+});
+
+tabSpremljeneObjave.addEventListener("click", () => {
+    mojeObjave.hidden = true;
+    spremljeneObjave.hidden = false;
+
+    tabMojeObjave.className = "postoviTab";
+    tabSpremljeneObjave.className = "postoviTabAktivan";
+})
 
 getAllTags();

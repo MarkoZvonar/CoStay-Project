@@ -59,15 +59,15 @@
 
     <div class="postoviSekcija">
       <div class="postoviTabs">
-        <div class="postoviTabAktivan">
+        <div id="tabMojeObjave" class="postoviTabAktivan">
           <h2 class="postoviNaslov">My Posted Requests</h2>
         </div>
-        <div class="postoviTab">
+        <div id="tabSpremljeneObjave" class="postoviTab">
           <h2 class="postoviNaslov">Saved Posts</h2>
         </div>
       </div>
 
-      <div class="postovi">
+      <div id="mojeObjave" class="postovi">
         <div class="postKartica">
           <div class="postSlikaWrapper">
             <img
@@ -149,7 +149,49 @@
           <p class="postLokacija">Dolomites, Italy</p>
           <p class="postCijena">250 €</p>
         </div>
-      </div>
+      </div> 
+      <!-- iznad -->
+       <div id="spremljeneObjave" class="postovi" hidden>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="/assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+         <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="/assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+        <div class="postKartica">
+          <div class="postSlikaWrapper">
+            <img
+              src="/assets/probnaSlikaKartica.jpg"
+              alt="Post image"
+              class="postSlika"
+            />
+            <p class="postDatum">Jan 11-13</p>
+          </div>
+          <h3 class="postNaziv">Adventure in the Mountains</h3>
+          <p class="postLokacija">Dolomites, Italy</p>
+          <p class="postCijena">250 €</p>
+        </div>
+      </div> 
     </div>
     <div id="navbar"></div>
     <%- include('../components/navbar') %>

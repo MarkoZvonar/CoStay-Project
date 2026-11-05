@@ -273,6 +273,11 @@ a.addGumb {
   cursor: pointer;
 }
 
+.postoviTab:hover, 
+.postoviTabAktivan:hover {
+  transform: scale(1.05);
+}
+
 .postoviTabAktivan {
   background-color: white;
 }
@@ -294,6 +299,10 @@ a.addGumb {
   width: 100%;
   min-height: 100px;
   padding-top: 25px;
+}
+
+.postovi[hidden] {
+  display:none;
 }
 
 .postKartica {
