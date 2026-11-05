@@ -17,6 +17,9 @@ import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
 import inboxRoutes from "./routes/inbox.js";
+import discoverRoutes from "./routes/discover.js";
+import searchRoutes from "./routes/search.js";
+import discoverGuestRoutes from "./routes/discoverGuest.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -64,6 +67,9 @@ app.use("/api", apiRoutes);
 app.use("/inbox", inboxRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
+app.use("/discover/guest", discoverGuestRoutes);
+app.use("/discover", discoverRoutes);
+app.use("/search", searchRoutes);
 
 // Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {
