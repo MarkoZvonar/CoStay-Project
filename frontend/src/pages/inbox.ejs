@@ -3,136 +3,67 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="/pages/inbox.css" />
     <link rel="stylesheet" href="/pages/main.css" />
-
-    <title>Inbox</title>
+    <link rel="stylesheet" href="/pages/inbox.css" />
+    <title>Inbox | CoStay</title>
+    <script src="/services/inbox.js" defer></script>
   </head>
-
   <body>
-    <div class="zaglavlje"></div>
-
     <main class="inboxTijelo">
-      <h1 class="inboxNaslov">Inbox</h1>
-
-      <button
-        class="buddyZahtjevi"
-        id="buddyGumb"
-        type="button"
-        aria-expanded="false"
-      >
-        <img src="/assets/users-round.svg" alt=" " class="buddySlika" />
-        <div class="buddyTekst">
-          <h2>Buddy requests</h2>
-          <p>3 pending buddy requests</p>
+      <header class="inboxZaglavlje">
+        <div>
+          <h1>Inbox</h1>
+          <p>Dogovori sljedeće putovanje.</p>
         </div>
-        <span class="buddyStrelica" id="buddyStrelica">⌄</span>
-      </button>
-
-      <div class="zahtjeviLista" id="zahtjeviLista" hidden>
-        <div class="zahtjev">
-          <img src="/assets/probnaSlikaKartica.jpg" alt="" />
-          <div class="osobaPodaci">
-            <h3>Marko Horvat</h3>
-            <p>Wants to be your buddy</p>
+        <button id="osvjezi" type="button" class="sekundarniGumb">
+          Osvježi
+        </button>
+      </header>
+      <p id="inboxStatus" role="status" aria-live="polite"></p>
+      <div class="inboxRaspored">
+        <section class="razgovori" aria-labelledby="razgovoriNaslov">
+          <h2 id="razgovoriNaslov">Razgovori</h2>
+          <div id="razgovoriLista">
+            <p class="prazno">Učitavanje razgovora…</p>
           </div>
-          <button class="zahtjevGumb" type="button">Accept</button>
-        </div>
-
-        <div class="zahtjev">
-          <img src="/assets/probnaSlikaKartica.jpg" alt="" />
-          <div class="osobaPodaci">
-            <h3>Ana Lovač</h3>
-            <p>Wants to be your buddy</p>
+        </section>
+        <section class="chat" aria-labelledby="chatNaslov">
+          <header class="chatZaglavlje">
+            <h2 id="chatNaslov">Odaberi razgovor</h2>
+            <p id="chatSudionici" class="chatNapomena" hidden></p>
+            <p class="chatNapomena">Prikazuje se do 100 najnovijih poruka.</p>
+          </header>
+          <div
+            id="porukeLista"
+            class="porukeLista"
+            role="log"
+            aria-label="Poruke"
+            aria-live="polite"
+          >
+            <p class="prazno">
+              Ovdje će se prikazati poruke odabranog razgovora.
+            </p>
           </div>
-          <button class="zahtjevGumb" type="button">Accept</button>
-        </div>
-
-        <div class="zahtjev">
-          <img src="/assets/probnaSlikaKartica.jpg" alt="" />
-          <div class="osobaPodaci">
-            <h3>Ivan Larić</h3>
-            <p>Wants to be your buddy</p>
-          </div>
-          <button class="zahtjevGumb" type="button">Accept</button>
-        </div>
+          <form id="porukaObrazac" class="porukaObrazac">
+            <label for="sadrzaj">Tvoja poruka</label>
+            <div class="unosRed">
+              <textarea
+                id="sadrzaj"
+                name="sadrzaj"
+                rows="2"
+                maxlength="2000"
+                required
+                disabled
+                placeholder="Napiši poruku…"
+              ></textarea>
+              <button id="posalji" type="submit" disabled>Pošalji</button>
+            </div>
+            <p id="slanjeStatus" role="status" aria-live="polite"></p>
+          </form>
+        </section>
       </div>
-
-      <section class="porukeSekcija">
-        <h2 class="porukeNaslov">Messages</h2>
-
-        <div class="porukeLista">
-          <a href="#" class="poruka">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt=""
-              class="osobaSlika"
-            />
-            <div class="porukaTekst">
-              <h3>John Pork</h3>
-              <p>Answer the phone!!</p>
-            </div>
-            <span class="porukaVrijeme">10:24</span>
-          </a>
-
-          <a href="#" class="poruka">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt=""
-              class="osobaSlika"
-            />
-            <div class="porukaTekst">
-              <h3>John Pork</h3>
-              <p>Hello!</p>
-            </div>
-            <span class="porukaVrijeme">10:24</span>
-          </a>
-
-          <a href="#" class="poruka">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt=""
-              class="osobaSlika"
-            />
-            <div class="porukaTekst">
-              <h3>John Pork</h3>
-              <p>Asnwer!</p>
-            </div>
-            <span class="porukaVrijeme">10:24</span>
-          </a>
-
-          <a href="#" class="poruka">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt=""
-              class="osobaSlika"
-            />
-            <div class="porukaTekst">
-              <h3>John Pork</h3>
-              <p>Answer the phone!</p>
-            </div>
-            <span class="porukaVrijeme">10:24</span>
-          </a>
-        </div>
-      </section>
+      <noscript>Za razmjenu poruka uključi JavaScript u pregledniku.</noscript>
     </main>
-
-    <div id="navbar"></div>
-
     <%- include('../components/navbar') %>
-
-    <script>
-      const buddyGumb = document.getElementById("buddyGumb");
-      const zahtjeviLista = document.getElementById("zahtjeviLista");
-      const buddyStrelica = document.getElementById("buddyStrelica");
-
-      buddyGumb.addEventListener("click", function () {
-        zahtjeviLista.hidden = !zahtjeviLista.hidden;
-
-        buddyGumb.setAttribute("aria-expanded", !zahtjeviLista.hidden);
-
-        buddyStrelica.textContent = zahtjeviLista.hidden ? "⌄" : "⌃";
-      });
-    </script>
   </body>
 </html>

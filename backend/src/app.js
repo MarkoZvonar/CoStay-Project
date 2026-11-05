@@ -16,6 +16,7 @@ import session from "express-session";
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
+import inboxRoutes from "./routes/inbox.js";
 import discoverRoutes from "./routes/discover.js";
 import searchRoutes from "./routes/search.js";
 import profileRoutes from "./routes/profile.js";
@@ -64,6 +65,7 @@ app.use(
 app.use(refreshSession);
 // rute
 app.use("/api", apiRoutes);
+app.use("/inbox", inboxRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
 app.use("/discover/guest", discoverGuestRoutes);
