@@ -113,7 +113,7 @@ body {
 }
 
 .editGumb {
-  color:#344e41;
+  color:#444;
   font-size: 14px;
   text-decoration: none;
 }
@@ -364,14 +364,6 @@ a.addGumb {
   font-size: 16px;
   font-weight: bold;
   color: #263b30;
-}
-
-.editProfilePage .profilGornjiDio {
-  grid-template-columns: minmax(0, 1fr);
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  min-height: calc(100dvh - 130px);
 }
 
 @media (max-width: 1399px) {

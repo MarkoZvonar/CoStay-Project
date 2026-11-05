@@ -1,6 +1,7 @@
 import { supabase } from "../config/supabase.js";
 import { createClient } from "@supabase/supabase-js";
 import { requireRegistered } from "../middleware/requireRegistered.js";
+import uploadProfileImage from "../middleware/multer.js";
 import express from "express";
 
 const router = express.Router();
@@ -209,5 +210,80 @@ router.get("/edit", requireRegistered, (req, res) => {
         opis: req.korisnik.opis || "",
     });
 })
+
+//pomocna fja za post /edit
+function tekst(vrijednost) {
+    if (typeof vrijednost === "string") {
+        return vrijednost.trim();
+    }
+    return "";
+}
+
+router.post("/edit", requireRegistered, uploadProfileImage.single("profilnaSlika"),
+    async (req, res, next) => {
+        try {
+            //privemeno dok ne sredim upload slike
+            if (req.file) {
+                return res.status(400).send("Image upload is not available yet.");
+            }
+
+            const ime = tekst(req.body.profilIme);
+            const prezime = tekst(req.body.profilPrezime);
+            const mjestoStanovanja = tekst(req.body.profilLokacija);
+            const opis = tekst(req.body.profilOpis);
+
+            if (!ime || !prezime || !mjestoStanovanja) {
+                return res.status(400).send("First name, last name and location are required.");
+            }
+
+            const korisnickiSupabase = createClient(
+                process.env.SUPABASE_URL,
+                process.env.SUPABASE_ANON_KEY,
+                {
+                    auth: {
+                        persistSession:false,
+                        autoRefreshToken: false,
+                        detectSessionInUrl: false
+                    },
+                    global: {
+                        headers: {
+                            Authorization: `Bearer ${req.session.accessToken}`
+                        }
+                    }
+                }
+            );
+
+            //azuriramo profil prijavljenog korisnika
+            const {data, error} = await korisnickiSupabase
+                .from("KORISNIK")
+                .update({
+                    ime: ime,
+                    prezime: prezime,
+                    mjesto_stanovanja: mjestoStanovanja,
+                    opis: opis
+                })
+                .eq("id_korisnik", req.korisnik.id_korisnik)
+                .select("id_korisnik")
+                .maybeSingle();
+
+                if (error) return next(error);
+                if(!data) {
+                    return res.status(403).send("Your profile could not be updated.");
+                }
+
+                //azuriramo podatke koje druge stranice citaju iz sesije
+                req.session.ime = ime;
+                req.session.prezime = prezime;
+                req.session.mjesto_stanovanja = mjestoStanovanja;
+                req.session.opis = opis;
+
+                return req.session.save((saveError) => {
+                    if(saveError) return next(saveError);
+                    return res.redirect(303, "/profile");
+                });
+        } catch (error) {
+            next(error);
+        }
+});
 
 export default router;

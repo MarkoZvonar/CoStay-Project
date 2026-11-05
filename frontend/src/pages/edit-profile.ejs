@@ -5,25 +5,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/pages/profile.css" />
     <link rel="stylesheet" href="/pages/main.css" />
+    <link rel="stylesheet" href="/pages/edit-profile.css">
     <title>Edit profile</title>
   </head>
 
   <body class="editProfilePage">
     <div class="profilGornjiDio">
       <div class="profile">
-        <div class="profilnaSlika">
-          <img src="<%= profilnaSlikaUrl || '/assets/probnaSlikaKartica.jpg'%>" alt="Profilna slika" />
-        </div>
-
-        <div class="profilIme"><%= ime %> <%= prezime %></div>
-
-        <div class="profilLokacija"><%= mjestoStanovanja %></div>
-
-        <div class="profilOpis">
-          <%= opis %>
-        </div>
-
-        <a href="/edit" class="addGumb">Save changes</a>
+        <form class="editProfileForm" action="/profile/edit" method="POST" enctype="multipart/form-data">
+            <label for="profilnaSlika">Profilna slika</label>
+            <input id="profilnaSlika" name="profilnaSlika" type="file" accept="image/jpeg,image/png,image/webp"/>
+            <label for="profilIme">Ime</label>
+            <input id="profilIme" name="profilIme" type="text" value="<%= ime %>" required>
+            <label for="profilPrezime">Prezime</label>
+            <input id="profilPrezime" name="profilPrezime" type="text" value="<%= prezime %>" required>
+            <label for="profilLokacija">Mjesto stanovanja</label>
+            <input id="profilLokacija" name="profilLokacija" type="text" value="<%= mjestoStanovanja %>" required>
+            <label for="profilOpis">Opis</label>
+            <input id="profilOpis" name="profilOpis" type="text" value="<%= opis %>">
+            <button type="submit" class="addGumb">Save changes</button>
+            <a href="/profile">Cancel</a>
+        </form>
       </div>
     </div>
     <div id="navbar"></div>

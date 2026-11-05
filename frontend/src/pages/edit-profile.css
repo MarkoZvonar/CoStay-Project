@@ -1,0 +1,60 @@
+.editProfilePage .profilGornjiDio {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: calc(100dvh - 130px);
+}
+
+.editProfileForm {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.editProfileForm label {
+  margin-top: 12px;
+  font-weight: bold;
+}
+
+.editProfileForm input,
+.editProfileForm textarea {
+  width: 100%;
+  padding: 12px;
+
+  background-color: #f7f8f7;
+  border: 1px solid #e2e8e3;
+  border-radius: 9px;
+
+  font: inherit;
+  color: #263b30;
+}
+
+.editProfileForm input[type="file"]::file-selector-button {
+  margin-right: 10px;
+  padding: 10px 14px;
+
+  background-color: #e2e8e3;
+  border: none;
+  border-radius: 8px;
+
+  color: #263b30;
+  cursor: pointer;
+}
+
+.editProfileForm button {
+    align-self:center;
+    margin-top: 20px;
+}
+
+.editProfileForm a {
+  align-self: center;
+  margin-top: 5px;
+
+  color: #344e41;
+  text-decoration: none;
+}
+
+.editProfileForm a:hover {
+  text-decoration: underline;
+}
