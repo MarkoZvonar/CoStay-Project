@@ -51,10 +51,17 @@
               <div class="datum">
                 <% 
                   const options = { month: 'short', day: 'numeric' };
-                  const checkInDate = smjestaj.check_in ? new Date(smjestaj.check_in).toLocaleDateString('en-US', options) : 'Jan 12';
-                  const checkOutDate = smjestaj.check_out ? new Date(smjestaj.check_out).getDate() : '13';
+
+                  const checkInDate = smjestaj.check_in
+                    ? new Date(smjestaj.check_in).toLocaleDateString('en-US', options)
+                    : 'Jan 12';
+
+                  const checkOutDate = smjestaj.check_out
+                    ? new Date(smjestaj.check_out).toLocaleDateString('en-US', options)
+                    : 'Mar 4';
                 %>
-                <%= checkInDate %>-<%= checkOutDate %>
+
+                <%= checkInDate %> - <%= checkOutDate %>
               </div>
 
               <div class="slikaDno">
