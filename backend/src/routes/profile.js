@@ -200,4 +200,14 @@ router.delete("/tags/:id", requireRegistered, async(req, res, next) => {
     }
 });
 
+router.get("/edit", requireRegistered, (req, res) => {
+    res.render("edit-profile", {
+        ime: req.korisnik.ime || "",
+        prezime: req.korisnik.prezime || "",
+        mjestoStanovanja: req.korisnik.mjesto_stanovanja || "",
+        profilnaSlikaUrl: req.korisnik.profilna_slika_url || "",
+        opis: req.korisnik.opis || "",
+    });
+})
+
 export default router;

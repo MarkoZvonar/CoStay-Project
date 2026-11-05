@@ -112,6 +112,12 @@ body {
   color: #444;
 }
 
+.editGumb {
+  color:#344e41;
+  font-size: 14px;
+  text-decoration: none;
+}
+
 .tagovi {
   width: calc(100% - 40px);
   max-width: 900px;
@@ -358,6 +364,14 @@ a.addGumb {
   font-size: 16px;
   font-weight: bold;
   color: #263b30;
+}
+
+.editProfilePage .profilGornjiDio {
+  grid-template-columns: minmax(0, 1fr);
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+  min-height: calc(100dvh - 130px);
 }
 
 @media (max-width: 1399px) {

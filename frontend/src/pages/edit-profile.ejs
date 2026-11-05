@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/pages/profile.css" />
+    <link rel="stylesheet" href="/pages/main.css" />
+    <title>Edit profile</title>
+  </head>
+
+  <body class="editProfilePage">
+    <div class="profilGornjiDio">
+      <div class="profile">
+        <div class="profilnaSlika">
+          <img src="<%= profilnaSlikaUrl || '/assets/probnaSlikaKartica.jpg'%>" alt="Profilna slika" />
+        </div>
+
+        <div class="profilIme"><%= ime %> <%= prezime %></div>
+
+        <div class="profilLokacija"><%= mjestoStanovanja %></div>
+
+        <div class="profilOpis">
+          <%= opis %>
+        </div>
+
+        <a href="/edit" class="addGumb">Save changes</a>
+      </div>
+    </div>
+    <div id="navbar"></div>
+    <%- include('../components/navbar') %>
+  </body>
+</html>
