@@ -1,119 +1,271 @@
 import express from "express";
-import { requireAuth } from "../middleware/authMiddleware.js";
+import { createClient } from "@supabase/supabase-js";
+import { requireRegistered } from "../middleware/requireRegistered.js";
 
+const router = express.Router();
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
-function provjeri({ data, error }) {
-  if (error) throw error;
-  return data;
-}
+router.use((req, res, next) => {
+  res.set("Cache-Control", "no-store");
+  next();
+});
 
-export function createInboxRouter(createClient) {
-  const router = express.Router();
-  router.use((req, res, next) => {
-    res.set("Cache-Control", "no-store");
-    next();
+// GET /inbox — profil je već provjeren u requireRegistered.
+router.get("/", requireRegistered, (req, res) => {
+  return res.render("inbox", {
+    ime: req.korisnik.ime,
+    email: req.korisnik.email,
+    prezime: req.korisnik.prezime,
+    birthday: req.korisnik.datum_rodenja,
+    spol: req.korisnik.spol,
   });
-  router.use(requireAuth);
-  router.use(async (req, res, next) => {
-    const token = req.session.accessToken;
-    if (!token) return res.status(401).json({ error: "Ponovno se prijavi za pristup porukama." });
-    try {
-      const db = createClient(token);
-      const { data, error } = await db.auth.getUser(token);
-      if (error || !data.user || data.user.id !== req.session.user.id) {
-        return res.status(401).json({ error: "Prijava je istekla. Ponovno se prijavi." });
-      }
-      // Trenutačni model očekuje KORISNIK.id_korisnik = auth.users.id.
-      const profil = provjeri(await db.from("KORISNIK").select("id_korisnik")
-        .eq("id_korisnik", data.user.id).maybeSingle());
-      if (!profil) return res.status(409).json({ error: "Nedostaje profil povezan s tvojim računom. Potrebno je povezati KORISNIK.id_korisnik s ID-jem prijavljenog računa." });
-      req.inbox = { db, userId: profil.id_korisnik };
-      next();
-    } catch (error) { next(error); }
-  });
+});
 
-  router.get("/razgovori", async (req, res, next) => {
-    try {
-      const { db, userId } = req.inbox;
-      const clanstva = provjeri(await db.from("SUGOVORNIK").select("id_razgovor")
-        .eq("id_sugovornik", userId));
-      if (!clanstva.length) return res.json({ razgovori: [] });
-      const razgovori = provjeri(await db.from("RAZGOVOR").select(`
+// GET /inbox/razgovori
+router.get("/razgovori", requireRegistered, async (req, res, next) => {
+  try {
+    const korisnickiSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${req.session.accessToken}`,
+          },
+        },
+      },
+    );
+    const korisnikId = req.korisnik.id_korisnik;
+
+    const { data: clanstva, error: greskaClanstava } = await korisnickiSupabase
+      .from("SUGOVORNIK")
+      .select("id_razgovor")
+      .eq("id_sugovornik", korisnikId);
+
+    if (greskaClanstava) return next(greskaClanstava);
+    if (!clanstva.length) return res.json({ razgovori: [] });
+
+    const razgovorIds = clanstva.map((clanstvo) => clanstvo.id_razgovor);
+    const { data: razgovori, error: greskaRazgovora } = await korisnickiSupabase
+      .from("RAZGOVOR")
+      .select(`
         id_razgovor,
+        razgovor_tip,
         sudionici:SUGOVORNIK(id_sugovornik,korisnik:KORISNIK(ime,prezime)),
         zadnja:PORUKA(id_poruka,poruka,vrijeme_slanja)
-      `).in("id_razgovor", clanstva.map((c) => c.id_razgovor))
-        .eq("razgovor_tip", "izravan")
-        .order("vrijeme_slanja", { referencedTable: "zadnja", ascending: false })
-        .order("id_poruka", { referencedTable: "zadnja", ascending: false })
-        .limit(1, { referencedTable: "zadnja" }));
-      const rezultat = razgovori.map((r) => ({
-        id: r.id_razgovor,
-        naziv: r.sudionici.filter((s) => s.id_sugovornik !== userId)
-          .map((s) => s.korisnik ? `${s.korisnik.ime} ${s.korisnik.prezime}` : "Korisnik").join(", ") || "Razgovor",
-        zadnjaPoruka: r.zadnja[0]?.poruka || "",
-        vrijeme: r.zadnja[0]?.vrijeme_slanja || null,
+      `)
+      .in("id_razgovor", razgovorIds)
+      .order("vrijeme_slanja", { referencedTable: "zadnja", ascending: false })
+      .order("id_poruka", { referencedTable: "zadnja", ascending: false })
+      .limit(1, { referencedTable: "zadnja" });
+
+    if (greskaRazgovora) return next(greskaRazgovora);
+
+    const rezultat = razgovori.map((razgovor) => {
+      const sugovornici = razgovor.sudionici.filter(
+        (sudionik) => sudionik.id_sugovornik !== korisnikId,
+      );
+      const naziv = sugovornici.map((sudionik) => {
+        if (!sudionik.korisnik) return "Korisnik";
+        return `${sudionik.korisnik.ime} ${sudionik.korisnik.prezime}`;
+      }).join(", ");
+      const grupni = Boolean(razgovor.razgovor_tip && razgovor.razgovor_tip !== "izravan");
+      const sudionici = razgovor.sudionici.map((sudionik) => ({
+        id: sudionik.id_sugovornik,
+        ime: sudionik.korisnik
+          ? `${sudionik.korisnik.ime} ${sudionik.korisnik.prezime}`
+          : "Korisnik",
       }));
-      rezultat.sort((a, b) => (b.vrijeme || "").localeCompare(a.vrijeme || "") || a.id.localeCompare(b.id));
-      res.json({ razgovori: rezultat });
-    } catch (error) { next(error); }
-  });
+      const zadnjaPoruka = razgovor.zadnja[0];
 
-  router.use("/razgovori/:id/poruke", async (req, res, next) => {
-    if (!UUID.test(req.params.id)) return res.status(400).json({ error: "Nevaljan razgovor." });
-    try {
-      const { db, userId } = req.inbox;
-      const clanstvo = provjeri(await db.from("SUGOVORNIK").select("id_razgovor")
-        .eq("id_razgovor", req.params.id).eq("id_sugovornik", userId).maybeSingle());
-      if (!clanstvo) return res.status(404).json({ error: "Razgovor nije dostupan." });
-      const razgovor = provjeri(await db.from("RAZGOVOR").select("id_razgovor")
-        .eq("id_razgovor", req.params.id).eq("razgovor_tip", "izravan").maybeSingle());
-      if (!razgovor) return res.status(404).json({ error: "Razgovor nije dostupan." });
-      next();
-    } catch (error) { next(error); }
-  });
-
-  router.get("/razgovori/:id/poruke", async (req, res, next) => {
-    try {
-      const { db, userId } = req.inbox;
-      const poruke = provjeri(await db.from("PORUKA")
-        .select("id_poruka,id_posiljatelj,poruka,vrijeme_slanja")
-        .eq("id_razgovor", req.params.id)
-        .order("vrijeme_slanja", { ascending: false }).order("id_poruka", { ascending: false }).limit(100));
-      res.json({ poruke: poruke.reverse().map((p) => ({
-        id: p.id_poruka, sadrzaj: p.poruka || "", vrijeme: p.vrijeme_slanja,
-        moja: p.id_posiljatelj === userId,
-      })) });
-    } catch (error) { next(error); }
-  });
-
-  router.post("/razgovori/:id/poruke", async (req, res, next) => {
-    // JSON zahtjev sprječava slanje forme s druge stranice uz korisnikovu sesiju.
-    if (!req.is("application/json")) return res.status(415).json({ error: "Očekuje se JSON zahtjev." });
-    const tekst = typeof req.body?.sadrzaj === "string" ? req.body.sadrzaj.trim() : "";
-    if (!tekst || tekst.length > 2000) return res.status(400).json({ error: "Poruka mora sadržavati između 1 i 2000 znakova." });
-    try {
-      const { db, userId } = req.inbox;
-      provjeri(await db.from("PORUKA").insert({
-        id_razgovor: req.params.id, id_posiljatelj: userId, poruka: tekst,
-      }));
-      res.status(201).json({ success: true });
-    } catch (error) { next(error); }
-  });
-
-  router.use((error, req, res, next) => {
-    // Klijentu ne vraćamo interne detalje baze ili sadržaj poruka.
-    console.error("Inbox:", error.code || "nedostupna_usluga");
-    const nedostajeStupac = ["42703", "PGRST204"].includes(error.code);
-    const rekurzijaPravila = error.code === "42P17";
-    res.status(nedostajeStupac || rekurzijaPravila ? 503 : 500).json({
-      error: rekurzijaPravila
-        ? "Razgovori trenutačno nisu dostupni zbog pogreške u pravilima pristupa. Obrati se administratoru."
-        : nedostajeStupac
-        ? "Potrebno je primijeniti SQL dopunu za vrijeme slanja poruka."
-        : "Poruke trenutačno nisu dostupne. Pokušaj ponovno; ako se problem ponavlja, provjeri prava pristupa bazi.",
+      return {
+        id: razgovor.id_razgovor,
+        naziv: grupni ? `Grupa · ${naziv || "Razgovor"}` : naziv || "Razgovor",
+        grupni,
+        sudionici,
+        zadnjaPoruka: zadnjaPoruka?.poruka || "",
+        vrijeme: zadnjaPoruka?.vrijeme_slanja || null,
+      };
     });
+
+    rezultat.sort((prvi, drugi) => {
+      const poVremenu = (drugi.vrijeme || "").localeCompare(prvi.vrijeme || "");
+      return poVremenu || prvi.id.localeCompare(drugi.id);
+    });
+    return res.json({ razgovori: rezultat });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// GET /inbox/razgovori/:id/poruke
+router.get("/razgovori/:id/poruke", requireRegistered, async (req, res, next) => {
+  if (!UUID.test(req.params.id)) {
+    return res.status(400).json({ error: "Nevaljan razgovor." });
+  }
+
+  try {
+    const korisnickiSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${req.session.accessToken}`,
+          },
+        },
+      },
+    );
+    const korisnikId = req.korisnik.id_korisnik;
+
+    const { data: clanstvo, error: greskaClanstva } = await korisnickiSupabase
+      .from("SUGOVORNIK")
+      .select("id_razgovor")
+      .eq("id_razgovor", req.params.id)
+      .eq("id_sugovornik", korisnikId)
+      .maybeSingle();
+
+    if (greskaClanstva) return next(greskaClanstva);
+    if (!clanstvo) {
+      return res.status(404).json({ error: "Razgovor nije dostupan." });
+    }
+
+    const { data: razgovor, error: greskaRazgovora } = await korisnickiSupabase
+      .from("RAZGOVOR")
+      .select("id_razgovor,razgovor_tip")
+      .eq("id_razgovor", req.params.id)
+      .maybeSingle();
+
+    if (greskaRazgovora) return next(greskaRazgovora);
+    if (!razgovor) {
+      return res.status(404).json({ error: "Razgovor nije dostupan." });
+    }
+
+    const { data: poruke, error } = await korisnickiSupabase
+      .from("PORUKA")
+      .select("id_poruka,id_posiljatelj,poruka,vrijeme_slanja,posiljatelj:KORISNIK(ime,prezime)")
+      .eq("id_razgovor", req.params.id)
+      .order("vrijeme_slanja", { ascending: false })
+      .order("id_poruka", { ascending: false })
+      .limit(100);
+
+    if (error) return next(error);
+
+    const rezultat = poruke.reverse().map((poruka) => ({
+      id: poruka.id_poruka,
+      sadrzaj: poruka.poruka || "",
+      vrijeme: poruka.vrijeme_slanja,
+      moja: poruka.id_posiljatelj === korisnikId,
+      posiljatelj: poruka.posiljatelj
+        ? `${poruka.posiljatelj.ime} ${poruka.posiljatelj.prezime}`
+        : "Korisnik",
+    }));
+    const grupni = Boolean(razgovor.razgovor_tip && razgovor.razgovor_tip !== "izravan");
+    return res.json({ poruke: rezultat, grupni });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// POST /inbox/razgovori/:id/poruke
+router.post("/razgovori/:id/poruke", requireRegistered, async (req, res, next) => {
+  if (!UUID.test(req.params.id)) {
+    return res.status(400).json({ error: "Nevaljan razgovor." });
+  }
+  if (!req.is("application/json")) {
+    return res.status(415).json({ error: "Očekuje se JSON zahtjev." });
+  }
+
+  const tekst = typeof req.body?.sadrzaj === "string" ? req.body.sadrzaj.trim() : "";
+  if (!tekst || tekst.length > 2000) {
+    return res.status(400).json({
+      error: "Poruka mora sadržavati između 1 i 2000 znakova.",
+    });
+  }
+
+  try {
+    const korisnickiSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${req.session.accessToken}`,
+          },
+        },
+      },
+    );
+    const korisnikId = req.korisnik.id_korisnik;
+
+    const { data: clanstvo, error: greskaClanstva } = await korisnickiSupabase
+      .from("SUGOVORNIK")
+      .select("id_razgovor")
+      .eq("id_razgovor", req.params.id)
+      .eq("id_sugovornik", korisnikId)
+      .maybeSingle();
+
+    if (greskaClanstva) return next(greskaClanstva);
+    if (!clanstvo) {
+      return res.status(404).json({ error: "Razgovor nije dostupan." });
+    }
+
+    const { data: razgovor, error: greskaRazgovora } = await korisnickiSupabase
+      .from("RAZGOVOR")
+      .select("id_razgovor,razgovor_tip")
+      .eq("id_razgovor", req.params.id)
+      .maybeSingle();
+
+    if (greskaRazgovora) return next(greskaRazgovora);
+    if (!razgovor) {
+      return res.status(404).json({ error: "Razgovor nije dostupan." });
+    }
+
+    const { error } = await korisnickiSupabase.from("PORUKA").insert({
+      id_razgovor: req.params.id,
+      id_posiljatelj: korisnikId,
+      poruka: tekst,
+    });
+
+    if (error) return next(error);
+    return res.status(201).json({ success: true });
+  } catch (error) {
+    next(error);
+  }
+});
+
+// Zajednička obrada grešaka samo za inbox.
+router.use((error, req, res, next) => {
+  if (res.headersSent) return next(error);
+  console.error("Inbox:", error.code || "nedostupna_usluga");
+
+  if (error.code === "42P17") {
+    return res.status(503).json({
+      error: "Razgovori trenutačno nisu dostupni zbog pogreške u pravilima pristupa. Obrati se administratoru.",
+    });
+  }
+  if (["42703", "PGRST204"].includes(error.code)) {
+    return res.status(503).json({
+      error: "Potrebno je primijeniti SQL dopunu za vrijeme slanja poruka.",
+    });
+  }
+  return res.status(500).json({
+    error: "Poruke trenutačno nisu dostupne. Pokušaj ponovno; ako se problem ponavlja, provjeri prava pristupa bazi.",
   });
-  return router;
-}
+});
+
+export default router;

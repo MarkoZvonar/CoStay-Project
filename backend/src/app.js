@@ -16,6 +16,7 @@ import session from "express-session";
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
 import apiRoutes from "./routes/api.js";
+import inboxRoutes from "./routes/inbox.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
@@ -60,6 +61,7 @@ app.use(
 app.use(refreshSession);
 // rute
 app.use("/api", apiRoutes);
+app.use("/inbox", inboxRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
 

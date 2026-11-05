@@ -2,6 +2,7 @@
 const lista = document.getElementById("razgovoriLista");
 const poruke = document.getElementById("porukeLista");
 const naslov = document.getElementById("chatNaslov");
+const sudionici = document.getElementById("chatSudionici");
 const status = document.getElementById("inboxStatus");
 const slanjeStatus = document.getElementById("slanjeStatus");
 const unos = document.getElementById("sadrzaj");
@@ -15,6 +16,10 @@ let zadnjiPopis = "";
 
 async function api(url, options = {}) {
   const odgovor = await fetch(url, { ...options, headers: { "Content-Type": "application/json", ...options.headers } });
+  if (odgovor.redirected) {
+    povezivanjeNedovrseno = true;
+    throw new Error("Za pristup inboxu prijavi se i dovrši profil.");
+  }
   if (odgovor.status === 401) {
     povezivanjeNedovrseno = true;
     throw new Error("Prijava je istekla. Ponovno se prijavi za pristup porukama.");
@@ -37,6 +42,14 @@ function prazno(element, tekst) {
   element.replaceChildren(p);
 }
 
+function prikaziZaglavlje() {
+  naslov.textContent = odabrani?.naziv || "Odaberi razgovor";
+  sudionici.hidden = !odabrani?.grupni;
+  sudionici.textContent = odabrani?.grupni
+    ? `Sudionika: ${odabrani.sudionici.length} · ${odabrani.sudionici.map((s) => s.ime).join(", ")}`
+    : "";
+}
+
 function prikaziRazgovore(razgovori) {
   const potpis = JSON.stringify([razgovori, odabrani?.id]);
   if (potpis === zadnjiPopis) return;
@@ -51,7 +64,7 @@ function prikaziRazgovore(razgovori) {
     const avatar = document.createElement("span");
     avatar.className = "avatar";
     avatar.setAttribute("aria-hidden", "true");
-    avatar.textContent = razgovor.naziv.slice(0, 1).toUpperCase();
+    avatar.textContent = razgovor.grupni ? "👥" : razgovor.naziv.slice(0, 1).toUpperCase();
     const tekst = document.createElement("span");
     tekst.className = "razgovorTekst";
     const ime = document.createElement("strong");
@@ -67,7 +80,7 @@ function prikaziRazgovore(razgovori) {
       unos.disabled = true;
       posalji.disabled = true;
       slanjeStatus.textContent = "";
-      naslov.textContent = razgovor.naziv;
+      prikaziZaglavlje();
       zadnjePoruke = "";
       prikaziRazgovore(razgovori);
       prazno(poruke, "Učitavanje poruka…");
@@ -82,10 +95,10 @@ function prikaziRazgovore(razgovori) {
 async function ucitajPoruke() {
   if (!odabrani) return;
   const id = odabrani.id;
-  const podaci = await api(`/api/inbox/razgovori/${encodeURIComponent(id)}/poruke`);
+  const podaci = await api(`/inbox/razgovori/${encodeURIComponent(id)}/poruke`);
   // Spor odgovor prethodnog razgovora ne smije prepisati trenutačni razgovor.
   if (odabrani?.id !== id) return;
-  const potpis = JSON.stringify(podaci.poruke);
+  const potpis = JSON.stringify([podaci.grupni, podaci.poruke]);
   if (potpis !== zadnjePoruke) {
     const priDnu = poruke.scrollHeight - poruke.scrollTop - poruke.clientHeight < 70;
     const prviPrikaz = !zadnjePoruke;
@@ -94,6 +107,12 @@ async function ucitajPoruke() {
       const element = document.createElement("article");
       element.className = poruka.moja ? "poruka moja" : "poruka";
       element.setAttribute("aria-label", poruka.moja ? "Tvoja poruka" : "Primljena poruka");
+      if (podaci.grupni) {
+        const autor = document.createElement("strong");
+        autor.className = "porukaAutor";
+        autor.textContent = poruka.moja ? "Ti" : poruka.posiljatelj;
+        element.append(autor);
+      }
       const tekst = document.createElement("p");
       tekst.textContent = poruka.sadrzaj;
       const vrijeme = document.createElement("time");
@@ -115,15 +134,18 @@ async function osvjezi() {
   if (ucitavanje || document.hidden) return;
   ucitavanje = true;
   try {
-    const podaci = await api("/api/inbox/razgovori");
-    if (odabrani && !podaci.razgovori.some((r) => r.id === odabrani.id)) {
+    const podaci = await api("/inbox/razgovori");
+    const odabraniRazgovor = podaci.razgovori.find((r) => r.id === odabrani?.id);
+    if (odabrani && !odabraniRazgovor) {
       odabrani = null;
       unos.value = "";
       unos.disabled = true;
       posalji.disabled = true;
-      naslov.textContent = "Odaberi razgovor";
       prazno(poruke, "Razgovor više nije dostupan.");
+    } else if (odabraniRazgovor) {
+      odabrani = odabraniRazgovor;
     }
+    prikaziZaglavlje();
     prikaziRazgovore(podaci.razgovori);
     await ucitajPoruke();
     status.textContent = "";
@@ -143,7 +165,7 @@ document.getElementById("porukaObrazac").addEventListener("submit", async (event
   posalji.disabled = true;
   slanjeStatus.textContent = "Slanje…";
   try {
-    await api(`/api/inbox/razgovori/${encodeURIComponent(odabrani.id)}/poruke`, {
+    await api(`/inbox/razgovori/${encodeURIComponent(odabrani.id)}/poruke`, {
       method: "POST", body: JSON.stringify({ sadrzaj }),
     });
     unos.value = "";

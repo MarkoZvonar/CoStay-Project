@@ -122,15 +122,7 @@ router.get("/create", requireRegistered, (req, res) => {
     spol: req.session.spol || "",
   });
 });
-router.get("/inbox", requireRegistered, (req, res) => {
-  res.render("inbox", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
+
 
 router.get("/search", (req, res) => {
   res.render("search", {

@@ -144,6 +144,15 @@ body {
   background: #344e41;
   color: white;
 }
+.porukaAutor {
+  display: block;
+  margin-bottom: 5px;
+  font-size: 12px;
+}
+.chatZaglavlje h2,
+.chatNapomena {
+  overflow-wrap: anywhere;
+}
 .poruka p {
   white-space: pre-wrap;
   overflow-wrap: anywhere;

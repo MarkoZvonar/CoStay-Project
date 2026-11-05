@@ -1,6 +1,14 @@
 # Početni inbox
 
-Implementirani su popis postojećih izravnih razgovora, pregled zadnjih 100 poruka i slanje tekstualne poruke (do 2000 znakova). Sučelje osvježava podatke svakih pet sekundi dok je kartica vidljiva. Grupe, pokretanje razgovora iz objave i WebSocket komunikacija još nisu implementirani.
+Implementirani su popis postojećih izravnih i grupnih razgovora, pregled zadnjih 100 poruka i slanje tekstualne poruke (do 2000 znakova). Grupa prikazuje sudionike i ime autora uz svaku poruku. Sučelje osvježava podatke svakih pet sekundi dok je kartica vidljiva. Pokretanje razgovora iz objave, automatsko stvaranje grupa i WebSocket komunikacija još nisu implementirani.
+
+## Raspored koda prema timskom tutorijalu
+
+- `backend/src/routes/inbox.js` je izravno izvezeni router za cijelu karticu. `GET /inbox` prikazuje EJS, `GET /inbox/razgovori` vraća razgovore, a GET i POST na `/inbox/razgovori/:id/poruke` čitaju i spremaju poruke.
+- `app.js` uključuje router jednom pod `/inbox`, nakon sesije i `refreshSession`. Ruta je premještena iz `pages.js`, a inbox je uklonjen iz `api.js`.
+- Svaka zaštićena ruta koristi postojeći `requireRegistered`. Profil dolazi iz `req.korisnik`, a token iz `req.session.accessToken`.
+- Rute koje čitaju ili pišu bazu izravno stvaraju `korisnickiSupabase` pozivom bibliotečnog `createClient`. Nakon svakog upita provjerava se `error`, koji se prosljeđuje zajedničkoj obradi grešaka inboxa. Ponovljene provjere identiteta i pomoćni `createUserClient` uklonjeni su iz inbox implementacije.
+- `frontend/src/pages/inbox.ejs` sadrži strukturu prikaza, `inbox.css` izgled, a `frontend/src/services/inbox.js` događaje obrasca i HTTP pozive prema `/inbox/...`.
 
 ## Priprema baze
 
@@ -10,6 +18,14 @@ Implementirani su popis postojećih izravnih razgovora, pregled zadnjih 100 poru
 4. Pregledaj i pokreni `migrations/20261102_inbox_membership_policy.sql` kao postgres kroz SQL Editor. Dopuna ispravlja rekurziju prikazanog SELECT pravila za SUGOVORNIK. Kod ne isključuje RLS i ne koristi service-role ključ.
 5. Pokreni aplikaciju iz backend mape naredbom `npm start`. Ponovno se prijavi kako bi nova sesija sadržavala pristupni token pa otvori `/inbox`.
 6. Prijavi drugog sudionika u zasebnom pregledniku ili privatnom prozoru. Provjeri slanje u oba smjera i pojavu novih poruka nakon najviše pet sekundi. Treći korisnik ne smije vidjeti razgovor niti dohvatiti poruke poznatim ID-jem razgovora.
+
+## Postojeći grupni razgovor
+
+- U RAZGOVOR treba postojati grupni redak povezan s objavom. Tip različit od `izravan` označava grupu; prazna vrijednost tipa prikazuje se kao izravni razgovor radi kompatibilnosti.
+- Za svakog člana, uključujući autora putovanja, u SUGOVORNIK mora postojati redak s istim `id_razgovor` i njegovim `id_sugovornik`. Sam redak u RAZGOVOR ne daje članstvo.
+- Naziv se sastavlja iz imena ostalih sudionika uz oznaku „Grupa”. Zaglavlje prikazuje sve dostupne sudionike, a poruke ime pošiljatelja. Postojeća shema nema stupac za vlastiti naziv grupe.
+- Čitanje i slanje provjeravaju članstvo za obje vrste razgovora. Ista postojeća RLS pravila vrijede i za grupe. KORISNIK SELECT treba omogućiti čitanje imena autora poruka.
+- Za testiranje otvori isti grupni razgovor s računima članova u odvojenim preglednicima. Poruka jednog člana treba postati vidljiva ostalima pri osvježavanju. Korisnik bez članstva ne smije dohvatiti grupu ni poslati poruku.
 
 ## Potrebna RLS pravila
 
@@ -48,13 +64,13 @@ Ruta `/inbox` koristi `requireRegistered` i otvara inbox korisniku s dovršenim 
 
 ## Ograničenja
 
-Supabase token ostaje na poslužitelju. Svaki zahtjev ima zaseban Supabase klijent s korisnikovim tokenom; `getUser` provjerava njegov identitet. Ako obnova sesije više nije moguća, korisnik se mora ponovno prijaviti.
+Supabase token ostaje na poslužitelju. Svaka ruta s upitima stvara zaseban Supabase klijent s korisnikovim tokenom. Postojeći `requireRegistered` provjerava identitet i profil. Ako obnova sesije više nije moguća, korisnik se mora ponovno prijaviti.
 
 API ne prima ID pošiljatelja od preglednika i dodatno provjerava članstvo, ali RLS i dalje mora zasebno štititi izravne pozive bazi. Stvarna integracija s udaljenom bazom još nije potvrđena: prethodni pokušaj čitanja strukture s konfiguriranim ključem vratio je HTTP 401. Ako se to ponovi, provjeri SUPABASE_URL i SUPABASE_ANON_KEY u lokalnom backend/.env bez dijeljenja ključeva u chatu.
 
 ## Lokalne provjere
 
-`npm test` u backend mapi izvršava 10 testova API-ja s testnim podacima.
+`npm test` u backend mapi izvršava 15 testova routera i prikaza s testnim podacima.
 
 `bash db/tests/run-inbox-rls.sh` iz korijena projekta stvara zasebnu privremenu PostgreSQL bazu, reproducira originalnu rekurziju 42P17, primjenjuje SQL dopune i provjerava pristup obaju članova, odbijanje lažnog pošiljatelja te zabranu pristupa trećem i anonimnom korisniku. Provjerava i ponovljeno izvršavanje SQL ispravka. Potrebni su lokalni PostgreSQL alati `initdb`, `pg_ctl` i `psql`. Skripta ne koristi `.env`, ne spaja se na Supabase i gasi privremenu bazu nakon završetka.
 
