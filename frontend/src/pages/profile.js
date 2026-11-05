@@ -20,13 +20,13 @@ async function getAllTags() {
     try {
         const response = await fetch("/profile/tags");
         if (response.redirected) {
-            throw new Error("Potrebna je nova prijava.");
+            throw new Error("Please log in again.");
         }
 
         const data = await response.json();
 
         if(!response.ok) {
-            throw new Error(data.error || "Dohvat ponuđenih tagova nije uspio.");
+            throw new Error(data.error || "Failed to load available tags.");
         }
 
         sviTagovi = data.tagovi;
@@ -66,7 +66,7 @@ dodajTag.addEventListener("click", async () => {
         tag.ime_tag === unosTaga.value.trim());
 
     if (!odabraniTag) {
-        showMessage("Odaberi jedan od ponuđenih tagova.");
+        showMessage("Choose from available tags.");
         return;
     }
 
@@ -91,9 +91,9 @@ dodajTag.addEventListener("click", async () => {
         });
 
         if (response.redirected) {
-            throw new Error("Potrebna je nova prijava.");
+            throw new Error("Please log in again.");
         } else if (!response.ok) {
-            throw new Error("Dodavanje taga nije uspjelo.");
+            throw new Error("Failed to add the tag.");
         }
 
         const data = await response.json();
@@ -119,9 +119,9 @@ listaTagova.addEventListener("click", async(event) => {
             {method: "DELETE"});
 
         if (response.redirected) {
-            throw new Error("Potrebna je nova prijava.");
+            throw new Error("Please log in again.");
         } else if (!response.ok) {
-            throw new Error("Uklanjanje taga nije uspjelo.");
+            throw new Error("Failed to remove the tag.");
         }
 
         gumb.closest(".tag").remove();

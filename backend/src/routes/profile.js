@@ -11,7 +11,7 @@ router.get("/", requireRegistered, async(req, res, next) => {
   if(!accessToken) {
     return res
       .status(401)
-      .send('Potrebna je nova prijava. <a href="/logout">Odjavi se</a>');
+      .send('Please log in again. <a href="/logout">Log out</a>');
   }
 
   try {
@@ -42,7 +42,7 @@ router.get("/", requireRegistered, async(req, res, next) => {
     if (error) return next(error);
 
     if(!korisnik) {
-      return res.status(404).send("Profil nije pronađen.");
+      return res.status(404).send("Profile not found.");
     }
 
     //dohvacamo podatke o korisnikovim tagovima
@@ -100,7 +100,7 @@ router.get("/tags", requireRegistered, async(req, res, next) => {
 
         if (error) {
             return res.status(500).json({
-                error: "Dohvat ponuđenih tagova nije uspio."
+                error: "Failed to load available tags."
             });
         }
         return res.json({tagovi});
@@ -115,7 +115,7 @@ router.post("/tags", requireRegistered, async (req, res, next) => {
 
     if(typeof tagId !== "string" || tagId.trim() === "") {
         return res.status(400).json({
-            error: "Odaberi jedan od ponuđenih tagova."
+            error: "Choose from available tags."
         });
     }
 
@@ -147,7 +147,7 @@ router.post("/tags", requireRegistered, async (req, res, next) => {
         if (tagError) return next(tagError);
         if (!tag) {
             return res.status(404).json({
-                error: "Odabrani tag ne postoji."
+                error: "The selected tag is not available."
             });
         }
 
