@@ -115,43 +115,83 @@
         <div class="tagovi">
           <a>Tags:</a>
           <label>
-            <input type="checkbox" name="plaza" />
-            Plaža
+            <input type="checkbox" name="tags" value="Pool" />
+            Pool
           </label>
 
           <label>
-            <input type="checkbox" name="plaza" />
-            Planina
+            <input type="checkbox" name="tags" value="Nature" />
+            Nature
           </label>
 
           <label>
-            <input type="checkbox" name="plaza" />
-            Nightlife
-          </label>
-
-          <label>
-            <input type="checkbox" name="plaza" />
-            Chill
-          </label>
-
-          <label>
-            <input type="checkbox" name="plaza" />
+            <input type="checkbox" name="tags" value="Sport" />
             Sport
           </label>
 
           <label>
-            <input type="checkbox" name="plaza" />
-            Grad
+            <input type="checkbox" name="tags" value="Adventure" />
+            Adventure
           </label>
 
           <label>
-            <input type="checkbox" name="plaza" />
-            Staromodno
+            <input type="checkbox" name="tags" value="Quiet" />
+            Quiet
           </label>
 
           <label>
-            <input type="checkbox" name="plaza" />
-            Moderno
+            <input type="checkbox" name="tags" value="Beach" />
+            Beach
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Party" />
+            Party
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="High budget" />
+            High Budget
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Low budget" />
+            Low Budget
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Pet friendly" />
+            Pet Friendly
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="No pets" />
+            No Pets
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="LGBTQ+" />
+            LGBTQ+
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Smoking allowed" />
+            Smoking Allowed
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="No smoking" />
+            No Smoking
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Women only" />
+            Women Only
+          </label>
+
+          <label>
+            <input type="checkbox" name="tags" value="Men only" />
+            Men Only
           </label>
         </div>
 
@@ -175,7 +215,7 @@
               <span>Zagreb, Hrvatska</span>
             </div>
 
-            <span class="brojacBroj">6 smještaja</span>
+            <span class="brojacBroj"><%= data.length %> smještaja</span>
           </div>
         </div>
       </div>
@@ -188,16 +228,53 @@
               <div class="karticaSlika">
                 <img src="/assets/probnaSlikaKartica.jpg" alt="Slika smještaja" />
 
-                <div class="datum"><%= item.check_in %></div>
-                <div class="datum"><%= item.check_out %></div>
+                <div class="datum">
+                  <% 
+                    const options = { month: 'short', day: 'numeric' };
+                    const checkInDate = item.check_in ? new Date(item.check_in).toLocaleDateString('en-US', options) : 'no date';
+                    const checkOutDate = item.check_out ? new Date(item.check_out).toLocaleDateString('en-US', options) : 'no date';
+                  %>
+                  <%= checkInDate %>-<%= checkOutDate %>
+                </div>
 
                 <div class="slikaDno">
                   <div class="lokacija">
                     <span class="lokacijaIkona">📍</span>
-                    <span><%= item.LOKACIJA.ime_lokacije %></span>
+                    <span><%= item.LOKACIJA
+                      ? item.LOKACIJA.ime_lokacije + ', ' + item.LOKACIJA.ime_drzave
+                      : 'Nepoznata lokacija' %>
+                    </span>
                   </div>
 
                   <div class="cijena"><%= Number(item.ukupna_cijena / item.ukupni_kapacitet).toFixed(2) %> € <span>/ noć</span></div>
+                </div>
+              </div>
+
+              <!-- 2. dio: Tagovi -->
+              <div class="karticaTagovi">
+                <% if (item.OBJAVA_TAG && item.OBJAVA_TAG.length > 0) { %>
+                  <% item.OBJAVA_TAG.forEach(t => { %>
+                    <% const nazivTaga = t.TAG ? t.TAG.ime_tag : (t.id_tag ? t.id_tag.ime_tag : t.ime_tag); %>
+                    <% if (nazivTaga) { %>
+                      <span class="tag"><%= nazivTaga.trim() %></span>
+                    <% } %>
+                  <% }) %>
+                <% } %>
+              </div>
+
+              <div class="karticaKapacitet">
+                <div class="kapacitetStavka">
+                  <span class="kapacitetNaslov">Ukupni kapacitet</span>
+                  <span class="kapacitetVrijednost">
+                    <%= item.ukupni_kapacitet %> osoba
+                  </span>
+                </div>
+
+                <div class="kapacitetStavka">
+                  <span class="kapacitetNaslov">Preostala mjesta</span>
+                  <span class="kapacitetVrijednost">
+                    <%= item.preostalih_mjesta %> osoba
+                  </span>
                 </div>
               </div>
 
