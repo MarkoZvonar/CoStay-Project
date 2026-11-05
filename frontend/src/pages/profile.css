@@ -196,11 +196,19 @@ body {
   color: white;
   font-size: 14px;
   font-weight: bold;
+  font-family: Arial, sans-serif;
   cursor: pointer;
 }
 
 .addGumb:hover {
   background-color: #263b30;
+}
+
+a.addGumb {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
 }
 
 .listaTagova {
@@ -252,10 +260,31 @@ body {
   margin-bottom: 30px;
 }
 
+.postoviTabs {
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  padding-left: max(0px, calc((100% - 4 * 320px - 3 * 25px) / 2));
+}
+
+.postoviTab, .postoviTabAktivan {
+  padding: 12px 15px;
+  border-radius: 14px;
+  cursor: pointer;
+}
+
+.postoviTab:hover, 
+.postoviTabAktivan:hover {
+  transform: scale(1.05);
+}
+
+.postoviTabAktivan {
+  background-color: white;
+}
+
 .postoviNaslov {
   width: 100%;
-  margin: 0 0 20px 0;
-  padding-left: max(0px, calc((100% - 4 * 320px - 3 * 25px) / 2));
+  /* padding-left: max(0px, calc((100% - 4 * 320px - 3 * 25px) / 2)); */
 
   font-size: 24px;
   font-weight: bold;
@@ -269,6 +298,11 @@ body {
   gap: 25px;
   width: 100%;
   min-height: 100px;
+  padding-top: 25px;
+}
+
+.postovi[hidden] {
+  display:none;
 }
 
 .postKartica {

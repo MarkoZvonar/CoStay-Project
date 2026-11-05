@@ -19,6 +19,7 @@ import apiRoutes from "./routes/api.js";
 import inboxRoutes from "./routes/inbox.js";
 import discoverRoutes from "./routes/discover.js";
 import searchRoutes from "./routes/search.js";
+import profileRoutes from "./routes/profile.js";
 import discoverGuestRoutes from "./routes/discoverGuest.js";
 
 const app = express();
@@ -70,6 +71,7 @@ app.use("/auth", authRoutes);
 app.use("/discover/guest", discoverGuestRoutes);
 app.use("/discover", discoverRoutes);
 app.use("/search", searchRoutes);
+app.use("/profile", profileRoutes);
 
 // Zdravstveni endpoint iz predloška
 app.get("/health", (req, res) => {

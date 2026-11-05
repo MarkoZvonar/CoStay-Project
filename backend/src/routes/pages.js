@@ -116,16 +116,6 @@ router.get("/create", requireRegistered, (req, res) => {
 });
 
 
-router.get("/profile", requireRegistered, (req, res) => {
-  res.render("profile", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
-
 // Start stranica
 router.get("/start", (req, res) => {
   if (req.session.user) {
