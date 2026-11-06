@@ -61,13 +61,49 @@ router.get("/", requireRegistered, async(req, res, next) => {
       ime_tag:zapis.TAG.ime_tag
     }));
 
+    //dohvacanje vlastitih objava
+    const {data: mojeObjave, error: mojeObjaveError} = await korisnickiSupabase
+        .from("OBJAVA")
+        .select(`*,id_lokacije (ime_lokacije,ime_drzave),id_autor (ime,prezime),
+            OBJAVA_SLIKA (id_slika,url_slika),
+            OBJAVA_TAG (TAG (ime_tag))`)
+        .eq("id_autor", req.korisnik.id_korisnik);
+
+    if(mojeObjaveError) return next(mojeObjaveError);
+
+    //dohvat id-eva korisnikovih spremljenih objava
+    const {data:spremljeniZapisi, error: spremljeniError} = await korisnickiSupabase
+        .from("SPREMLJENA_OBJAVA")
+        .select("id_objava")
+        .eq("id_korisnik", req.korisnik.id_korisnik);
+
+    if (spremljeniError) return next(spremljeniError);
+
+    const spremljeniIds = (spremljeniZapisi || []).map((zapis) => zapis.id_objava);
+
+    //dohvat podataka spremljenih objava
+    let spremljeneObjave = [];
+    if(spremljeniIds.length > 0) {
+        const {data, error: spremljeneObjaveError} = await korisnickiSupabase
+            .from("OBJAVA")
+            .select(`*,id_lokacije (ime_lokacije,ime_drzave),id_autor (ime,prezime),
+                OBJAVA_SLIKA (id_slika,url_slika),
+                OBJAVA_TAG (TAG (ime_tag))`)
+            .in("id_objava", spremljeniIds);
+
+        if(spremljeneObjaveError) return next(spremljeneObjaveError);
+        spremljeneObjave = data || [];
+    }
+
     return res.render("profile", {
       ime: korisnik.ime || "",
       prezime: korisnik.prezime || "",
       mjestoStanovanja: korisnik.mjesto_stanovanja || "",
       profilnaSlikaUrl: korisnik.profilna_slika_url || "",
       opis: korisnik.opis || "",
-      tagovi: tagovi
+      tagovi: tagovi,
+      mojeObjave: mojeObjave || [],
+      spremljeneObjave: spremljeneObjave
     });
   } catch (error) {
     next(error);

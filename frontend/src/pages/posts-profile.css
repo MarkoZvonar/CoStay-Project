@@ -1,0 +1,17 @@
+.postoviSekcija .postovi {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: stretch;
+  gap: 20px;
+}
+
+.postoviSekcija .postovi[hidden] {
+  display: none;
+}
+
+.postoviPoruka {
+  width: 100%;
+  text-align: center;
+  color: #666;
+}

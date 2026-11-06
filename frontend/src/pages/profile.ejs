@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/pages/profile.css" />
     <link rel="stylesheet" href="/pages/main.css" />
+    <link rel="stylesheet" href="/pages/posts-profile.css" />
     <script src="/pages/profile.js" defer></script>
     <title>Profile</title>
   </head>
@@ -63,137 +64,29 @@
         <div id="tabMojeObjave" class="postoviTabAktivan">
           <h2 class="postoviNaslov">My Posted Requests</h2>
         </div>
+
         <div id="tabSpremljeneObjave" class="postoviTab">
           <h2 class="postoviNaslov">Saved Posts</h2>
         </div>
       </div>
 
       <div id="mojeObjave" class="postovi">
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
+        <%- include('../components/profileposts', {
+          objave: mojeObjave,
+          spremljene: false,
+          praznaPoruka: "You haven't posted any requests yet."
+        }) %>
+      </div>
 
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-      </div> 
-      <!-- iznad -->
-       <div id="spremljeneObjave" class="postovi" hidden>
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-         <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-        <div class="postKartica">
-          <div class="postSlikaWrapper">
-            <img
-              src="/assets/probnaSlikaKartica.jpg"
-              alt="Post image"
-              class="postSlika"
-            />
-            <p class="postDatum">Jan 11-13</p>
-          </div>
-          <h3 class="postNaziv">Adventure in the Mountains</h3>
-          <p class="postLokacija">Dolomites, Italy</p>
-          <p class="postCijena">250 €</p>
-        </div>
-      </div> 
+      <div id="spremljeneObjave" class="postovi" hidden>
+        <%- include('../components/profileposts', {
+          objave: spremljeneObjave,
+          spremljene: true,
+          praznaPoruka: "You haven't saved any posts yet."
+        }) %>
+      </div>
     </div>
+    
     <div id="navbar"></div>
     <%- include('../components/navbar') %>
   </body>

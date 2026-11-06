@@ -152,6 +152,42 @@ tabSpremljeneObjave.addEventListener("click", () => {
 
     tabMojeObjave.className = "postoviTab";
     tabSpremljeneObjave.className = "postoviTabAktivan";
-})
+});
+
+spremljeneObjave.addEventListener("click", async (event) => {
+  const gumb = event.target.closest(".spremiGumb");
+
+  if (!gumb) return;
+
+  gumb.disabled = true;
+
+  try {
+    const odgovor = await fetch(
+      "/discover/spremi/" + encodeURIComponent(gumb.dataset.id),
+      { method: "DELETE" }
+    );
+
+    if (odgovor.redirected) {
+      throw new Error("Please log in again.");
+    }
+
+    if (!odgovor.ok) {
+      throw new Error("Failed to remove the saved post.");
+    }
+
+    gumb.closest(".kartica").remove();
+
+    if (!spremljeneObjave.querySelector(".kartica")) {
+      const poruka = document.createElement("p");
+      poruka.className = "postoviPoruka";
+      poruka.textContent = "You haven't saved any posts yet.";
+      spremljeneObjave.replaceChildren(poruka);
+    }
+  } catch (error) {
+    alert(error.message);
+  } finally {
+    gumb.disabled = false;
+  }
+});
 
 getAllTags();
