@@ -201,14 +201,47 @@ router.delete("/tags/:id", requireRegistered, async(req, res, next) => {
     }
 });
 
-router.get("/edit", requireRegistered, (req, res) => {
-    res.render("edit-profile", {
-        ime: req.korisnik.ime || "",
-        prezime: req.korisnik.prezime || "",
-        mjestoStanovanja: req.korisnik.mjesto_stanovanja || "",
-        profilnaSlikaUrl: req.korisnik.profilna_slika_url || "",
-        opis: req.korisnik.opis || "",
-    });
+router.get("/edit", requireRegistered, async(req, res, next) => {
+    try {
+        const korisnickiSupabase = createClient(
+            process.env.SUPABASE_URL,
+            process.env.SUPABASE_ANON_KEY,
+            {
+                auth: {
+                    persistSession: false,
+                    autoRefreshToken: false,
+                    detectSessionInUrl: false
+                },
+                global: {
+                    headers: {
+                        Authorization: `Bearer ${req.session.accessToken}`
+                    }
+                }
+            }
+        );
+
+        const {data: korisnik, error} = await korisnickiSupabase
+            .from("KORISNIK")
+            .select("ime, prezime, mjesto_stanovanja, profilna_slika_url,opis")
+            .eq("id_korisnik", req.korisnik.id_korisnik)
+            .maybeSingle();
+
+        if(error) return next(error);
+
+        if(!korisnik) {
+            return res.status(404).send("Profile not found.");
+        }
+
+        return res.render("edit-profile", {
+            ime: korisnik.ime || "",
+            prezime: korisnik.prezime || "",
+            mjestoStanovanja: korisnik.mjesto_stanovanja || "",
+            profilnaSlikaUrl: korisnik.profilna_slika_url || "",
+            opis: korisnik.opis || "",
+        });
+    } catch(error) {
+        next(error);
+    }
 })
 
 //pomocna fja za post /edit
