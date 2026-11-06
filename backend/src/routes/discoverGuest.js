@@ -25,21 +25,9 @@ router.get("/", async (req, res, next) => {
       .from("OBJAVA")
       .select(`
         *,
-        id_lokacije (
-          ime_lokacije,
-          ime_drzave,
-          latitude,
-          longitude
-        ),
-        id_autor (
-          ime,
-          prezime
-        ),
-        OBJAVA_TAG (
-          TAG (
-            ime_tag
-          )
-        )
+        id_lokacije (ime_lokacije, ime_drzave, latitude, longitude),
+        id_autor (ime, prezime),
+        OBJAVA_TAG (TAG (ime_tag))
       `)
       .eq("status_objave", "otvorena");
 
@@ -57,6 +45,7 @@ router.get("/", async (req, res, next) => {
       spol: "",
       smjestaji: objave || [],
       brojac: objave ? objave.length : 0,
+      spremljeneObjaveIds: [],
     });
 
   } catch (error) {
