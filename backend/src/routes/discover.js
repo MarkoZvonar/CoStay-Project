@@ -113,6 +113,7 @@ router.get("/", requireRegistered, async (req, res, next) => {
       smjestaji: objave,
       brojac: objave.length,
       spremljeneObjaveIds: spremljeneObjaveIds,
+      jeGost: false,
     });
   } catch (error) {
     console.error("Neočekivana greška u Discover ruti:", error);

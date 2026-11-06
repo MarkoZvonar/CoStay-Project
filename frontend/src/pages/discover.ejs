@@ -49,7 +49,8 @@
               <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>" alt="Slika smještaja" />
 
               <% const spremljeno = spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
-
+              
+              <% if (!jeGost) { %>
               <button
                 type="button"
                 class="spremiGumb <%= spremljeno ? 'spremljen' : '' %>"
@@ -59,7 +60,8 @@
               >
                 <%= spremljeno ? '♥' : '+' %>
               </button>
-
+              <% } %>
+              
               <div class="datum">
                 <% 
                   const options = { month: 'short', day: 'numeric' };

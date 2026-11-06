@@ -46,6 +46,7 @@ router.get("/", async (req, res, next) => {
       smjestaji: objave || [],
       brojac: objave ? objave.length : 0,
       spremljeneObjaveIds: [],
+      jeGost: true,
     });
 
   } catch (error) {
