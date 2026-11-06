@@ -12,14 +12,14 @@
 
   <body>
     <div class="naslov">
-      <a class="logo" href="discover.html">CoStay</a>
+      <a class="logo" href="/discover">CoStay</a>
 
       <div class="ikone">
-        <a href="discover.html" class="obavijestiGumb" aria-label="Obavijesti">
+        <a href="/inbox" class="obavijestiGumb" aria-label="Obavijesti">
           <img src="/assets/notification.svg" alt="" />
         </a>
 
-        <a href="discover.html" class="izbornikGumb" aria-label="Izbornik">
+        <a href="/discover" class="izbornikGumb" aria-label="Izbornik">
           <img src="/assets/menu.svg" alt="" />
         </a>
       </div>
@@ -48,6 +48,20 @@
             <div class="karticaSlika">
               <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>" alt="Slika smještaja" />
 
+              <% const spremljeno = spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
+              
+              <% if (!jeGost) { %>
+              <button
+                type="button"
+                class="spremiGumb <%= spremljeno ? 'spremljen' : '' %>"
+                data-id="<%= smjestaj.id_objava %>"
+                data-spremljeno="<%= spremljeno %>"
+                aria-label="<%= spremljeno ? 'Ukloni iz spremljenih' : 'Spremi objavu' %>"
+              >
+                <%= spremljeno ? '♥' : '+' %>
+              </button>
+              <% } %>
+              
               <div class="datum">
                 <% 
                   const options = { month: 'short', day: 'numeric' };
@@ -68,9 +82,7 @@
                 <div class="lokacija">
                   <span class="lokacijaIkona">📍</span>
                   <span>
-                    <%= smjestaj.id_lokacije
-                      ? smjestaj.id_lokacije.ime_lokacije + ', ' + smjestaj.id_lokacije.ime_drzave
-                      : 'Nepoznata lokacija' %>
+                    <%= smjestaj.id_lokacije ? smjestaj.id_lokacije.ime_lokacije + ', ' + smjestaj.id_lokacije.ime_drzave: 'Nepoznata lokacija' %>
                   </span>
                 </div>
                 <div class="cijena">
@@ -93,7 +105,7 @@
               <% } %>
             </div>
 
-                        <!-- 3. dio: Kapacitet -->
+            <!-- 3. dio: Kapacitet -->
             <div class="karticaKapacitet">
               <div class="kapacitetStavka">
                 <span class="kapacitetNaslov">Ukupni kapacitet</span>
@@ -110,7 +122,7 @@
               </div>
             </div>
 
-            <!-- 3. dio: Kontakt -->
+            <!-- 4. dio: Kontakt -->
             <div class="karticaKontakt">
               <div class="organizator">
                 <span class="organizatorNaslov">Organizator</span>
@@ -129,5 +141,48 @@
     </div>
 
     <%- include('../components/navbar') %>
+      <script>
+      const spremiGumbi = document.querySelectorAll(".spremiGumb");
+
+      spremiGumbi.forEach((gumb) => {
+        gumb.addEventListener("click", async () => {
+          const idObjava = gumb.dataset.id;
+          const spremljeno = gumb.dataset.spremljeno === "true";
+
+          const metoda = spremljeno ? "DELETE" : "POST";
+
+          gumb.disabled = true;
+
+          try {
+            const odgovor = await fetch(`/discover/spremi/${idObjava}`, {
+              method: metoda,
+            });
+
+            if (!odgovor.ok) {
+              throw new Error("Spremanje objave nije uspjelo.");
+            }
+
+            if (spremljeno) {
+              // Objavu smo uklonili iz spremljenih
+              gumb.textContent = "+";
+              gumb.dataset.spremljeno = "false";
+              gumb.classList.remove("spremljen");
+              gumb.setAttribute("aria-label", "Spremi objavu");
+            } else {
+              // Objavu smo spremili
+              gumb.textContent = "♥";
+              gumb.dataset.spremljeno = "true";
+              gumb.classList.add("spremljen");
+              gumb.setAttribute("aria-label", "Ukloni iz spremljenih");
+            }
+          } catch (error) {
+            console.error(error);
+            alert("Došlo je do greške. Pokušajte ponovno.");
+          } finally {
+            gumb.disabled = false;
+          }
+        });
+      });
+    </script>
   </body>
 </html>
