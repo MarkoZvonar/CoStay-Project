@@ -7,10 +7,7 @@ dotenv.config();
 const router = express.Router();
 
 router.get("/", async (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/");
-  }
-
+  
   res.render("search", {
     query: 0,
     data: []
@@ -18,9 +15,6 @@ router.get("/", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-  if (req.session.user) {
-    return res.redirect("/");
-  }
 
   const supabase = createClient(
     process.env.SUPABASE_URL,
