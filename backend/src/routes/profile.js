@@ -1,7 +1,6 @@
 import { supabase } from "../config/supabase.js";
 import { createClient } from "@supabase/supabase-js";
 import { requireRegistered } from "../middleware/requireRegistered.js";
-import uploadProfileImage from "../middleware/multer.js";
 import express from "express";
 
 const router = express.Router();
@@ -232,14 +231,9 @@ function tekst(vrijednost) {
     return "";
 }
 
-router.post("/edit", requireRegistered, uploadProfileImage.single("profilnaSlika"),
+router.post("/edit", requireRegistered,
     async (req, res, next) => {
         try {
-            //privemeno dok ne sredim upload slike
-            if (req.file) {
-                return res.status(400).send("Image upload is not available yet.");
-            }
-
             const ime = tekst(req.body.profilIme);
             const prezime = tekst(req.body.profilPrezime);
             const mjestoStanovanja = tekst(req.body.profilLokacija);
