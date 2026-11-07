@@ -19,6 +19,7 @@
 
 .editProfileForm input,
 .editProfileForm textarea {
+  box-sizing: border-box;
   width: 100%;
   padding: 12px;
 
@@ -28,6 +29,11 @@
 
   font: inherit;
   color: #263b30;
+}
+
+.editProfileForm textarea {
+  min-height: 120px;
+  resize: vertical;
 }
 
 .editProfileForm input[type="file"]::file-selector-button {
