@@ -50,7 +50,27 @@
         <div class="kartica">
           <!-- 1. dio: Slika, datum, lokacija i cijena -->
           <div class="karticaSlika">
-            <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>" alt="Slika smještaja" />
+            <% const slike = (smjestaj.OBJAVA_SLIKA || []).filter(slika => slika.url_slika); %>
+
+            <div class="galerija">
+              <% if (slike.length > 0) { %>
+
+                <% slike.forEach((slika, index) => { %>
+                  <img src="<%= slika.url_slika %>" alt="Slika smještaja" class="galerijaSlika <%= index === 0 ? 'aktivna' : '' %>"/>
+                <% }) %>
+
+              <% } else { %>
+
+                <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>"  alt="Slika smještaja"  class="galerijaSlika aktivna"/>
+
+              <% } %>
+
+              <% if (slike.length > 1) { %>
+                <button type="button" class="galerijaStrelica lijevo" aria-label="Prethodna slika">&#10094;</button>
+                <button type="button" class="galerijaStrelica desno" aria-label="Sljedeća slika">&#10095;</button>
+                <span class="galerijaBrojac">1 / <%= slike.length %></span>
+              <% } %>
+            </div>
 
             <% const spremljeno=spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
 
@@ -149,6 +169,52 @@
   <%- include('../components/navbar') %>
     <script>
       const spremiGumbi = document.querySelectorAll(".spremiGumb");
+
+      // Promjena slika u galeriji
+      const galerije = document.querySelectorAll(".galerija");
+
+      galerije.forEach((galerija) => {
+        const slike = galerija.querySelectorAll(".galerijaSlika");
+        const lijevo = galerija.querySelector(".galerijaStrelica.lijevo");
+        const desno = galerija.querySelector(".galerijaStrelica.desno");
+        const brojac = galerija.querySelector(".galerijaBrojac");
+
+        let trenutnaSlika = 0;
+
+        function prikaziSliku(index) {
+          slike[trenutnaSlika].classList.remove("aktivna");
+
+          trenutnaSlika = index;
+
+          slike[trenutnaSlika].classList.add("aktivna");
+
+          if (brojac) {
+            brojac.textContent = `${trenutnaSlika + 1} / ${slike.length}`;
+          }
+        }
+
+        if (lijevo && desno) {
+          lijevo.addEventListener("click", () => {
+            let novaSlika = trenutnaSlika - 1;
+
+            if (novaSlika < 0) {
+              novaSlika = slike.length - 1;
+            }
+
+            prikaziSliku(novaSlika);
+          });
+
+          desno.addEventListener("click", () => {
+            let novaSlika = trenutnaSlika + 1;
+
+            if (novaSlika >= slike.length) {
+              novaSlika = 0;
+            }
+
+            prikaziSliku(novaSlika);
+          });
+        }
+      });
 
       spremiGumbi.forEach((gumb) => {
         gumb.addEventListener("click", async () => {

@@ -102,6 +102,10 @@ router.get("/", requireRegistered, async (req, res, next) => {
                 TAG (
                   ime_tag
                 )
+              ),
+              OBJAVA_SLIKA (
+                id_slika,
+                url_slika
               )
             `)
             .in("id_objava", objavaIds)
