@@ -2,8 +2,24 @@ import { supabase } from "../config/supabase.js";
 import { createClient } from "@supabase/supabase-js";
 import { requireRegistered } from "../middleware/requireRegistered.js";
 import express from "express";
+import multer from "multer";
 
 const router = express.Router();
+
+const upload = multer({
+    storage: multer.memoryStorage(),
+    limits: {
+      fileSize: 5 * 1024 * 1024, // maksimalno 5 MB
+    },
+    fileFilter: (req, file, cb) => {
+      if (!["image/jpeg", "image/png", "image/webp"].includes(file.mimetype)) {
+        return cb(new Error("Dozvoljene su samo JPG, PNG i WEBP slike."));
+      }
+  
+      cb(null, true);
+    },
+  });
+
 
 function kreirajSupabase(req) {
   return createClient(
@@ -281,5 +297,65 @@ router.post("/edit", requireRegistered,
 router.get("/edit/:idObjava", requireRegistered, async(req, res, next) => {
 
 });
+
+
+router.post(
+    "/profilna-slika",
+    requireRegistered,
+    upload.single("profilnaSlika"),
+    async (req, res, next) => {
+      try {
+        if (!req.file) {
+          return res.status(400).send("Niste odabrali sliku.");
+        }
+  
+        const korisnickiSupabase = kreirajSupabase(req);
+  
+        const idKorisnik = req.korisnik.id_korisnik;
+  
+        // Putanja slike u Storageu
+        const putanjaSlike = `${idKorisnik}/profilna`;
+  
+        // Upload slike u Supabase Storage
+        const { data: uploadData, error: uploadError } =
+          await korisnickiSupabase.storage
+            .from("profilne slike")
+            .upload(putanjaSlike, req.file.buffer, {
+              contentType: req.file.mimetype,
+              upsert: true,
+            });
+  
+        if (uploadError) {
+          console.error("Greška kod uploada:", uploadError);
+          return next(uploadError);
+        }
+  
+        // Dohvaćanje javnog URL-a slike
+        const { data: urlData } = korisnickiSupabase.storage
+          .from("profilne slike")
+          .getPublicUrl(putanjaSlike);
+  
+        const profilnaSlikaUrl = urlData.publicUrl;
+  
+        // Spremanje URL-a u tablicu KORISNIK
+        const { error: updateError } = await korisnickiSupabase
+          .from("KORISNIK")
+          .update({
+            profilna_slika_url: profilnaSlikaUrl,
+          })
+          .eq("id_korisnik", idKorisnik);
+  
+        if (updateError) {
+          console.error("Greška kod spremanja URL-a:", updateError);
+          return next(updateError);
+        }
+  
+        // Povratak na profil
+        return res.redirect("/profile");
+      } catch (error) {
+        next(error);
+      }
+    }
+  );
 
 export default router;

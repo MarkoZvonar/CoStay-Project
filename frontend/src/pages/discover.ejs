@@ -1,147 +1,153 @@
 <!doctype html>
 <html lang="hr">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="author" content="Lovro Krčmarić" />
-    <meta name="application-name" content="Lab1 iz WEB-a" />
-    <link rel="stylesheet" href="/pages/discover.css" />
-    <link rel="stylesheet" href="/pages/main.css" />
-    <title>Discover</title>
-  </head>
 
-  <body>
-    <div class="naslov">
-      <a class="logo" href="/discover">CoStay</a>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="author" content="Lovro Krčmarić" />
+  <meta name="application-name" content="Lab1 iz WEB-a" />
+  <link rel="stylesheet" href="/pages/discover.css" />
+  <link rel="stylesheet" href="/pages/main.css" />
+  <title>Discover</title>
+</head>
 
-      <div class="ikone">
-        <a href="/inbox" class="obavijestiGumb" aria-label="Obavijesti">
-          <img src="/assets/notification.svg" alt="" />
-        </a>
+<body>
+  <div class="naslov">
+    <a class="logo" href="/discover">CoStay</a>
 
-        <a href="/discover" class="izbornikGumb" aria-label="Izbornik">
-          <img src="/assets/menu.svg" alt="" />
-        </a>
-      </div>
+    <div class="ikone">
+      <a href="/inbox" class="obavijestiGumb" aria-label="Obavijesti">
+        <img src="/assets/notification.svg" alt="" />
+      </a>
+
+      <a href="/discover" class="izbornikGumb" aria-label="Izbornik">
+        <img src="/assets/menu.svg" alt="" />
+      </a>
     </div>
+  </div>
 
-    <div class="brojac">
-      <div class="brojacTekst">
-        <span class="brojacNadnaslov">TVOJI REZULTATI PRETRAGE</span>
-        <h1>Pronađi svoj sljedeći boravak.</h1>
+  <div class="brojac">
+    <div class="brojacTekst">
+      <span class="brojacNadnaslov">TVOJI REZULTATI PRETRAGE</span>
+      <h1>Pronađi svoj sljedeći boravak.</h1>
 
-        <div class="brojacDetalji">
-          <div class="brojacLokacija">
-            <img src="/assets/brojacSlika.png" alt="" />
-            <span>Zagreb, Hrvatska</span>
-          </div>
-            <span class="brojacBroj"><%= typeof brojac !== 'undefined' ? brojac : (typeof smjestaji !== 'undefined' ? smjestaji.length : 0) %> smještaja</span>
+      <div class="brojacDetalji">
+        <div class="brojacLokacija">
+          <img src="/assets/brojacSlika.png" alt="" />
+          <span>Zagreb, Hrvatska</span>
         </div>
+        <span class="brojacBroj">
+          <%= typeof brojac !=='undefined' ? brojac : (typeof smjestaji !=='undefined' ? smjestaji.length : 0) %>
+            smještaja
+        </span>
       </div>
     </div>
+  </div>
 
-    <div class="tijelo">
-      <% if (smjestaji && smjestaji.length > 0) { %>
-        <% smjestaji.forEach(smjestaj => { %>
-          <div class="kartica">
-            <!-- 1. dio: Slika, datum, lokacija i cijena -->
-            <div class="karticaSlika">
-              <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>" alt="Slika smještaja" />
+  <div class="tijelo">
+    <% if (smjestaji && smjestaji.length> 0) { %>
+      <% smjestaji.forEach(smjestaj=> { %>
+        <div class="kartica">
+          <!-- 1. dio: Slika, datum, lokacija i cijena -->
+          <div class="karticaSlika">
+            <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>" alt="Slika smještaja" />
 
-              <% const spremljeno = spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
-              
+            <% const spremljeno=spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
+
               <% if (!jeGost) { %>
-              <button
-                type="button"
-                class="spremiGumb <%= spremljeno ? 'spremljen' : '' %>"
-                data-id="<%= smjestaj.id_objava %>"
-                data-spremljeno="<%= spremljeno %>"
-                aria-label="<%= spremljeno ? 'Ukloni iz spremljenih' : 'Spremi objavu' %>"
-              >
-                <%= spremljeno ? '♥' : '+' %>
-              </button>
-              <% } %>
-              
-              <div class="datum">
-                <% 
-                  const options = { month: 'short', day: 'numeric' };
+                <button type="button" class="spremiGumb <%= spremljeno ? 'spremljen' : '' %>"
+                  data-id="<%= smjestaj.id_objava %>" data-spremljeno="<%= spremljeno %>"
+                  aria-label="<%= spremljeno ? 'Ukloni iz spremljenih' : 'Spremi objavu' %>">
+                  <%= spremljeno ? '♥' : '+' %>
+                </button>
+                <% } %>
 
-                  const checkInDate = smjestaj.check_in
-                    ? new Date(smjestaj.check_in).toLocaleDateString('en-US', options)
-                    : 'Jan 12';
+                  <div class="datum">
+                    <% const options={ month: 'short' , day: 'numeric' }; const checkInDate=smjestaj.check_in ? new
+                      Date(smjestaj.check_in).toLocaleDateString('en-US', options) : 'Jan 12' ; const
+                      checkOutDate=smjestaj.check_out ? new Date(smjestaj.check_out).toLocaleDateString('en-US',
+                      options) : 'Mar 4' ; %>
 
-                  const checkOutDate = smjestaj.check_out
-                    ? new Date(smjestaj.check_out).toLocaleDateString('en-US', options)
-                    : 'Mar 4';
-                %>
+                      <%= checkInDate %> - <%= checkOutDate %>
+                  </div>
 
-                <%= checkInDate %> - <%= checkOutDate %>
-              </div>
+                  <div class="slikaDno">
+                    <div class="lokacija">
+                      <span class="lokacijaIkona">📍</span>
+                      <span>
+                        <%= smjestaj.id_lokacije ? smjestaj.id_lokacije.ime_lokacije + ', ' +
+                          smjestaj.id_lokacije.ime_drzave: 'Nepoznata lokacija' %>
+                      </span>
+                    </div>
+                    <div class="cijena">
+                      <%= smjestaj.ukupna_cijena %> €
+                    </div>
+                  </div>
+          </div>
 
-              <div class="slikaDno">
-                <div class="lokacija">
-                  <span class="lokacijaIkona">📍</span>
-                  <span>
-                    <%= smjestaj.id_lokacije ? smjestaj.id_lokacije.ime_lokacije + ', ' + smjestaj.id_lokacije.ime_drzave: 'Nepoznata lokacija' %>
-                  </span>
-                </div>
-                <div class="cijena">
-                  <%= smjestaj.ukupna_cijena %> €
-                </div>
-              </div>
-            </div>
-
-            <!-- 2. dio: Tagovi -->
-            <div class="karticaTagovi">
-              <% if (smjestaj.OBJAVA_TAG && smjestaj.OBJAVA_TAG.length > 0) { %>
-                <% smjestaj.OBJAVA_TAG.forEach(t => { %>
-                  <% const nazivTaga = t.TAG ? t.TAG.ime_tag : (t.id_tag ? t.id_tag.ime_tag : t.ime_tag); %>
+          <!-- 2. dio: Tagovi -->
+          <div class="karticaTagovi">
+            <% if (smjestaj.OBJAVA_TAG && smjestaj.OBJAVA_TAG.length> 0) { %>
+              <% smjestaj.OBJAVA_TAG.forEach(t=> { %>
+                <% const nazivTaga=t.TAG ? t.TAG.ime_tag : (t.id_tag ? t.id_tag.ime_tag : t.ime_tag); %>
                   <% if (nazivTaga) { %>
-                    <span class="tag"><%= nazivTaga.trim() %></span>
-                  <% } %>
-                <% }) %>
-              <% } else { %>
-                <span class="tag">Smještaj</span>
-              <% } %>
+                    <span class="tag">
+                      <%= nazivTaga.trim() %>
+                    </span>
+                    <% } %>
+                      <% }) %>
+                        <% } else { %>
+                          <span class="tag">Smještaj</span>
+                          <% } %>
+          </div>
+
+          <!-- 3. dio: Kapacitet -->
+          <div class="karticaKapacitet">
+            <div class="kapacitetStavka">
+              <span class="kapacitetNaslov">Ukupni kapacitet</span>
+              <span class="kapacitetVrijednost">
+                <%= smjestaj.ukupni_kapacitet %> osoba
+              </span>
             </div>
 
-            <!-- 3. dio: Kapacitet -->
-            <div class="karticaKapacitet">
-              <div class="kapacitetStavka">
-                <span class="kapacitetNaslov">Ukupni kapacitet</span>
-                <span class="kapacitetVrijednost">
-                  <%= smjestaj.ukupni_kapacitet %> osoba
-                </span>
-              </div>
-
-              <div class="kapacitetStavka">
-                <span class="kapacitetNaslov">Preostala mjesta</span>
-                <span class="kapacitetVrijednost">
-                  <%= smjestaj.preostalih_mjesta %> osoba
-                </span>
-              </div>
-            </div>
-
-            <!-- 4. dio: Kontakt -->
-            <div class="karticaKontakt">
-              <div class="organizator">
-                <span class="organizatorNaslov">Organizator</span>
-                <span class="organizatorIme">
-                  <%= smjestaj.id_autor ? (smjestaj.id_autor.ime + ' ' + smjestaj.id_autor.prezime) : 'Ivan Horvat' %>
-                </span>
-              </div>
-
-              <a href="<%= smjestaj.booking_url && smjestaj.booking_url !== 'nista' ? smjestaj.booking_url : '#' %>" class="messageGumb">Message</a>
+            <div class="kapacitetStavka">
+              <span class="kapacitetNaslov">Preostala mjesta</span>
+              <span class="kapacitetVrijednost">
+                <%= smjestaj.preostalih_mjesta %> osoba
+              </span>
             </div>
           </div>
-        <% }) %>
-      <% } else { %>
-        <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">Trenutno nema pronađenih smještaja koji odgovaraju vašim tagovima.</p>
-      <% } %>
-    </div>
 
-    <%- include('../components/navbar') %>
-      <script>
+          <!-- 4. dio: Kontakt -->
+          <div class="karticaKontakt">
+            <div class="organizator">
+              <span class="organizatorNaslov">Organizator</span>
+              <span class="organizatorIme">
+                <%= smjestaj.id_autor ? (smjestaj.id_autor.ime + ' ' + smjestaj.id_autor.prezime) : 'Ivan Horvat' %>
+              </span>
+            </div>
+            <% const mojZahtjev=(mojiZahtjevi || []).find( z=> String(z.id_objava) === String(smjestaj.id_objava)
+              );
+
+              const prihvacen = mojZahtjev?.status_zahtjeva === "prihvacen";
+              const poslan = mojZahtjev?.status_zahtjeva === "na_cekanju";
+              %>
+              <button type="button" class="messageGumb" id="zahtjev-<%= smjestaj.id_objava %>"
+                onclick="posaljiZahtjev('<%= smjestaj.id_objava %>')" <%=(prihvacen || poslan) ? "disabled" : "" %>
+                >
+                <%= prihvacen ? "ZAHTJEV PRIHVAĆEN" : poslan ? "ZAHTJEV POSLAN" : "POŠALJI ZAHTJEV" %>
+              </button>
+          </div>
+        </div>
+        <% }) %>
+          <% } else { %>
+            <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">Trenutno nema pronađenih
+              smještaja koji odgovaraju vašim tagovima.</p>
+            <% } %>
+  </div>
+
+  <%- include('../components/navbar') %>
+    <script>
       const spremiGumbi = document.querySelectorAll(".spremiGumb");
 
       spremiGumbi.forEach((gumb) => {
@@ -183,6 +189,54 @@
           }
         });
       });
+
+      async function posaljiZahtjev(idObjava) {
+        const gumb = document.getElementById(`zahtjev-${idObjava}`);
+
+        if (gumb.disabled) return;
+
+        gumb.disabled = true;
+
+        try {
+          const odgovor = await fetch(`/discover/pridruzi-se/${idObjava}`, {
+            method: "POST",
+          });
+
+          const tekst = await odgovor.text();
+
+          let rezultat;
+
+          try {
+            rezultat = JSON.parse(tekst);
+          } catch {
+            throw new Error("Neispravan odgovor servera.");
+          }
+
+          if (!odgovor.ok) {
+            alert(rezultat.poruka || "Slanje zahtjeva nije uspjelo.");
+            return;
+          }
+
+          // Promjena teksta gumba nakon uspješnog slanja
+          gumb.textContent = "ZAHTJEV POSLAN";
+
+          alert("Zahtjev za pridruživanje uspješno je poslan!");
+
+        } catch (error) {
+          console.error("Greška:", error);
+          alert("Došlo je do greške. Pokušajte ponovno.");
+        } finally {
+          // Ako je zahtjev uspješno poslan, gumb ostaje zaključan.
+          // Ako nije, ponovno omogućujemo klik.
+          if (gumb.textContent !== "ZAHTJEV POSLAN") {
+            gumb.disabled = false;
+          }
+        }
+      }
+
+
+
     </script>
-  </body>
+</body>
+
 </html>

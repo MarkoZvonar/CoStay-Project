@@ -14,8 +14,30 @@
     <div class="profilGornjiDio">
       <div class="profile">
         <div class="profilnaSlika">
-          <img src="<%= profilnaSlikaUrl || '/assets/probnaSlikaKartica.jpg'%>" alt="Profilna slika" />
+          <img
+            src="<%= profilnaSlikaUrl || '/assets/probnaSlikaKartica.jpg' %>"
+            alt="Profilna slika"
+          />
         </div>
+        
+        <form
+          class="profilnaSlikaForma"
+          action="/profile/profilna-slika"
+          method="POST"
+          enctype="multipart/form-data"
+        >
+          <label for="profilnaSlika">Promijeni profilnu sliku</label>
+        
+          <input
+            type="file"
+            id="profilnaSlika"
+            name="profilnaSlika"
+            accept="image/jpeg,image/png,image/webp"
+            required
+          />
+        
+          <button type="submit">Učitaj sliku</button>
+        </form>
 
         <div class="profilIme"><%= ime %> <%= prezime %></div>
 

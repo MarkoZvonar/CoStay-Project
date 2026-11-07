@@ -24,6 +24,7 @@ function kreirajSupabase(req) {
   );
 }
 
+
 // GET /discover
 router.get("/", requireRegistered, async (req, res, next) => {
   try {
@@ -43,7 +44,17 @@ router.get("/", requireRegistered, async (req, res, next) => {
       (objava) => objava.id_objava,
     );
 
-    // 2. Dohvat tagova korisnika
+    // 2. Dohvat zahtjeva za pridruživanje trenutnog korisnika
+    const { data: mojiZahtjevi, error: zahtjeviError } =
+      await korisnickiSupabase
+        .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+        .select("id_objava, status_zahtjeva")
+        .eq("id_podnositelja", idKorisnik);
+
+    if (zahtjeviError) return next(zahtjeviError);
+
+
+    // 3. Dohvat tagova korisnika
     const { data: korisnikTagovi, error: tagoviError } =
       await korisnickiSupabase
         .from("KORISNIK_TAGOVI")
@@ -56,7 +67,7 @@ router.get("/", requireRegistered, async (req, res, next) => {
 
     let objave = [];
 
-    // 3. Dohvat objava koje imaju barem jedan korisnikov tag
+    // 4. Dohvat objava koje imaju barem jedan korisnikov tag
     if (tagIds.length > 0) {
       const { data: objavaTagovi, error: objTagError } =
         await korisnickiSupabase
@@ -70,7 +81,7 @@ router.get("/", requireRegistered, async (req, res, next) => {
         ...new Set(objavaTagovi.map((ot) => ot.id_objava)),
       ];
 
-      // 4. Dohvat objava i povezanih podataka
+      // 5. Dohvat objava i povezanih podataka
       if (objavaIds.length > 0) {
         const { data: dohvaceneObjave, error: objavaError } =
           await korisnickiSupabase
@@ -103,7 +114,7 @@ router.get("/", requireRegistered, async (req, res, next) => {
       }
     }
 
-    // 5. Prikaz Discover stranice
+    // 6. Prikaz Discover stranice
     return res.render("discover", {
       ime: req.korisnik.ime || "",
       email: req.korisnik.email || "",
@@ -113,13 +124,16 @@ router.get("/", requireRegistered, async (req, res, next) => {
       smjestaji: objave,
       brojac: objave.length,
       spremljeneObjaveIds: spremljeneObjaveIds,
+      mojiZahtjevi: mojiZahtjevi || [],
       jeGost: false,
     });
+
   } catch (error) {
     console.error("Neočekivana greška u Discover ruti:", error);
     next(error);
   }
 });
+
 
 // POST /discover/spremi/:idObjava
 // Spremanje objave
@@ -172,5 +186,47 @@ router.delete(
     }
   },
 );
+
+
+// POST /discover/pridruzi-se/:idObjava
+// Slanje zahtjeva za pridruživanje objavi
+router.post(
+  "/pridruzi-se/:idObjava",
+  requireRegistered,
+  async (req, res, next) => {
+    try {
+      const korisnickiSupabase = kreirajSupabase(req);
+
+      const { data, error } = await korisnickiSupabase
+        .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+        .insert({
+          id_podnositelja: req.korisnik.id_korisnik,
+          id_objava: req.params.idObjava,
+        })
+        .select()
+        .single();
+
+      if (error) {
+        if (error.code === "23505") {
+          return res.status(409).json({
+            uspjeh: false,
+            poruka: "Već ste poslali zahtjev za ovu objavu.",
+          });
+        }
+
+        return next(error);
+      }
+
+      return res.status(201).json({
+        uspjeh: true,
+        poruka: "Zahtjev za pridruživanje uspješno je poslan!",
+        zahtjev: data,
+      });
+    } catch (error) {
+      next(error);
+    }
+  },
+);
+
 
 export default router;
