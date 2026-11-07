@@ -27,7 +27,15 @@ router.get("/", async (req, res, next) => {
         *,
         id_lokacije (ime_lokacije, ime_drzave, latitude, longitude),
         id_autor (ime, prezime),
-        OBJAVA_TAG (TAG (ime_tag))
+        OBJAVA_TAG (
+          TAG (
+            ime_tag
+          )
+        ),
+        OBJAVA_SLIKA (
+          id_slika,
+          url_slika
+        )
       `)
       .eq("status_objave", "otvorena");
 
@@ -46,6 +54,7 @@ router.get("/", async (req, res, next) => {
       smjestaji: objave || [],
       brojac: objave ? objave.length : 0,
       spremljeneObjaveIds: [],
+      mojiZahtjevi: [],
       jeGost: true,
     });
 

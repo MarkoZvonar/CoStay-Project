@@ -407,6 +407,89 @@ body {
   cursor: wait;
 }
 
+/* Galerija slika u kartici */
+
+.galerija {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+}
+
+.galerijaSlika {
+  position: absolute;
+  top: 0;
+  left: 0;
+
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  display: none;
+}
+
+.galerijaSlika.aktivna {
+  display: block;
+}
+
+/* Strelice za promjenu slika */
+
+.galerijaStrelica {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 3;
+
+  width: 32px;
+  height: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.85);
+
+  color: #344e41;
+  font-size: 15px;
+
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.galerijaStrelica:hover {
+  background-color: white;
+}
+
+.galerijaStrelica.lijevo {
+  left: 8px;
+}
+
+.galerijaStrelica.desno {
+  right: 8px;
+}
+
+/* Brojač slika */
+
+.galerijaBrojac {
+  position: absolute;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 2;
+
+  padding: 4px 10px;
+
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
 /* 4 kartice */
 @media (min-width: 1650px) {
   .tijelo {
