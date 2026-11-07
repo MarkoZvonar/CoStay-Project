@@ -366,6 +366,15 @@ a.addGumb {
   color: #263b30;
 }
 
+.traka a[href="/profile"] {
+  background: #344e41;
+  color: white;
+  border-radius: 10px;
+}
+.traka a[href="/profile"] img {
+  filter: brightness(0) invert(1);
+}
+
 @media (max-width: 1399px) {
   .postovi {
     grid-template-columns: repeat(3, 320px);

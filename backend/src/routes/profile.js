@@ -6,6 +6,25 @@ import express from "express";
 
 const router = express.Router();
 
+function kreirajSupabase(req) {
+  return createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY,
+    {
+      auth: {
+        persistSession: false,
+        autoRefreshToken: false,
+        detectSessionInUrl: false,
+      },
+      global: {
+        headers: {
+          Authorization: `Bearer ${req.session.accessToken}`,
+        },
+      },
+    },
+  );
+}
+
 router.get("/", requireRegistered, async(req, res, next) => {
   const accessToken = req.session.accessToken;
 
@@ -16,22 +35,7 @@ router.get("/", requireRegistered, async(req, res, next) => {
   }
 
   try {
-    const korisnickiSupabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    );
+    const korisnickiSupabase = kreirajSupabase(req);
 
     //dohvacamo podatke o korisniku iz baze
     const { data: korisnik, error } = await korisnickiSupabase
@@ -113,22 +117,7 @@ router.get("/", requireRegistered, async(req, res, next) => {
 //ruta koja vraca popis svih tagova u JSON obliku
 router.get("/tags", requireRegistered, async(req, res, next) => {
     try {
-        const korisnickiSupabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_ANON_KEY,
-            {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false
-                },
-                global: {
-                    headers: {
-                        Authorization: `Bearer ${req.session.accessToken}`
-                    }
-                }
-            }
-        );
+        const korisnickiSupabase = kreirajSupabase(req);
 
         //upit bazi podataka
         const {data: tagovi, error} = await korisnickiSupabase
@@ -157,22 +146,7 @@ router.post("/tags", requireRegistered, async (req, res, next) => {
     }
 
     try {
-        const korisnickiSupabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_ANON_KEY,
-            {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false,
-                },
-                global: {
-                    headers: {
-                    Authorization: `Bearer ${req.session.accessToken}`,
-                    },
-                },
-            },
-        );
+        const korisnickiSupabase = kreirajSupabase(req);
 
         //provjera postoji li odabrani tag u bazi
         const {data: tag, error: tagError} = await korisnickiSupabase
@@ -207,22 +181,7 @@ router.post("/tags", requireRegistered, async (req, res, next) => {
 //ruta koja brise tag s profila
 router.delete("/tags/:id", requireRegistered, async(req, res, next) => {
     try {
-        const korisnickiSupabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_ANON_KEY,
-            {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false,
-                },
-                global: {
-                    headers: {
-                    Authorization: `Bearer ${req.session.accessToken}`,
-                    },
-                },
-            },
-        );
+        const korisnickiSupabase = kreirajSupabase(req);
 
         const {error} = await korisnickiSupabase
             .from("KORISNIK_TAGOVI")
@@ -239,22 +198,7 @@ router.delete("/tags/:id", requireRegistered, async(req, res, next) => {
 
 router.get("/edit", requireRegistered, async(req, res, next) => {
     try {
-        const korisnickiSupabase = createClient(
-            process.env.SUPABASE_URL,
-            process.env.SUPABASE_ANON_KEY,
-            {
-                auth: {
-                    persistSession: false,
-                    autoRefreshToken: false,
-                    detectSessionInUrl: false
-                },
-                global: {
-                    headers: {
-                        Authorization: `Bearer ${req.session.accessToken}`
-                    }
-                }
-            }
-        );
+        const korisnickiSupabase = kreirajSupabase(req);
 
         const {data: korisnik, error} = await korisnickiSupabase
             .from("KORISNIK")
@@ -305,22 +249,7 @@ router.post("/edit", requireRegistered, uploadProfileImage.single("profilnaSlika
                 return res.status(400).send("First name, last name and location are required.");
             }
 
-            const korisnickiSupabase = createClient(
-                process.env.SUPABASE_URL,
-                process.env.SUPABASE_ANON_KEY,
-                {
-                    auth: {
-                        persistSession:false,
-                        autoRefreshToken: false,
-                        detectSessionInUrl: false
-                    },
-                    global: {
-                        headers: {
-                            Authorization: `Bearer ${req.session.accessToken}`
-                        }
-                    }
-                }
-            );
+            const korisnickiSupabase = kreirajSupabase(req);
 
             //azuriramo profil prijavljenog korisnika
             const {data, error} = await korisnickiSupabase
@@ -353,6 +282,10 @@ router.post("/edit", requireRegistered, uploadProfileImage.single("profilnaSlika
         } catch (error) {
             next(error);
         }
+});
+
+router.get("/edit/:idObjava", requireRegistered, async(req, res, next) => {
+
 });
 
 export default router;

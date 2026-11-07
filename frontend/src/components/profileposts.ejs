@@ -104,12 +104,12 @@
           </span>
         </div>
 
-        <a
-          href="<%= smjestaj.booking_url && smjestaj.booking_url !== 'nista'
-            ? smjestaj.booking_url
-            : '#' %>"
-          class="messageGumb"
-        >Message</a>
+        <% if (!spremljene) { %>
+          <a href="/edit/<%= smjestaj.id_objava %>" class="messageGumb">Edit</a>
+        <% } else { %>
+        <a href="<%= smjestaj.booking_url && smjestaj.booking_url !== 'nista'
+          ? smjestaj.booking_url: '#' %>" class="messageGumb">Message</a>
+        <% } %>
       </div>
     </div>
   <% }); %>
