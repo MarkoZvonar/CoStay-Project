@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="hr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="/pages/profile.css" />
+    <link rel="stylesheet" href="/pages/main.css" />
+    <link rel="stylesheet" href="/pages/edit-profile.css">
+    <title>Edit profile</title>
+  </head>
+
+  <body class="editProfilePage">
+    <div class="profilGornjiDio">
+      <div class="profile">
+        <form class="editProfileForm" action="/profile/edit" method="POST">
+            <!-- <label for="profilnaSlika">Profilna slika</label>
+            <input id="profilnaSlika" name="profilnaSlika" type="file" accept="image/jpeg,image/png,image/webp"/> -->
+            <label for="profilIme">Ime</label>
+            <input id="profilIme" name="profilIme" type="text" value="<%= ime %>" required>
+            <label for="profilPrezime">Prezime</label>
+            <input id="profilPrezime" name="profilPrezime" type="text" value="<%= prezime %>" required>
+            <label for="profilLokacija">Mjesto stanovanja</label>
+            <input id="profilLokacija" name="profilLokacija" type="text" value="<%= mjestoStanovanja %>" required>
+            <label for="profilOpis">Opis</label>
+            <textarea id="profilOpis" name="profilOpis" rows="4"><%= opis %></textarea>
+            <button type="submit" class="addGumb">Save changes</button>
+            <a href="/profile">Cancel</a>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

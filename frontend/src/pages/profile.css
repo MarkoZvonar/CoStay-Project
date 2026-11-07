@@ -112,6 +112,12 @@ body {
   color: #444;
 }
 
+.editGumb {
+  color:#444;
+  font-size: 14px;
+  text-decoration: none;
+}
+
 .tagovi {
   width: calc(100% - 40px);
   max-width: 900px;
@@ -358,6 +364,15 @@ a.addGumb {
   font-size: 16px;
   font-weight: bold;
   color: #263b30;
+}
+
+.traka a[href="/profile"] {
+  background: #344e41;
+  color: white;
+  border-radius: 10px;
+}
+.traka a[href="/profile"] img {
+  filter: brightness(0) invert(1);
 }
 
 @media (max-width: 1399px) {
