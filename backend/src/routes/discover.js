@@ -139,6 +139,155 @@ router.get("/", requireRegistered, async (req, res, next) => {
 });
 
 
+// GET /discover/ostale-objave
+// Dohvat ostalih objava u grupama od najviše 10
+router.get(
+  "/ostale-objave",
+  requireRegistered,
+  async (req, res, next) => {
+    try {
+      const korisnickiSupabase = kreirajSupabase(req);
+      const idKorisnik = req.korisnik.id_korisnik;
+
+      // 1. Određivanje početka i veličine stranice
+      const offset = Math.max(0, Number.parseInt(req.query.offset, 10) || 0);
+      const limit = 10;
+
+      // 2. Dohvat tagova trenutnog korisnika
+      const { data: korisnikTagovi, error: tagoviError } =
+        await korisnickiSupabase
+          .from("KORISNIK_TAGOVI")
+          .select("id_tag")
+          .eq("id_korisnik", idKorisnik);
+
+      if (tagoviError) return next(tagoviError);
+
+      const tagIds = (korisnikTagovi || []).map(t => t.id_tag);
+
+      // 3. Dohvat ID-eva objava koje odgovaraju korisnikovim tagovima
+      let objavaIdsSTagovima = [];
+
+      if (tagIds.length > 0) {
+        const { data: objavaTagovi, error: objavaTagoviError } =
+          await korisnickiSupabase
+            .from("OBJAVA_TAG")
+            .select("id_objava")
+            .in("id_tag", tagIds);
+
+        if (objavaTagoviError) return next(objavaTagoviError);
+
+        objavaIdsSTagovima = [
+          ...new Set((objavaTagovi || []).map(ot => ot.id_objava))
+        ];
+      }
+
+      // 4. Dohvat ostalih otvorenih objava
+      let upit = korisnickiSupabase
+        .from("OBJAVA")
+        .select(`
+          *,
+          id_lokacije (
+            ime_lokacije,
+            ime_drzave,
+            latitude,
+            longitude
+          ),
+          id_autor (
+            ime,
+            prezime
+          ),
+          OBJAVA_TAG (
+            TAG (
+              ime_tag
+            )
+          ),
+          OBJAVA_SLIKA (
+            id_slika,
+            url_slika
+          )
+        `)
+        .eq("status_objave", "otvorena")
+        .neq("id_autor", idKorisnik)
+        .order("id_objava", { ascending: false })
+        .range(offset, offset + limit - 1);
+
+      // Izbacujemo objave koje su već prikazane u prvom dijelu
+      if (objavaIdsSTagovima.length > 0) {
+        upit = upit.not(
+          "id_objava",
+          "in",
+          `(${objavaIdsSTagovima.join(",")})`
+        );
+      }
+
+      const { data: objave, error: objaveError } = await upit;
+
+      if (objaveError) return next(objaveError);
+
+      // 5. Dohvat spremljenih objava korisnika
+      const { data: spremljeneObjave, error: spremljeneError } =
+        await korisnickiSupabase
+          .from("SPREMLJENA_OBJAVA")
+          .select("id_objava")
+          .eq("id_korisnik", idKorisnik);
+
+      if (spremljeneError) return next(spremljeneError);
+
+      const spremljeneObjaveIds = (spremljeneObjave || []).map(
+        objava => objava.id_objava
+      );
+
+      // 6. Dohvat zahtjeva za pridruživanje korisnika
+      const { data: mojiZahtjevi, error: zahtjeviError } =
+        await korisnickiSupabase
+          .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+          .select("id_objava, status_zahtjeva")
+          .eq("id_podnositelja", idKorisnik);
+
+      if (zahtjeviError) return next(zahtjeviError);
+
+      // 7. Pretvaranje svake objave u HTML pomoću postojeće EJS komponente
+      const htmlKartice = [];
+
+      for (const smjestaj of (objave || [])) {
+        const html = await new Promise((resolve, reject) => {
+          res.render(
+            "../components/objavaKartica",
+            {
+              smjestaj,
+              spremljeneObjaveIds,
+              mojiZahtjevi: mojiZahtjevi || [],
+              jeGost: false
+            },
+            (error, html) => {
+              if (error) {
+                reject(error);
+              } else {
+                resolve(html);
+              }
+            }
+          );
+        });
+
+        htmlKartice.push(html);
+      }
+
+      // 8. Slanje rezultata frontend dijelu
+      return res.json({
+        html: htmlKartice.join(""),
+        imaJos: (objave || []).length === limit,
+        sljedeciOffset: offset + (objave || []).length
+      });
+
+    } catch (error) {
+      console.error("Greška kod dohvata ostalih objava:", error);
+      next(error);
+    }
+  }
+);
+
+
+
 // POST /discover/spremi/:idObjava
 // Spremanje objave
 router.post(
