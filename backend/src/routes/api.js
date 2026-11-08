@@ -1,19 +1,35 @@
 import express from "express";
-import { supabase } from "../config/supabase.js";
+import { createClient } from "@supabase/supabase-js";
+import { requireRegistered } from "../middleware/requireRegistered.js";
 
 const router = express.Router();
 
-// Nova ruta za kreiranje objave prilagođena vašoj shemi baze i postojećim lokacijama
-router.post("/posts", async (req, res, next) => {
+// Ruta za kreiranje objave zaštićena s requireRegistered middlewareom
+router.post("/posts", requireRegistered, async (req, res, next) => {
   try {
-    // 1. Provjera je li korisnik prijavljen
-    if (!req.session || !req.session.user) {
-      return res
-        .status(401)
-        .json({ error: "Morate biti prijavljeni da biste kreirali objavu." });
-    }
-
+    // 1. Budući da requireRegistered već provjerava sesiju, token i identitet,
+    // ID prijavljenog korisnika sigurno imamo u req.session.user.id,
+    // a token nam je dostupan u req.session.accessToken.
     const autorId = req.session.user.id;
+    const accessToken = req.session.accessToken;
+
+    // Stvaranje korisničkog klijenta sa specifičnim tokenom (kako bi RLS politike u bazi propustile upis)
+    const korisnickiSupabase = createClient(
+      process.env.SUPABASE_URL,
+      process.env.SUPABASE_ANON_KEY,
+      {
+        auth: {
+          persistSession: false,
+          autoRefreshToken: false,
+          detectSessionInUrl: false,
+        },
+        global: {
+          headers: {
+            Authorization: `Bearer ${accessToken}`,
+          },
+        },
+      },
+    );
 
     // 2. Izvlačenje podataka poslanih s forme
     const {
@@ -44,17 +60,28 @@ router.post("/posts", async (req, res, next) => {
         .json({ error: "Molimo ispunite sva obavezna polja." });
     }
 
-    // 3. Provjera postoji li odabrana lokacija u tablici LOKACIJA (isključivo Zagreb, Pula, Split, Opatija)
-    let { data: existingLokacija, error: lokacijaQueryError } = await supabase
-      .from("LOKACIJA")
-      .select("id_lokacije")
-      .eq("ime_lokacije", lokacija.trim())
-      .single();
+    // 3. Provjera postoji li odabrana lokacija u tablici LOKACIJA
+    // (Dopušteni gradovi: Zagreb, Pula, Split, Opatija - s prvim velikim slovom)
+    const dozvoljeniGradovi = ["Zagreb", "Pula", "Split", "Opatija"];
+    const cistaLokacija = typeof lokacija === "string" ? lokacija.trim() : "";
+
+    if (!dozvoljeniGradovi.includes(cistaLokacija)) {
+      return res.status(400).json({
+        error:
+          "Odabrani grad ne postoji u bazi. Molimo odaberite jedan od ponuđenih gradova (Zagreb, Pula, Split, Opatija).",
+      });
+    }
+
+    let { data: existingLokacija, error: lokacijaQueryError } =
+      await korisnickiSupabase
+        .from("LOKACIJA")
+        .select("id_lokacije")
+        .eq("ime_lokacije", cistaLokacija)
+        .single();
 
     if (lokacijaQueryError || !existingLokacija) {
       return res.status(400).json({
-        error:
-          "Odabrana lokacija ne postoji u bazi. Molimo odaberite jedan od ponuđenih gradova.",
+        error: "Lokacija nije pronađena u bazi podataka.",
       });
     }
 
@@ -62,7 +89,7 @@ router.post("/posts", async (req, res, next) => {
 
     // 4. Unos objave u tablicu OBJAVA
     const kapacitet = Number(brojOsoba);
-    const { data: postData, error: postError } = await supabase
+    const { data: postData, error: postError } = await korisnickiSupabase
       .from("OBJAVA")
       .insert([
         {
@@ -72,7 +99,7 @@ router.post("/posts", async (req, res, next) => {
           check_out: datumOdlaska,
           ukupna_cijena: Number(ukupnaCijena),
           ukupni_kapacitet: kapacitet,
-          preostalih_mjesta: kapacitet, // Na početku su sva mjesta slobodna
+          preostalih_mjesta: kapacitet,
           opis: opis.trim(),
           booking_url: vanjskiOglas ? vanjskiOglas.trim() : null,
           rok_prijave: krajnjiRok,
@@ -82,17 +109,30 @@ router.post("/posts", async (req, res, next) => {
       .select("id_objava")
       .single();
 
-    if (postError) throw postError;
+    if (postError) {
+      console.error("Greška pri unosu objave u bazu:", postError.message);
+      if (postError.code === "42501") {
+        return res.status(403).json({
+          error: "Baza nije dopustila spremanje objave zbog RLS pravila.",
+        });
+      }
+      throw postError;
+    }
+
     const objavaId = postData.id_objava;
 
     // 5. Unos slika u tablicu OBJAVA_SLIKA (ako postoje)
     if (slikeSmjestaja) {
-      const slikeList = slikeSmjestaja
-        .split(",")
-        .map((s) => s.trim())
-        .filter(Boolean);
+      const slikeList =
+        typeof slikeSmjestaja === "string"
+          ? slikeSmjestaja
+              .split(",")
+              .map((s) => s.trim())
+              .filter(Boolean)
+          : slikeSmjestaja;
+
       for (const slikaUrl of slikeList) {
-        await supabase
+        await korisnickiSupabase
           .from("OBJAVA_SLIKA")
           .insert([{ id_objava: objavaId, url_slika: slikaUrl }]);
       }
@@ -100,12 +140,16 @@ router.post("/posts", async (req, res, next) => {
 
     // 6. Unos tagova u tablice TAG i OBJAVA_TAG (ako postoje)
     if (tagovi) {
-      const tagoviList = tagovi
-        .split(",")
-        .map((t) => t.trim())
-        .filter(Boolean);
+      const tagoviList =
+        typeof tagovi === "string"
+          ? tagovi
+              .split(",")
+              .map((t) => t.trim())
+              .filter(Boolean)
+          : tagovi;
+
       for (const imeTag of tagoviList) {
-        let { data: existingTag } = await supabase
+        let { data: existingTag } = await korisnickiSupabase
           .from("TAG")
           .select("id_tag")
           .eq("ime_tag", imeTag)
@@ -113,11 +157,12 @@ router.post("/posts", async (req, res, next) => {
 
         let tagId;
         if (!existingTag) {
-          const { data: newTag, error: tagErr } = await supabase
+          const { data: newTag, error: tagErr } = await korisnickiSupabase
             .from("TAG")
             .insert([{ ime_tag: imeTag }])
             .select("id_tag")
             .single();
+
           if (!tagErr && newTag) {
             tagId = newTag.id_tag;
           }
@@ -126,14 +171,14 @@ router.post("/posts", async (req, res, next) => {
         }
 
         if (tagId) {
-          await supabase
+          await korisnickiSupabase
             .from("OBJAVA_TAG")
             .insert([{ id_tag: tagId, id_objava: objavaId }]);
         }
       }
     }
 
-    //redirecta nas na profile page
+    // 7. Uspješan povratak frontendu
     return res.redirect(303, "/profile");
   } catch (err) {
     console.error("Greška kod kreiranja objave:", err.message);
