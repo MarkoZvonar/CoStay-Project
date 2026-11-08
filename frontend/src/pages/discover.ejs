@@ -44,180 +44,96 @@
     </div>
   </div>
 
-  <div class="tijelo">
-    <% if (smjestaji && smjestaji.length> 0) { %>
-      <% smjestaji.forEach(smjestaj=> { %>
-        <div class="kartica">
-          <!-- 1. dio: Slika, datum, lokacija i cijena -->
-          <div class="karticaSlika">
-            <% const slike = (smjestaj.OBJAVA_SLIKA || []).filter(slika => slika.url_slika); %>
+    
+    <div class="tijelo">
 
-            <div class="galerija">
-              <% if (slike.length > 0) { %>
+      <!-- Prvo prikazujemo objave koje odgovaraju tagovima korisnika -->
+      <div id="objaveSTagovima" style="display: contents;">
+        <% if (smjestaji && smjestaji.length > 0) { %>
+          <% smjestaji.forEach(smjestaj => { %>
+            <%- include('../components/objavaKartica', {
+              smjestaj: smjestaj,
+              spremljeneObjaveIds: spremljeneObjaveIds,
+              mojiZahtjevi: mojiZahtjevi,
+              jeGost: jeGost
+            }) %>
+          <% }) %>
+        <% } else { %>
+          <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">
+            Trenutno nema objava koje odgovaraju vašim tagovima.
+          </p>
+        <% } %>
+      </div>
 
-                <% slike.forEach((slika, index) => { %>
-                  <img src="<%= slika.url_slika %>" alt="Slika smještaja" class="galerijaSlika <%= index === 0 ? 'aktivna' : '' %>"/>
-                <% }) %>
+      <!-- Separator između personaliziranih i ostalih objava -->
 
-              <% } else { %>
-
-                <img src="<%= smjestaj.slika_url || '/assets/probnaSlikaKartica.jpg' %>"  alt="Slika smještaja"  class="galerijaSlika aktivna"/>
-
-              <% } %>
-
-              <% if (slike.length > 1) { %>
-                <button type="button" class="galerijaStrelica lijevo" aria-label="Prethodna slika">&#10094;</button>
-                <button type="button" class="galerijaStrelica desno" aria-label="Sljedeća slika">&#10095;</button>
-                <span class="galerijaBrojac">1 / <%= slike.length %></span>
-              <% } %>
-            </div>
-
-            <% const spremljeno=spremljeneObjaveIds && spremljeneObjaveIds.includes(smjestaj.id_objava); %>
-
-              <% if (!jeGost) { %>
-                <button type="button" class="spremiGumb <%= spremljeno ? 'spremljen' : '' %>"
-                  data-id="<%= smjestaj.id_objava %>" data-spremljeno="<%= spremljeno %>"
-                  aria-label="<%= spremljeno ? 'Ukloni iz spremljenih' : 'Spremi objavu' %>">
-                  <%= spremljeno ? '♥' : '+' %>
-                </button>
-                <% } %>
-
-                  <div class="datum">
-                    <% const options={ month: 'short' , day: 'numeric' }; const checkInDate=smjestaj.check_in ? new
-                      Date(smjestaj.check_in).toLocaleDateString('en-US', options) : 'Jan 12' ; const
-                      checkOutDate=smjestaj.check_out ? new Date(smjestaj.check_out).toLocaleDateString('en-US',
-                      options) : 'Mar 4' ; %>
-
-                      <%= checkInDate %> - <%= checkOutDate %>
-                  </div>
-
-                  <div class="slikaDno">
-                    <div class="lokacija">
-                      <span class="lokacijaIkona">📍</span>
-                      <span>
-                        <%= smjestaj.id_lokacije ? smjestaj.id_lokacije.ime_lokacije + ', ' +
-                          smjestaj.id_lokacije.ime_drzave: 'Nepoznata lokacija' %>
-                      </span>
-                    </div>
-                    <div class="cijena">
-                      <%= smjestaj.ukupna_cijena %> €
-                    </div>
-                  </div>
-          </div>
-
-          <!-- 2. dio: Tagovi -->
-          <div class="karticaTagovi">
-            <% if (smjestaj.OBJAVA_TAG && smjestaj.OBJAVA_TAG.length> 0) { %>
-              <% smjestaj.OBJAVA_TAG.forEach(t=> { %>
-                <% const nazivTaga=t.TAG ? t.TAG.ime_tag : (t.id_tag ? t.id_tag.ime_tag : t.ime_tag); %>
-                  <% if (nazivTaga) { %>
-                    <span class="tag">
-                      <%= nazivTaga.trim() %>
-                    </span>
-                    <% } %>
-                      <% }) %>
-                        <% } else { %>
-                          <span class="tag">Smještaj</span>
-                          <% } %>
-          </div>
-
-          <!-- 3. dio: Kapacitet -->
-          <div class="karticaKapacitet">
-            <div class="kapacitetStavka">
-              <span class="kapacitetNaslov">Ukupni kapacitet</span>
-              <span class="kapacitetVrijednost">
-                <%= smjestaj.ukupni_kapacitet %> osoba
-              </span>
-            </div>
-
-            <div class="kapacitetStavka">
-              <span class="kapacitetNaslov">Preostala mjesta</span>
-              <span class="kapacitetVrijednost">
-                <%= smjestaj.preostalih_mjesta %> osoba
-              </span>
-            </div>
-          </div>
-
-          <!-- 4. dio: Kontakt -->
-          <div class="karticaKontakt">
-            <div class="organizator">
-              <span class="organizatorNaslov">Organizator</span>
-              <span class="organizatorIme">
-                <%= smjestaj.id_autor ? (smjestaj.id_autor.ime + ' ' + smjestaj.id_autor.prezime) : 'Ivan Horvat' %>
-              </span>
-            </div>
-            <% const mojZahtjev=(mojiZahtjevi || []).find( z=> String(z.id_objava) === String(smjestaj.id_objava)
-              );
-
-              const prihvacen = mojZahtjev?.status_zahtjeva === "prihvacen";
-              const poslan = mojZahtjev?.status_zahtjeva === "na_cekanju";
-              %>
-              <button type="button" class="messageGumb" id="zahtjev-<%= smjestaj.id_objava %>"
-                onclick="posaljiZahtjev('<%= smjestaj.id_objava %>')" <%=(prihvacen || poslan) ? "disabled" : "" %>
-                >
-                <%= prihvacen ? "ZAHTJEV PRIHVAĆEN" : poslan ? "ZAHTJEV POSLAN" : "POŠALJI ZAHTJEV" %>
-              </button>
-          </div>
+      <% if (!jeGost) { %>
+        <div class="separatorObjava">
+          <span>Ostale objave</span>
         </div>
-        <% }) %>
-          <% } else { %>
-            <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">Trenutno nema pronađenih
-              smještaja koji odgovaraju vašim tagovima.</p>
-            <% } %>
-  </div>
+
+        <div id="ostaleObjave" style="display: contents;"></div>
+
+        <div id="ucitavanjeOstalih" style="grid-column: 1 / -1; height: 20px;"></div>
+      <% } %>
+
+
+    </div>
+
+
 
   <%- include('../components/navbar') %>
     <script>
-      const spremiGumbi = document.querySelectorAll(".spremiGumb");
+      
+      const tijelo = document.querySelector(".tijelo");
 
-      // Promjena slika u galeriji
-      const galerije = document.querySelectorAll(".galerija");
+      // Promjena slika u galeriji i spremanje objava
+      tijelo.addEventListener("click", async (event) => {
 
-      galerije.forEach((galerija) => {
-        const slike = galerija.querySelectorAll(".galerijaSlika");
-        const lijevo = galerija.querySelector(".galerijaStrelica.lijevo");
-        const desno = galerija.querySelector(".galerijaStrelica.desno");
-        const brojac = galerija.querySelector(".galerijaBrojac");
+        // 1. GALERIJA SLIKA
+        const strelica = event.target.closest(".galerijaStrelica");
 
-        let trenutnaSlika = 0;
+        if (strelica) {
+          const galerija = strelica.closest(".galerija");
+          const slike = galerija.querySelectorAll(".galerijaSlika");
+          const brojac = galerija.querySelector(".galerijaBrojac");
 
-        function prikaziSliku(index) {
-          slike[trenutnaSlika].classList.remove("aktivna");
+          let trenutnaSlika = 0;
 
-          trenutnaSlika = index;
+          slike.forEach((slika, index) => {
+            if (slika.classList.contains("aktivna")) {
+              trenutnaSlika = index;
+            }
+          });
 
+          if (strelica.classList.contains("lijevo")) {
+            trenutnaSlika--;
+
+            if (trenutnaSlika < 0) {
+              trenutnaSlika = slike.length - 1;
+            }
+          } else {
+            trenutnaSlika++;
+
+            if (trenutnaSlika >= slike.length) {
+              trenutnaSlika = 0;
+            }
+          }
+
+          slike.forEach(slika => slika.classList.remove("aktivna"));
           slike[trenutnaSlika].classList.add("aktivna");
 
           if (brojac) {
             brojac.textContent = `${trenutnaSlika + 1} / ${slike.length}`;
           }
+
+          return;
         }
 
-        if (lijevo && desno) {
-          lijevo.addEventListener("click", () => {
-            let novaSlika = trenutnaSlika - 1;
+        // 2. SPREMANJE OBJAVE
+        const gumb = event.target.closest(".spremiGumb");
 
-            if (novaSlika < 0) {
-              novaSlika = slike.length - 1;
-            }
-
-            prikaziSliku(novaSlika);
-          });
-
-          desno.addEventListener("click", () => {
-            let novaSlika = trenutnaSlika + 1;
-
-            if (novaSlika >= slike.length) {
-              novaSlika = 0;
-            }
-
-            prikaziSliku(novaSlika);
-          });
-        }
-      });
-
-      spremiGumbi.forEach((gumb) => {
-        gumb.addEventListener("click", async () => {
+        if (gumb) {
           const idObjava = gumb.dataset.id;
           const spremljeno = gumb.dataset.spremljeno === "true";
 
@@ -235,27 +151,28 @@
             }
 
             if (spremljeno) {
-              // Objavu smo uklonili iz spremljenih
               gumb.textContent = "+";
               gumb.dataset.spremljeno = "false";
               gumb.classList.remove("spremljen");
               gumb.setAttribute("aria-label", "Spremi objavu");
             } else {
-              // Objavu smo spremili
               gumb.textContent = "♥";
               gumb.dataset.spremljeno = "true";
               gumb.classList.add("spremljen");
               gumb.setAttribute("aria-label", "Ukloni iz spremljenih");
             }
+
           } catch (error) {
             console.error(error);
             alert("Došlo je do greške. Pokušajte ponovno.");
           } finally {
             gumb.disabled = false;
           }
-        });
+        }
       });
 
+
+      // 3. SLANJE ZAHTJEVA ZA PRIDRUŽIVANJE
       async function posaljiZahtjev(idObjava) {
         const gumb = document.getElementById(`zahtjev-${idObjava}`);
 
@@ -283,7 +200,6 @@
             return;
           }
 
-          // Promjena teksta gumba nakon uspješnog slanja
           gumb.textContent = "ZAHTJEV POSLAN";
 
           alert("Zahtjev za pridruživanje uspješno je poslan!");
@@ -292,13 +208,87 @@
           console.error("Greška:", error);
           alert("Došlo je do greške. Pokušajte ponovno.");
         } finally {
-          // Ako je zahtjev uspješno poslan, gumb ostaje zaključan.
-          // Ako nije, ponovno omogućujemo klik.
           if (gumb.textContent !== "ZAHTJEV POSLAN") {
             gumb.disabled = false;
           }
         }
       }
+
+            
+      // 4. INFINITE SCROLL ZA OSTALE OBJAVE
+
+      const jeGost = <%- JSON.stringify(jeGost) %>;
+
+      if (!jeGost) {
+        const spremnikOstalihObjava = document.getElementById("ostaleObjave");
+        const ucitavanjeOstalih = document.getElementById("ucitavanjeOstalih");
+
+        let offset = 0;
+        let ucitavanjeUTijeku = false;
+        let imaJosObjava = true;
+
+        async function ucitajOstaleObjave() {
+          // Sprječavamo istovremeno slanje više zahtjeva
+          if (ucitavanjeUTijeku || !imaJosObjava) {
+            return;
+          }
+
+          ucitavanjeUTijeku = true;
+
+          try {
+            const odgovor = await fetch(
+              `/discover/ostale-objave?offset=${offset}`
+            );
+
+            if (!odgovor.ok) {
+              throw new Error("Dohvat ostalih objava nije uspio.");
+            }
+
+            const rezultat = await odgovor.json();
+
+            // Dodavanje novih kartica na kraj postojećih
+            spremnikOstalihObjava.insertAdjacentHTML(
+              "beforeend",
+              rezultat.html
+            );
+
+            // Pamtimo gdje smo stali
+            offset = rezultat.sljedeciOffset;
+
+            // Provjeravamo postoje li još objave
+            imaJosObjava = rezultat.imaJos;
+
+            if (!imaJosObjava) {
+              observer.disconnect();
+              ucitavanjeOstalih.remove();
+            }
+
+          } catch (error) {
+            console.error("Greška kod učitavanja ostalih objava:", error);
+            observer.disconnect();
+            ucitavanjeOstalih.textContent =
+              "Došlo je do greške kod učitavanja objava.";
+          } finally {
+            ucitavanjeUTijeku = false;
+          }
+        }
+
+        // Učitavanje kada se približimo dnu stranice
+        const observer = new IntersectionObserver((entries) => {
+          entries.forEach(entry => {
+            if (entry.isIntersecting) {
+              ucitajOstaleObjave();
+            }
+          });
+        }, {
+          root: null,
+          rootMargin: "300px",
+          threshold: 0
+        });
+
+        observer.observe(ucitavanjeOstalih);
+      }
+
 
 
 

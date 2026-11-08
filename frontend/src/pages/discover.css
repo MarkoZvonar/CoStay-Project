@@ -490,6 +490,25 @@ body {
   font-weight: bold;
 }
 
+.separatorObjava {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin: 10px 0;
+  color: #344e41;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.separatorObjava::before,
+.separatorObjava::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background-color: #b8c2ba;
+}
+
 /* 4 kartice */
 @media (min-width: 1650px) {
   .tijelo {
