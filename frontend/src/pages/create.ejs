@@ -10,6 +10,19 @@
 
   <body>
     <main class="createTijelo">
+      <!-- Box za greške -->
+      <div
+        id="errorAlert"
+        style="
+          display: none;
+          background-color: #f8d7da;
+          color: #721c24;
+          padding: 12px;
+          border: 1px solid #f5c6cb;
+          border-radius: 4px;
+          margin-bottom: 15px;
+        "
+      ></div>
       <h1 class="createNaslov">Create Travel Post</h1>
 
       <form
@@ -127,6 +140,6 @@
 
     <%- include('../components/navbar') %>
 
-    <script src="create.js"></script>
+    <script src="/pages/create.js"></script>
   </body>
 </html>
