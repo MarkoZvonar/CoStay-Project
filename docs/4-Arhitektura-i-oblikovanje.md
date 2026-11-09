@@ -84,8 +84,8 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 **Cilj:** Prikazati važne pohranjene entitete, njihove identifikatore i veze te dovoljno atributa za razumijevanje podataka aplikacije. ER dijagram odvojen je od reprezentativnog UML dijagrama razreda u nastavku.
 
 **ER dijagram:** [ER dijagram](./assets/diagrams/4-3-1-costay-data-ERD.svg)
-**Izvor dijagrama:** [puml] (./puml/4-3-1-costay-data-ERD.puml)  
-**Implementacija:** [sql] (../supabase/migrations/20261109185243_create_costay_database.sql)
+**Izvor dijagrama:** [puml](./puml/4-3-1-costay-data-ERD.puml)  
+**Implementacija:** [sql](../supabase/migrations/20261109185243_create_costay_database.sql)
 
 
 <summary><strong>Stvaranje objave te podaci i veze </strong></summary>
