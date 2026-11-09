@@ -247,7 +247,7 @@ function tekst(vrijednost) {
     return "";
 }
 
-router.post("/edit", requireRegistered,
+router.post("/edit", requireRegistered, upload.single("profilnaSlika"),
     async (req, res, next) => {
         try {
             const ime = tekst(req.body.profilIme);
@@ -260,16 +260,42 @@ router.post("/edit", requireRegistered,
             }
 
             const korisnickiSupabase = kreirajSupabase(req);
+            let profilnaSlikaUrl;
+
+            if(req.file) {
+                const putanjaSlike = `${req.korisnik.id_korisnik}/profilna`;
+
+                const {error: uploadError} = await korisnickiSupabase.storage
+                    .from("profilne slike")
+                    .upload(putanjaSlike, req.file.buffer, {
+                        contentType: req.file.mimetype,
+                        upsert: true
+                    });
+
+                if(uploadError) return next(uploadError);
+
+                const {data:urlData} = korisnickiSupabase.storage
+                    .from("profilne slike")
+                    .getPublicUrl(putanjaSlike);
+
+                profilnaSlikaUrl = urlData.publicUrl;
+            }
+
+            const podaciZaUpdate = {
+                ime: ime,
+                prezime: prezime,
+                mjesto_stanovanja: mjestoStanovanja,
+                opis: opis
+            };
+
+            if(profilnaSlikaUrl) {
+                podaciZaUpdate.profilna_slika_url = profilnaSlikaUrl;
+            }
 
             //azuriramo profil prijavljenog korisnika
             const {data, error} = await korisnickiSupabase
                 .from("KORISNIK")
-                .update({
-                    ime: ime,
-                    prezime: prezime,
-                    mjesto_stanovanja: mjestoStanovanja,
-                    opis: opis
-                })
+                .update(podaciZaUpdate)
                 .eq("id_korisnik", req.korisnik.id_korisnik)
                 .select("id_korisnik")
                 .maybeSingle();
@@ -297,65 +323,5 @@ router.post("/edit", requireRegistered,
 router.get("/edit/:idObjava", requireRegistered, async(req, res, next) => {
 
 });
-
-
-router.post(
-    "/profilna-slika",
-    requireRegistered,
-    upload.single("profilnaSlika"),
-    async (req, res, next) => {
-      try {
-        if (!req.file) {
-          return res.status(400).send("Niste odabrali sliku.");
-        }
-  
-        const korisnickiSupabase = kreirajSupabase(req);
-  
-        const idKorisnik = req.korisnik.id_korisnik;
-  
-        // Putanja slike u Storageu
-        const putanjaSlike = `${idKorisnik}/profilna`;
-  
-        // Upload slike u Supabase Storage
-        const { data: uploadData, error: uploadError } =
-          await korisnickiSupabase.storage
-            .from("profilne slike")
-            .upload(putanjaSlike, req.file.buffer, {
-              contentType: req.file.mimetype,
-              upsert: true,
-            });
-  
-        if (uploadError) {
-          console.error("Greška kod uploada:", uploadError);
-          return next(uploadError);
-        }
-  
-        // Dohvaćanje javnog URL-a slike
-        const { data: urlData } = korisnickiSupabase.storage
-          .from("profilne slike")
-          .getPublicUrl(putanjaSlike);
-  
-        const profilnaSlikaUrl = urlData.publicUrl;
-  
-        // Spremanje URL-a u tablicu KORISNIK
-        const { error: updateError } = await korisnickiSupabase
-          .from("KORISNIK")
-          .update({
-            profilna_slika_url: profilnaSlikaUrl,
-          })
-          .eq("id_korisnik", idKorisnik);
-  
-        if (updateError) {
-          console.error("Greška kod spremanja URL-a:", updateError);
-          return next(updateError);
-        }
-  
-        // Povratak na profil
-        return res.redirect("/profile");
-      } catch (error) {
-        next(error);
-      }
-    }
-  );
 
 export default router;
