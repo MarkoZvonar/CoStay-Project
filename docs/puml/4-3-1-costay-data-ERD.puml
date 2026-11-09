@@ -1,0 +1,189 @@
+
+' CoStay - ER dijagram temeljen na SQL DDL-u
+@startuml
+
+title CoStay - ER model podataka
+
+hide circle
+left to right direction
+
+skinparam linetype ortho
+skinparam shadowing false
+skinparam defaultFontName Arial
+
+skinparam entity {
+  BackgroundColor #F0F6FF
+  BorderColor #315A87
+}
+
+entity "KORISNIK" as KORISNIK {
+  * id_korisnik : uuid <<PK>>
+  --
+  ime : character varying
+  prezime : character varying
+  datum_rodenja : date
+  spol : enum
+  mjesto_stanovanja : character varying
+  email : character varying
+  profilna_slika_url : text
+  uloga : enum
+  status_korisnickog_racuna : enum
+  datum_kreiranja_racuna : timestamp
+  opis : text
+}
+
+entity "TAG" as TAG {
+  * id_tag : uuid <<PK>>
+  --
+  ime_tag : character varying
+}
+
+entity "KORISNIK_TAGOVI" as KORISNIK_TAGOVI {
+  * id_tag : uuid <<PK, FK>>
+  * id_korisnik : uuid <<PK, FK>>
+}
+
+entity "LOKACIJA" as LOKACIJA {
+  * id_lokacije : uuid <<PK>>
+  --
+  ime_lokacije : character varying
+  latitude : numeric
+  longitude : numeric
+  ime_drzave : text
+}
+
+entity "OBJAVA" as OBJAVA {
+  * id_objava : uuid <<PK>>
+  --
+  id_autor : uuid <<FK>>
+  id_lokacije : uuid <<FK>>
+  check_in : date
+  check_out : date
+  ukupna_cijena : numeric
+  ukupni_kapacitet : integer
+  preostalih_mjesta : integer
+  opis : text
+  booking_url : text
+  rok_prijave : timestamp
+  status_objave : enum
+  datum_kreiranja_objave : timestamp
+}
+
+entity "OBJAVA_SLIKA" as OBJAVA_SLIKA {
+  * id_slika : uuid <<PK>>
+  --
+  id_objava : uuid <<FK>>
+  url_slika : text
+}
+
+entity "OBJAVA_TAG" as OBJAVA_TAG {
+  * id_tag : uuid <<PK, FK>>
+  * id_objava : uuid <<PK, FK>>
+}
+
+entity "SPREMLJENA_OBJAVA" as SPREMLJENA_OBJAVA {
+  * id_korisnik : uuid <<PK, FK>>
+  * id_objava : uuid <<PK, FK>>
+}
+
+entity "ZAHTJEV_ZA_PRIDRUZIVANJE" as ZAHTJEV_ZA_PRIDRUZIVANJE {
+  * id_zahtjev : uuid <<PK>>
+  --
+  id_podnositelja : uuid <<FK>>
+  id_objava : uuid <<FK>>
+  status_zahtjeva : enum
+  datum_kreiranja_zahtjeva : timestamp
+}
+
+entity "RECENZIJA" as RECENZIJA {
+  * id_recenzija : uuid <<PK>>
+  --
+  id_autor : uuid <<FK>>
+  id_primatelj : uuid <<FK>>
+  id_objava : uuid <<FK>>
+  ocjena : integer
+  komentar : text
+  datum_objave_recenzije : timestamp
+}
+
+entity "PRIJAVA_NEPRIMJERENOG_SADRZAJA" as PRIJAVA_NEPRIMJERENOG_SADRZAJA {
+  * id_prijava : uuid <<PK>>
+  --
+  id_autor_prijave : uuid <<FK>>
+  tip_prijave : enum
+  id_prijavljenog_sadrzaja : uuid
+  id_prijavljenog_korisnika : uuid <<FK>>
+  razlog : character varying
+  opis : text
+  vrijeme_stvaranja_prijave : timestamp
+  status_prijave : enum
+  poduzeta_mjera : text
+}
+
+entity "TROSKOVI" as TROSKOVI {
+  * id_trosak : uuid <<PK>>
+  --
+  id_korisnik : uuid <<FK>>
+  id_objava : uuid <<FK>>
+  iznos : numeric
+  rok_placanja : timestamp
+  datum_placanja : timestamp
+  status_placanja : enum
+}
+
+entity "RAZGOVOR" as RAZGOVOR {
+  * id_razgovor : uuid <<PK>>
+  --
+  razgovor_tip : enum
+  id_objava : uuid <<FK>>
+}
+
+entity "PORUKA" as PORUKA {
+  * id_poruka : uuid <<PK>>
+  --
+  id_razgovor : uuid <<FK>>
+  id_posiljatelj : uuid <<FK>>
+  poruka : text
+  vrijeme_slanja : timestamp
+}
+
+entity "SUGOVORNIK" as SUGOVORNIK {
+  * id_razgovor : uuid <<PK, FK>>
+  * id_sugovornik : uuid <<PK, FK>>
+}
+
+TAG ||--o{ KORISNIK_TAGOVI: dijeli se na > 
+KORISNIK ||--o{ KORISNIK_TAGOVI : sprema >
+
+KORISNIK ||--o{ OBJAVA :  kreira >
+LOKACIJA ||--o{ OBJAVA :  se poziva na >
+
+OBJAVA ||--o{ OBJAVA_SLIKA : sadrzi >
+
+TAG ||--o{ OBJAVA_TAG: dijeli se na >
+OBJAVA ||--o{ OBJAVA_TAG : sadrzi >
+
+KORISNIK ||--o{ SPREMLJENA_OBJAVA: sprema > 
+OBJAVA ||--o{ SPREMLJENA_OBJAVA: moze postati >
+
+KORISNIK ||--o{ ZAHTJEV_ZA_PRIDRUZIVANJE: salje >
+OBJAVA ||--o{ ZAHTJEV_ZA_PRIDRUZIVANJE: < se odnosi na
+
+OBJAVA ||--o{ RECENZIJA : omogucuje >
+KORISNIK ||--o{ RECENZIJA : pise >
+KORISNIK ||--o{ RECENZIJA : < prima 
+
+KORISNIK ||--o{ PRIJAVA_NEPRIMJERENOG_SADRZAJA : salje >
+KORISNIK ||--o{ PRIJAVA_NEPRIMJERENOG_SADRZAJA : < se odnosi na 
+
+KORISNIK ||--o{ TROSKOVI : ima >
+OBJAVA ||--o{ TROSKOVI : uzrokuje >
+
+OBJAVA ||--o{ RAZGOVOR : omogucuje > 
+RAZGOVOR ||--o{ PORUKA : < je dio
+KORISNIK ||--o{ PORUKA : salje >
+
+RAZGOVOR ||--o{ SUGOVORNIK : < je dio 
+KORISNIK ||--o{ SUGOVORNIK : je >
+
+@enduml
