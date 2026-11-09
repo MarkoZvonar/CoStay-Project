@@ -90,7 +90,7 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 <summary><strong>Stvaranje objave te podaci i veze </strong></summary>
 
-![ER dijagram podataka sustava CrisisMap](./assets/diagrams/4-2-crisismap-data-ERD.svg)
+![ER dijagram podataka sustava CrisisMap](./assets/diagrams/4-3-1-costay-data-ERD.svg)
 
 **Slika 4.2. ER dijagram podataka sustava CrisisMap**
 
@@ -104,6 +104,7 @@ modeliraju veze više-na-više.
 
 
 | Element | Opis |
+| :--- | :--- | :--- |
 | Korisnici i interesi | KORISNIK, TAG, KORISNIK_TAGOVI; status korisničkog profila, uloga, drugi statusi i interesi |
 | Objave i lokacije | OBJAVA, LOKACIJA, OBJAVA_SLIKA, OBJAVA_TAG, SPREMLJENA_OBJAVA; detalji puta, fotografije i spremljene objave |
 | Dogovaranje | ZAHTJEV_ZA_PRIDRUZIVANJE; podnositelj, objava, status  | 
