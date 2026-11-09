@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="/pages/search.css" />
     <link rel="stylesheet" href="/pages/main.css" />
+    <script src="/components/map.js"></script>
     <title>Search</title>
   </head>
 
@@ -24,8 +25,43 @@
     <% if (query == 0) { %>
       <form id="form" action="/search" method="POST">
         <div class="formGrupa">
-          <label for="location">Location:</label>
-          <input type="text" id="location" name="location" />
+          <div class="location-group">
+            <% if (map == 0) { %>
+              <input type="hidden" name="mapq" id="mapq" value="0">
+              <div class="location-text">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" />
+              </div>
+
+              <a href="/search/map" class="map-button">
+                <span>Show Map</span>
+              </a>
+            <% } else { %>
+              <div class="location-text">
+                <label for="radius">Location Radius (km):</label>
+                <input type="number" id="radius" name="radius" min="0" step="0.1" max="100" placeholder="Default: 10"/>
+              </div>
+
+              <a href="/search" class="map-button">
+                <span>Hide Map</span>
+              </a>
+            <% } %>
+          </div>
+
+          <% if (map == 1) { %>
+            <input type="hidden" name="latitude" id="latitude">
+            <input type="hidden" name="longitude" id="longitude">
+            <input type="hidden" name="mapq" id="mapq" value="1">
+
+            <div id="autocomplete-container"></div>
+
+            <div id="map"></div>
+
+            <script
+              async
+              src="https://maps.googleapis.com/maps/api/js?key=AIzaSyArVnQ6kpduKhsjXhQT2_exD7nY-GWilIY&loading=async&libraries=places&callback=initMap">
+            </script>
+          <% } %>
         </div>
 
         <div id="date">

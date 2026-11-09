@@ -6,9 +6,35 @@ dotenv.config();
 
 const router = express.Router();
 
+function calculateDistance(lat1, lon1, lat2, lon2) {
+  const R = 6371; // Radijus Zemlje u km
+
+  const dLat = (lat2 - lat1) * Math.PI / 180;
+  const dLon = (lon2 - lon1) * Math.PI / 180;
+
+  const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+  return R * c;
+}
+
 router.get("/", async (req, res) => {
   
   res.render("search", {
+    map: 0,
+    query: 0,
+    data: []
+  });
+});
+
+router.get("/map", async (req, res) => {
+  res.render("search", {
+    map: 1,
     query: 0,
     data: []
   });
@@ -30,7 +56,9 @@ router.post("/", async (req, res) => {
       ),
       LOKACIJA!id_lokacije (
         ime_lokacije,
-        ime_drzave
+        ime_drzave,
+        latitude,
+        longitude
       ),
       check_in,
       check_out,
@@ -51,10 +79,23 @@ router.post("/", async (req, res) => {
 
   data.forEach(item => {
     item.keep = true;
-    if (req.body.location && item.LOKACIJA.ime_lokacije.toLowerCase() !== req.body.location.toLowerCase()) {
-      item.keep = false;
-      return;
+
+    if (req.body.mapq == "0") {
+      if (req.body.location && item.LOKACIJA.ime_lokacije.toLowerCase() !== req.body.location.toLowerCase()) {
+        item.keep = false;
+        return;
+      }
+    } else if (req.body.mapq == "1") {
+      let radius = req.body.radius ? parseFloat(req.body.radius) : 10;
+      let x = parseFloat(req.body.latitude);
+      let y = parseFloat(req.body.longitude);
+      let distance = calculateDistance(x, y, item.LOKACIJA.latitude, item.LOKACIJA.longitude);
+      if (distance > radius) {
+        item.keep = false;
+        return;
+      }
     }
+ 
     if (req.body.organizator && (item.KORISNIK.ime + " " + item.KORISNIK.prezime).toLowerCase() !== req.body.organizator.toLowerCase()) {
       item.keep = false;
       return;
@@ -125,6 +166,7 @@ router.post("/", async (req, res) => {
   data = data.filter(item => item.keep);
 
   res.render("search", {
+    map: 0,
     query: 1,
     data: data
   })

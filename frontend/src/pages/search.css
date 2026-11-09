@@ -15,6 +15,13 @@
   display: none;
 }
 
+html,
+body {
+  margin: 0;
+  min-height: 100%;
+  height: auto;
+}
+
 body {
   display: flex;
   flex-direction: column;
@@ -22,10 +29,10 @@ body {
   background-color: rgb(240, 237, 237);
 
   width: 100%;
-  height: 110vh;
   gap: 30px;
+  min-height: 100vh;
+  overflow-y: auto;
 }
-
 
 .naslov {
   min-height: 82px;
@@ -250,6 +257,52 @@ label {
     accent-color: #276329;
 }
 
+.map-button {
+  display: inline-block;
+  padding: 10px 14px;
+  background-color: #344e41;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  text-decoration: none;
+  transition:
+  background-color 0.2s,
+  transform 0.1s;
+  width: 20%;
+}
+
+.map-container {
+  width: 100%;
+  margin: 20px 0;
+}
+
+#map-search {
+  width: 100%;
+  height: 40px;
+  padding: 10px;
+  margin-bottom: 10px;
+  box-sizing: border-box;
+}
+
+#map {
+  width: 100%;
+  height: 500px;
+  min-height: 500px;
+  border-radius: 10px;
+}
+
+.location-group {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+}
+
+.location-text {
+  width: 100%;
+}
+
 button {
   width: 100%;
   height: 48px;
@@ -261,15 +314,15 @@ button {
   border-radius: 9px;
   cursor: pointer;
   transition:
-    background-color 0.2s,
-    transform 0.1s;
+  background-color 0.2s,
+  transform 0.1s;
 }
 
-button:hover {
+button:hover, .map-button:hover {
   background-color: #263b30;
 }
 
-button:active {
+button:active, .map-button:active {
   transform: scale(0.99);
 }
 
@@ -512,6 +565,10 @@ button:active {
 
 .messageGumb:hover {
   background-color: #263b30;
+}
+
+#navbar {
+  padding-top: 100px;
 }
 
 /* 4 kartice */
