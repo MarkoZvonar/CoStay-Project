@@ -349,37 +349,107 @@ router.post(
   async (req, res, next) => {
     try {
       const korisnickiSupabase = kreirajSupabase(req);
+      const idKorisnik = req.korisnik.id_korisnik;
+      const idObjava = req.params.idObjava;
 
+      // Provjera postoji li već zahtjev
+      const { data: postojeci, error: provjeraError } =
+        await korisnickiSupabase
+          .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+          .select("status_zahtjeva")
+          .eq("id_podnositelja", idKorisnik)
+          .eq("id_objava", idObjava)
+          .maybeSingle();
+
+      if (provjeraError) return next(provjeraError);
+
+      // Ako zahtjev postoji, možemo ga ponovno poslati samo ako je povučen
+      if (postojeci) {
+        if (postojeci.status_zahtjeva !== "povucen") {
+          return res.status(409).json({
+            uspjeh: false,
+            poruka: "Zahtjev već postoji i nije povučen."
+          });
+        }
+
+        const { data, error } = await korisnickiSupabase
+          .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+          .update({ status_zahtjeva: "na_cekanju" })
+          .eq("id_podnositelja", idKorisnik)
+          .eq("id_objava", idObjava)
+          .eq("status_zahtjeva", "povucen")
+          .select()
+          .single();
+
+        if (error) return next(error);
+
+        return res.json({
+          uspjeh: true,
+          poruka: "Zahtjev je ponovno poslan!",
+          zahtjev: data
+        });
+      }
+
+      // Ako zahtjev ne postoji, stvaramo novi
       const { data, error } = await korisnickiSupabase
         .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
         .insert({
-          id_podnositelja: req.korisnik.id_korisnik,
-          id_objava: req.params.idObjava,
+          id_podnositelja: idKorisnik,
+          id_objava: idObjava
         })
         .select()
         .single();
 
-      if (error) {
-        if (error.code === "23505") {
-          return res.status(409).json({
-            uspjeh: false,
-            poruka: "Već ste poslali zahtjev za ovu objavu.",
-          });
-        }
-
-        return next(error);
-      }
+      if (error) return next(error);
 
       return res.status(201).json({
         uspjeh: true,
         poruka: "Zahtjev za pridruživanje uspješno je poslan!",
-        zahtjev: data,
+        zahtjev: data
       });
+
     } catch (error) {
       next(error);
     }
-  },
+  }
 );
+
+router.patch(
+  "/pridruzi-se/:idObjava",
+  requireRegistered,
+  async (req, res, next) => {
+    try {
+      const korisnickiSupabase = kreirajSupabase(req);
+
+      const { data, error } = await korisnickiSupabase
+        .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+        .update({ status_zahtjeva: "povucen" })
+        .eq("id_podnositelja", req.korisnik.id_korisnik)
+        .eq("id_objava", req.params.idObjava)
+        .in("status_zahtjeva", ["na_cekanju", "prihvacen"])
+        .select()
+        .maybeSingle();
+
+      if (error) return next(error);
+
+      if (!data) {
+        return res.status(409).json({
+          uspjeh: false,
+          poruka: "Zahtjev nije moguće povući."
+        });
+      }
+
+      return res.json({
+        uspjeh: true,
+        poruka: "Zahtjev je uspješno povučen!"
+      });
+
+    } catch (error) {
+      next(error);
+    }
+  }
+);
+
 
 
 export default router;

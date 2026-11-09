@@ -508,6 +508,39 @@ body {
   height: 1px;
   background-color: #b8c2ba;
 }
+.zahtjevGumb {
+  padding: 11px 22px;
+  border-radius: 8px;
+  background-color: #344e41;
+  color: white;
+  font-size: 14px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.zahtjevGumb:hover {
+  background-color: #263b30;
+}
+
+.zahtjevGumb:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
+/* Tekst gumba za već poslani zahtjev */
+
+.zahtjevPoslan .tekstHover {
+  display: none;
+}
+
+.zahtjevPoslan:hover .tekstNormalno {
+  display: none;
+}
+
+.zahtjevPoslan:hover .tekstHover {
+  display: inline;
+}
 
 /* 4 kartice */
 @media (min-width: 1650px) {

@@ -117,24 +117,39 @@
           : 'Ivan Horvat' %>
       </span>
     </div>
-
     <%
-      const mojZahtjev = (mojiZahtjevi || []).find(
-        z => String(z.id_objava) === String(smjestaj.id_objava)
-      );
-
-      const prihvacen = mojZahtjev?.status_zahtjeva === "prihvacen";
-      const poslan = mojZahtjev?.status_zahtjeva === "na_cekanju";
-    %>
-
+    const mojZahtjev = (mojiZahtjevi || []).find(
+      zahtjev => zahtjev.id_objava === smjestaj.id_objava
+    );
+  %>
+    
+  <% if (
+    mojZahtjev &&
+    ["na_cekanju", "prihvacen"].includes(mojZahtjev.status_zahtjeva)
+  ) { %>
+  
     <button
-      type="button"
-      class="messageGumb"
+      class="zahtjevGumb zahtjevPoslan"
       id="zahtjev-<%= smjestaj.id_objava %>"
-      onclick="posaljiZahtjev('<%= smjestaj.id_objava %>')"
-      <%= (prihvacen || poslan) ? "disabled" : "" %>
+      data-id="<%= smjestaj.id_objava %>"
+      data-status="<%= mojZahtjev.status_zahtjeva %>"
     >
-      <%= prihvacen ? "ZAHTJEV PRIHVAĆEN" : poslan ? "ZAHTJEV POSLAN" : "POŠALJI ZAHTJEV" %>
+      <span class="tekstNormalno">ZAHTJEV POSLAN</span>
+      <span class="tekstHover">POVUCI ZAHTJEV</span>
     </button>
+  
+  <% } else { %>
+  
+    <button
+      class="zahtjevGumb"
+      id="zahtjev-<%= smjestaj.id_objava %>"
+      data-id="<%= smjestaj.id_objava %>"
+      data-status="<%= mojZahtjev ? mojZahtjev.status_zahtjeva : 'nema' %>"
+    >
+      POŠALJI ZAHTJEV
+    </button>
+  
+  <% } %>
+
   </div>
 </div>

@@ -44,47 +44,43 @@
     </div>
   </div>
 
-    
-    <div class="tijelo">
 
-      <!-- Prvo prikazujemo objave koje odgovaraju tagovima korisnika -->
-      <div id="objaveSTagovima" style="display: contents;">
-        <% if (smjestaji && smjestaji.length > 0) { %>
-          <% smjestaji.forEach(smjestaj => { %>
-            <%- include('../components/objavaKartica', {
-              smjestaj: smjestaj,
-              spremljeneObjaveIds: spremljeneObjaveIds,
-              mojiZahtjevi: mojiZahtjevi,
-              jeGost: jeGost
-            }) %>
-          <% }) %>
-        <% } else { %>
-          <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">
-            Trenutno nema objava koje odgovaraju vašim tagovima.
-          </p>
-        <% } %>
+  <div class="tijelo">
+
+    <!-- Prvo prikazujemo objave koje odgovaraju tagovima korisnika -->
+    <div id="objaveSTagovima" style="display: contents;">
+      <% if (smjestaji && smjestaji.length> 0) { %>
+        <% smjestaji.forEach(smjestaj=> { %>
+          <%- include('../components/objavaKartica', { smjestaj: smjestaj, spremljeneObjaveIds: spremljeneObjaveIds,
+            mojiZahtjevi: mojiZahtjevi, jeGost: jeGost }) %>
+            <% }) %>
+              <% } else { %>
+                <p style="grid-column: 1 / -1; text-align: center; font-size: 1.2rem; color: #666;">
+                  Trenutno nema objava koje odgovaraju vašim tagovima.
+                </p>
+                <% } %>
+    </div>
+
+    <!-- Separator između personaliziranih i ostalih objava -->
+
+    <% if (!jeGost) { %>
+      <div class="separatorObjava">
+        <span>Ostale objave</span>
       </div>
 
-      <!-- Separator između personaliziranih i ostalih objava -->
+      <div id="ostaleObjave" style="display: contents;"></div>
 
-      <% if (!jeGost) { %>
-        <div class="separatorObjava">
-          <span>Ostale objave</span>
-        </div>
-
-        <div id="ostaleObjave" style="display: contents;"></div>
-
-        <div id="ucitavanjeOstalih" style="grid-column: 1 / -1; height: 20px;"></div>
+      <div id="ucitavanjeOstalih" style="grid-column: 1 / -1; height: 20px;"></div>
       <% } %>
 
 
-    </div>
+  </div>
 
 
 
   <%- include('../components/navbar') %>
     <script>
-      
+
       const tijelo = document.querySelector(".tijelo");
 
       // Promjena slika u galeriji i spremanje objava
@@ -173,48 +169,80 @@
 
 
       // 3. SLANJE ZAHTJEVA ZA PRIDRUŽIVANJE
-      async function posaljiZahtjev(idObjava) {
-        const gumb = document.getElementById(`zahtjev-${idObjava}`);
+      // 3. SLANJE ZAHTJEVA ZA PRIDRUŽIVANJE
 
-        if (gumb.disabled) return;
+      async function obradiZahtjev(gumb) {
+        const idObjava = gumb.dataset.id;
+        const status = gumb.dataset.status;
+
+        const povlacenje =
+          status === "na_cekanju" || status === "prihvacen";
+
+        // Potvrda povlačenja zahtjeva
+        if (povlacenje) {
+          const potvrda = confirm(
+            "Jesi li siguran da želiš povući zahtjev?"
+          );
+
+          if (!potvrda) return;
+        }
 
         gumb.disabled = true;
 
         try {
-          const odgovor = await fetch(`/discover/pridruzi-se/${idObjava}`, {
-            method: "POST",
-          });
+          const odgovor = await fetch(
+            `/discover/pridruzi-se/${idObjava}`,
+            {
+              method: povlacenje ? "PATCH" : "POST"
+            }
+          );
 
-          const tekst = await odgovor.text();
-
-          let rezultat;
-
-          try {
-            rezultat = JSON.parse(tekst);
-          } catch {
-            throw new Error("Neispravan odgovor servera.");
-          }
+          const rezultat = await odgovor.json();
 
           if (!odgovor.ok) {
-            alert(rezultat.poruka || "Slanje zahtjeva nije uspjelo.");
-            return;
+            throw new Error(
+              rezultat.poruka || "Zahtjev nije uspio."
+            );
           }
 
-          gumb.textContent = "ZAHTJEV POSLAN";
+          if (povlacenje) {
+            // Zahtjev je povučen
+            gumb.dataset.status = "povucen";
+            gumb.classList.remove("zahtjevPoslan");
 
-          alert("Zahtjev za pridruživanje uspješno je poslan!");
+            gumb.innerHTML = "POŠALJI ZAHTJEV";
+
+            alert("Zahtjev je uspješno povučen!");
+          } else {
+            // Zahtjev je ponovno poslan
+            gumb.dataset.status = "na_cekanju";
+            gumb.classList.add("zahtjevPoslan");
+
+            gumb.innerHTML = `
+                <span class="tekstNormalno">ZAHTJEV POSLAN</span>
+                <span class="tekstHover">POVUCI ZAHTJEV</span>
+            `;
+
+            alert("Zahtjev za pridruživanje uspješno je poslan!");
+          }
 
         } catch (error) {
           console.error("Greška:", error);
-          alert("Došlo je do greške. Pokušajte ponovno.");
+          alert(error.message || "Došlo je do greške. Pokušajte ponovno.");
         } finally {
-          if (gumb.textContent !== "ZAHTJEV POSLAN") {
-            gumb.disabled = false;
-          }
+          gumb.disabled = false;
         }
       }
 
-            
+      // Event listener mora biti IZVAN funkcije obradiZahtjev
+      tijelo.addEventListener("click", async function (event) {
+        const gumb = event.target.closest(".zahtjevGumb");
+
+        if (!gumb) return;
+
+        await obradiZahtjev(gumb);
+      });
+
       // 4. INFINITE SCROLL ZA OSTALE OBJAVE
 
       const jeGost = <%- JSON.stringify(jeGost) %>;
