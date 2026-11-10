@@ -6,11 +6,11 @@
 
 **Cilj:** Prikazati granicu sustava, relevantne aktere i njihove glavne ciljeve u **preglednom UML dijagramu obrazaca uporabe**. Ako je za razumijevanje pojedinog dijela sustava potrebno prikazati više detalja, taj dio izdvojite u dodatni usmjereni dijagram. Dodatni dijagrami trebaju produbiti dio preglednog modela, a ne stvarati nepovezane ili duplicirane prikaze istog sustava.
 
-![Dijagram obrazaca uporabe sustava CrisisMap](./assets/diagrams/3-1-crisismap-system-UC.svg)
+![Dijagram obrazaca uporabe sustava CrisisMap](./assets/diagrams/3-1-costay-system-UC.svg)
 
 **Slika 3.1. Dijagram obrazaca uporabe sustava CrisisMap**
 
-**PlantUML izvor:** [izvor](./puml/3-1-crisismap-system-UC.puml)
+**PlantUML izvor:** [izvor](./puml/3-1-costay-system-UC.puml)
 
 **Provjera dijagrama:** Prikažite prepoznate uloge koje **komuniciraju s aplikacijom**, a ne dionike koji s njom nemaju interakciju. Svaki glavni korisnički cilj mora imati pridruženog aktera; uključeni obrazac uporabe može se dosegnuti preko drugog obrasca uporabe bez vlastite izravne veze s akterom. `<<include>>` i `<<extend>>` koristite samo kada odnos odgovara stvarnom ponašanju.
 
@@ -99,6 +99,41 @@ Ako odobreni zadatak umjesto toga koristi isključivo OAuth prijavu, zamijenite 
 </details>
 
 ---
+### UC-001: Pregled objava na Discoveru
+
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Neregistrirani posjetitelj ili registrirani korisnik |
+| **Povezani zahtjevi** | F-005, F-022 |
+| **Preduvjeti** | Aplikacija je dostupna, a korisnik može pristupiti stranici Discover. Za prikaz personaliziranih preporuka korisnik je prijavljen u sustav. |
+| **Glavni uspješni tok** | 1. Korisnik otvara stranicu Discover.<br>2. Aplikacija dohvaća dostupne javne objave putovanja.<br>3. Ako je korisnik prijavljen, aplikacija prikazuje preporučene objave na temelju njegove povijesti pregledavanja.<br>4. Aplikacija prikazuje objave korisniku.<br>5. Dok korisnik pomiče stranicu prema dolje, aplikacija postupno dohvaća i prikazuje dodatne objave. |
+| **Alternativni tokovi / Iznimke** | **2a — Nema dostupnih objava:** Ako trenutačno nema objava za prikaz, aplikacija prikazuje odgovarajuću poruku.<br>**5a — Neuspješno dohvaćanje dodatnih objava:** Ako dohvaćanje dodatnih objava ne uspije, aplikacija obavještava korisnika o problemu i omogućuje mu ponovni pokušaj. |
+| **Posljedice (ishod)** | Korisniku su prikazane dostupne objave putovanja. Pregledavanje objava ne mijenja njihovo stanje. |
+
+### UC-002: Spremanje objave
+
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-007 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i postoji objava koju može pregledati. |
+| **Glavni uspješni tok** | 1. Korisnik otvara objavu koju želi spremiti.<br>2. Aplikacija prikazuje detalje objave i mogućnost spremanja.<br>3. Korisnik odabire opciju spremanja objave.<br>4. Aplikacija povezuje objavu s korisničkim računom i pohranjuje podatak o spremljenoj objavi.<br>5. Aplikacija prikazuje potvrdu da je objava spremljena. |
+| **Alternativni tokovi / Iznimke** | **3a — Korisnik nije prijavljen:** Ako korisnik nije prijavljen, aplikacija zahtijeva prijavu prije korištenja funkcionalnosti spremanja.<br>**4a — Objavu nije moguće spremiti:** Ako pohrana ne uspije, aplikacija obavještava korisnika o pogrešci i ne prikazuje potvrdu uspješnog spremanja. |
+| **Posljedice (ishod)** | Objava je spremljena na korisnički račun te je korisnik može naknadno pregledati na popisu spremljenih objava u svom profilu. |
+
+### UC-003: Slanje zahtjeva za pridruživanje
+
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-008, F-010 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i postoji objava čiji je status otvoren. |
+| **Glavni uspješni tok** | 1. Korisnik otvara objavu putovanja kojoj se želi pridružiti.<br>2. Aplikacija prikazuje detalje objave i mogućnost slanja zahtjeva za pridruživanje.<br>3. Korisnik odabire opciju slanja zahtjeva.<br>4. Aplikacija provjerava je li objava i dalje otvorena.<br>5. Aplikacija pohranjuje zahtjev za pridruživanje sa statusom „na čekanju”.<br>6. Aplikacija prikazuje korisniku potvrdu da je zahtjev uspješno poslan. |
+| **Alternativni tokovi / Iznimke** | **3a — Korisnik nije prijavljen:** Ako korisnik nije prijavljen, aplikacija zahtijeva prijavu prije slanja zahtjeva.<br>**4a — Objava više nije otvorena:** Ako se status objave promijenio prije slanja zahtjeva, aplikacija obavještava korisnika da slanje zahtjeva više nije moguće.<br>**5a — Neuspješna pohrana zahtjeva:** Ako pohrana zahtjeva ne uspije, aplikacija obavještava korisnika o pogrešci i ne prikazuje potvrdu uspješnog slanja. |
+| **Posljedice (ishod)** | Zahtjev za pridruživanje uspješno je pohranjen sa statusom „na čekanju”. Korisnik može pregledati status svojih zahtjeva. Zahtjev na čekanju ne povećava broj potvrđenih sudionika objave. |
+
+
+
 
 ## 3.3 Provjera dosljednosti obrazaca uporabe
 
