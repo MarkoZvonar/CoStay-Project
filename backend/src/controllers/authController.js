@@ -1,178 +1,171 @@
-import { supabase } from "../config/supabase.js";
+import "../config/env.js";
 import { createClient } from "@supabase/supabase-js";
+import { createOAuthClient } from "../config/oauthClient.js";
 
 const BASE_URL = process.env.BASE_URL || "http://localhost:3000";
 
-export const googleLogin = async (req, res, next) => {
+const saveSession = (req) =>
+  new Promise((resolve, reject) => {
+    req.session.save((error) => {
+      if (error) return reject(error);
+      resolve();
+    });
+  });
+
+const regenerateSession = (req) =>
+  new Promise((resolve, reject) => {
+    req.session.regenerate((error) => {
+      if (error) return reject(error);
+      resolve();
+    });
+  });
+
+async function startOAuth(provider, req, res, next) {
   try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
+    res.set("Cache-Control", "no-store");
+
+    // Za promjenu računa korisnik se prvo treba odjaviti.
+    if (req.session.user?.id) {
+      return res.redirect("/");
+    }
+
+    // Nova Express sesija za novi pokušaj prijave.
+    await regenerateSession(req);
+
+    req.session.oauthStartedAt = Date.now();
+
+    const authClient = createOAuthClient(req);
+
+    const { data, error } = await authClient.auth.signInWithOAuth({
+      provider,
       options: {
-        redirectTo: `${BASE_URL}/auth/callback`,
+        redirectTo: new URL("/auth/callback", BASE_URL).href,
+        skipBrowserRedirect: true,
       },
     });
 
-    if (error) throw error;
-    res.redirect(data.url);
+    if (error || !data?.url) {
+      delete req.session.oauthStorage;
+      delete req.session.oauthStartedAt;
+      await saveSession(req);
+
+      return res
+        .status(503)
+        .send("Prijavu trenutačno nije moguće pokrenuti. Pokušaj ponovno.");
+    }
+
+    // PKCE podatke moramo spremiti PRIJE odlaska na Google/GitHub.
+    await saveSession(req);
+
+    return res.redirect(data.url);
   } catch (error) {
     next(error);
   }
-};
+}
 
-export const githubLogin = async (req, res, next) => {
-  try {
-    const { data, error } = await supabase.auth.signInWithOAuth({
-      provider: "github",
-      options: {
-        redirectTo: `${BASE_URL}/auth/callback`,
-      },
-    });
+export const googleLogin = (req, res, next) =>
+  startOAuth("google", req, res, next);
 
-    if (error) throw error;
-    res.redirect(data.url);
-  } catch (error) {
-    next(error);
-  }
-};
+export const githubLogin = (req, res, next) =>
+  startOAuth("github", req, res, next);
 
-// --- CALLBACK KOJI HVATA HASH TOKEN IZ PREGLEDNIKA ---
 export const authCallback = async (req, res, next) => {
-  res.send(`
-    <html>
-      <body style="font-family: Arial, sans-serif; text-align: center; margin-top: 50px;">
-        <h3>Prijava u tijeku, molimo pričekajte...</h3>
-        <script>
-          // Čitamo hash dio URL-a (npr. #access_token=...)
-          const hash = window.location.hash.substring(1);
-          const params = new URLSearchParams(hash);
-          const accessToken = params.get("access_token");
-          const refreshToken = params.get("refresh_token");
-
-          // Nakon čitanja uklanjamo tokene iz adresne trake.
-          window.history.replaceState(null, "", window.location.pathname);
-          if (accessToken && refreshToken) {
-            // Šaljemo token na backend rutu da se spremi u sesiju
-            fetch("/auth/set-session", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({ accessToken, refreshToken })
-            })
-            .then(response => {
-              if (response.ok) {
-                window.location.href = "/"; // Uspjeh! Vraćamo se na početnu
-              } else {
-                alert("Greška kod spremanja sesije na poslužitelju.");
-              }
-            })
-            .catch(err => {
-              console.error("Greška mreže:", err);
-            });
-          } else {
-            document.body.innerHTML = "<h3>Greška: Pristupni token nije pronađen u URL-u.</h3>";
-          }
-        </script>
-      </body>
-    </html>
-  `);
-};
-
-export const setSession = async (req, res, next) => {
   try {
-    const { accessToken, refreshToken } = req.body;
+    res.set("Cache-Control", "no-store");
+    res.set("Referrer-Policy", "no-referrer");
 
-    if (
-      typeof accessToken !== "string" ||
-      !accessToken ||
-      typeof refreshToken !== "string" ||
-      !refreshToken
-    ) {
-      return res.status(400).json({
-        error: "Nedostaju tokeni potrebni za prijavu.",
-      });
-    }
-    // 1. Pitamo Supabase: "Je li ovaj token valjan i tko je ovaj korisnik?"
-    const {
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(accessToken);
-
-    if (error || !user) {
-      return res.status(401).json({ error: "Nevaljan ili istekao token." });
-    }
-    // Zaseban klijent: korisničku sesiju ne stavljamo
-    // na zajednički globalni Supabase klijent.
-    const authClient = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-      },
-    );
-
-    // Provjeravamo refresh token i dobivamo novi par tokena.
-    const { data: refreshed, error: refreshError } =
-      await authClient.auth.refreshSession({
-        refresh_token: refreshToken,
-      });
-
-    if (refreshError) {
-      const status =
-        !refreshError.status ||
-        refreshError.status >= 500 ||
-        refreshError.status === 429
-          ? 503
-          : 401;
-
-      return res.status(status).json({
-        error: "Provjera sesije nije uspjela. Pokušaj ponovno.",
-      });
+    if (req.session.user?.id) {
+      return res.redirect("/");
     }
 
-    // Oba tokena moraju pripadati istom korisniku.
-    if (
-      !refreshed.session ||
-      !refreshed.user ||
-      refreshed.user.id !== user.id
-    ) {
-      return res.status(401).json({
-        error: "Tokeni ne pripadaju istom korisniku.",
-      });
+    const code = typeof req.query.code === "string" ? req.query.code : "";
+
+    const startedAt = req.session.oauthStartedAt;
+    const elapsed = Date.now() - startedAt;
+
+    const validAttempt =
+      Number.isFinite(startedAt) &&
+      elapsed >= 0 &&
+      elapsed <= 10 * 60 * 1000 &&
+      req.session.oauthStorage;
+
+    if (req.query.error || !code || !validAttempt) {
+      delete req.session.oauthStorage;
+      delete req.session.oauthStartedAt;
+      await saveSession(req);
+
+      return res
+        .status(400)
+        .send(
+          "Prijava je otkazana, istekla ili nije pokrenuta u ovom pregledniku. " +
+            '<a href="/login">Pokreni prijavu ponovno.</a>',
+        );
     }
-    // 2. Obnavljamo sesiju zbog sigurnosti (Session Fixation zaštita)
-    req.session.regenerate((sessionError) => {
-      if (sessionError) return next(sessionError);
-      const isAdmin = user.email === "dora0495@gmail.com"; // Primjer provjere za admina - inače koristiti bazu
-      // 3. Upisujemo podatke o korisniku u sesiju
-      req.session.user = {
-        id: user.id,
-        provider: user.app_metadata?.provider,
-        email: user.email,
-        name:
-          user.user_metadata?.full_name ||
-          user.user_metadata?.name ||
-          user.email,
-        picture: user.user_metadata?.avatar_url || "",
-        role: isAdmin ? "admin" : "user", // Dodano: uloga korisnika
-      };
-      // Token je ranije u ovoj funkciji provjeren pozivom getUser.
-      // Čuvamo ga na backendu radi korisničkih zahtjeva prema Supabaseu.
-      req.session.accessToken = refreshed.session.access_token;
-      req.session.refreshToken = refreshed.session.refresh_token;
-      req.session.accessTokenExpiresAt = refreshed.session.expires_at;
-      // 4. Snimamo sesiju i vraćamo OK odgovor frontendu
-      req.session.save((saveError) => {
-        if (saveError) return next(saveError);
-        res.status(200).json({ success: true });
-      });
+
+    // Preuzimamo privremene podatke i uklanjamo ih iz Express sesije.
+    const oauthStorage = req.session.oauthStorage;
+
+    delete req.session.oauthStorage;
+    delete req.session.oauthStartedAt;
+    await saveSession(req);
+
+    // Razmjena koristi samo podatke ovog pokušaja prijave.
+    const authClient = createOAuthClient({
+      session: { oauthStorage },
     });
+
+    const { data, error } = await authClient.auth.exchangeCodeForSession(code);
+
+    if (error || !data?.session || !data?.user) {
+      const temporaryError =
+        error && (!error.status || error.status >= 500 || error.status === 429);
+
+      return res
+        .status(temporaryError ? 503 : 401)
+        .send(
+          "Prijavu nije moguće dovršiti. " +
+            '<a href="/login">Pokreni prijavu ponovno.</a>',
+        );
+    }
+
+    const { user, session: authSession } = data;
+
+    if (!user.email || !user.email_confirmed_at) {
+      return res
+        .status(403)
+        .send(
+          "Za prijavu je potrebna potvrđena email adresa. " +
+            '<a href="/login">Povratak na prijavu.</a>',
+        );
+    }
+
+    // Nakon uspješne autentifikacije mijenjamo ID Express sesije.
+    await regenerateSession(req);
+
+    req.session.user = {
+      id: user.id,
+      email: user.email,
+      provider: user.app_metadata?.provider,
+      name:
+        user.user_metadata?.full_name || user.user_metadata?.name || user.email,
+      picture: user.user_metadata?.avatar_url || "",
+    };
+
+    req.session.accessToken = authSession.access_token;
+    req.session.refreshToken = authSession.refresh_token;
+    req.session.accessTokenExpiresAt = authSession.expires_at;
+
+    await saveSession(req);
+
+    // Postojeća početna ruta odlučuje: signup2 ili discover.
+    return res.redirect(303, "/");
   } catch (error) {
     next(error);
   }
 };
+
+// ISPOD OSTAVI SVOJU POSTOJEĆU FUNKCIJU:
+// export const emailLogin = async (req, res, next) => { ... };
 export const emailLogin = async (req, res, next) => {
   const email = typeof req.body.email === "string" ? req.body.email.trim() : "";
 

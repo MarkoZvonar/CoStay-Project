@@ -1,13 +1,14 @@
-import dotenv from "dotenv";
+import "./config/env.js";
 import path from "path";
 import { fileURLToPath } from "url";
-import { refreshSession } from "./middleware/refreshSession.js";
+import {
+  refreshSession,
+  trackSessionResponseEnd,
+} from "./middleware/refreshSession.js";
 
 // Definiranje __dirname za ES module
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-
-dotenv.config({ path: path.join(__dirname, "../.env") });
 
 import http from "http";
 import express from "express";
@@ -15,24 +16,20 @@ import session from "express-session";
 
 import pageRoutes from "./routes/pages.js";
 import authRoutes from "./routes/auth.js";
-import apiRoutes from "./routes/api.js";
 
 const app = express();
 const port = Number(process.env.PORT || 3000);
-const BASE_URL = process.env.BASE_URL || `http://localhost:${port}`;
+// Zdravstveni endpoint iz predloška
+app.get("/health", (req, res) => {
+  res.status(200).json({ status: "healthy" });
+});
+app.get("/status", (req, res) => {
+  return res.type("text/plain").send("API running");
+});
 
 // Putanja do foldera s EJS predlošcima i CSS-om
 const frontendSrcPath = path.join(__dirname, "../../frontend/src");
 const frontendPagesPath = path.join(frontendSrcPath, "pages");
-
-// Provjera obaveznih varijabli okruženja
-if (
-  !process.env.SUPABASE_URL ||
-  !process.env.SUPABASE_ANON_KEY ||
-  !process.env.SESSION_SECRET
-) {
-  throw new Error("Nedostaju obavezne vrijednosti u .env datoteci.");
-}
 
 // EJS POSTAVKE
 app.set("view engine", "ejs");
@@ -43,6 +40,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Važno za čitanje podataka iz formi
 app.use(express.static(frontendSrcPath));
 
+app.use(trackSessionResponseEnd);
 // Konfiguracija sesije
 app.use(
   session({
@@ -59,29 +57,8 @@ app.use(
 );
 app.use(refreshSession);
 // rute
-app.use("/api", apiRoutes);
 app.use("/", pageRoutes);
 app.use("/auth", authRoutes);
-
-// Zdravstveni endpoint iz predloška
-app.get("/health", (req, res) => {
-  res.status(200).json({ status: "healthy" });
-});
-
-// Pomoćna funkcija za escape HTML-a
-function escapeHtml(value) {
-  return String(value).replace(
-    /[&<>"']/g,
-    (character) =>
-      ({
-        "&": "&amp;",
-        "<": "&lt;",
-        ">": "&gt;",
-        '"': "&quot;",
-        "'": "&#39;",
-      })[character],
-  );
-}
 
 // Globalna obrada grešaka
 app.use((error, req, res, next) => {
