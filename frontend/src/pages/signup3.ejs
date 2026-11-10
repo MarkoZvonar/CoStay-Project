@@ -3,14 +3,16 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>CoStay</title>
+    <title>CoStay — dovršavanje profila</title>
 
     <link rel="stylesheet" href="/pages/signup3.css" />
   </head>
+
   <body>
     <div id="reg-box">
       <h2 class="naslov">Napravi CoStay račun</h2>
       <h1 class="opis">Zadnji korak...</h1>
+
       <div id="progress">
         <a id="prog1">████</a>
         <a id="prog2">████</a>
@@ -18,69 +20,44 @@
       </div>
 
       <form id="form" action="/signup3" method="POST">
-        <label for="opis">Opis:</label>
+        <label for="opis">Opis — neobavezno:</label>
         <textarea
           id="opis"
           name="opis"
           rows="5"
           cols="40"
+          maxlength="2000"
           placeholder="Unesi opis..."
-        ></textarea>
-
+        ><%= opis %></textarea>
+        
         <fieldset id="tagovi">
-          <legend>Tagovi</legend>
+          <legend>Ključne riječi — neobavezno</legend>
 
-          <label>
-            <input type="checkbox" name="tagovi" value="plaza" />
-            Plaža
-          </label>
+          <% if (dostupniTagovi.length === 0) { %>
+            <p>Trenutačno nema dostupnih ključnih riječi.</p>
+          <% } %>
 
-          <label>
-            <input type="checkbox" name="tagovi" value="bazen" />
-            Bazen
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="planine" />
-            Planine
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="povijest" />
-            Povijest
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="kultura" />
-            Kultura
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="foodie" />
-            Foodie
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="Sport" />
-            Sport
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="Geek" />
-            Geek
-          </label>
-
-          <label>
-            <input type="checkbox" name="tagovi" value="Geek" />
-            Party
-          </label>
+          <% dostupniTagovi.forEach((tag) => { %>
+            <label>
+              <input
+                type="checkbox"
+                name="tagovi"
+                value="<%= tag.id_tag %>"
+                <%= odabraniTagovi.includes(tag.id_tag) ? "checked" : "" %>
+              />
+              <%= tag.ime_tag %>
+            </label>
+          <% }); %>
+          <p>Postojeće ključne riječi ostaju spremljene. Ukloniti ih možeš na profilu.</p>
         </fieldset>
 
-        <button type="submit">Registracija</button>
+        <button type="submit">Spremi i nastavi</button>
       </form>
+
       <p>
         <a href="/discover">Preskoči i nastavi na Discover</a>
       </p>
+
       <div id="login-container">
         <div class="link">
           <p><a href="/signup2">Vrati se</a></p>
