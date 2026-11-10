@@ -83,24 +83,38 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 **Cilj:** Prikazati važne pohranjene entitete, njihove identifikatore i veze te dovoljno atributa za razumijevanje podataka aplikacije. ER dijagram odvojen je od reprezentativnog UML dijagrama razreda u nastavku.
 
-**ER dijagram:** [Ugradite čitljiv dijagram projekta.]  
-**Izvor dijagrama:** [Poveznica na njegov izvor.]  
-**Implementacija:** [Navedite gdje je odgovarajući model podataka definiran u projektu.]
+**ER dijagram:** [ER dijagram](./assets/diagrams/4-3-1-costay-data-ERD.svg)
+**Izvor dijagrama:** [puml](./puml/4-3-1-costay-data-ERD.puml)  
+**Implementacija:** [sql](../supabase/migrations/20261109185243_create_costay_database.sql)
 
-<details>
-<summary><strong>Jedna prijava poplave i povezani podaci</strong></summary>
 
-**Primjer — CrisisMap:** Ana putem svojeg korisničkog računa podnosi prijavu poplave `R-104`. Odabire lokaciju na karti i označava razinu ozbiljnosti kao visoku. Građanin može podnijeti više prijava; svaka prijava pripada jednoj kategoriji kriznog događaja, primjerice *Poplava*. Aplikacija pohranjuje prijavu i njezine koordinate. Kartografske pločice dolaze od vanjskog pružatelja i nisu entiteti u modelu podataka aplikacije.
+<summary><strong>Stvaranje objave te podaci i veze </strong></summary>
 
-![ER dijagram podataka sustava CrisisMap](./assets/diagrams/4-2-crisismap-data-ERD.svg)
+![ER dijagram podataka sustava CoStay](./assets/diagrams/4-3-1-costay-data-ERD.svg)
 
-**Slika 4.2. ER dijagram podataka sustava CrisisMap**
+**Slika 4.2. ER dijagram podataka sustava CoStay**
 
-**PlantUML izvor:** [izvor](./puml/4-2-crisismap-data-ERD.puml)
+**PlantUML izvor:** [izvor](./puml/4-3-1-costay-data-ERD.puml)
 
-**Analiza primjera:** `R-104` ima jednog autora i jednu kategoriju; Ana i kategorija *Poplava* mogu biti povezane s više prijava. Dijagram prikazuje veze bez prepisivanja svih stupaca baze podataka ili pisanja drugog tabličnog opisa za svaki entitet. Ako aplikacija prihvaća i **anonimne** prijave, tu mogućnost prikažite u vezi s entitetom `Citizen`. Ako su kategorije fiksne vrijednosti, a ne pohranjeni zapisi, nemojte izmišljati tablicu kategorija. Završni ER dijagram usporedite s modelom trajne pohrane i objasnite samo razlike važne za razumijevanje projekta.
 
-</details>
+**Pregled entiteta CoStay baze podataka:**
+Središnji entitet OBJAVA povezuje autora (KORISNIK) i lokaciju putovanja (LOKACIJA). Uz njega su vezani zahtjevi za pridruživanje, 
+fotografije, tagovi, recenzije, troškovi i razgovori. Posredne tablice KORISNIK_TAGOVI, OBJAVE_TAG, SPREMLJENA_OBJAVA i SUGOVORNIKA
+modeliraju veze više-na-više.
+
+
+| Element | Opis |
+| :--- | :--- | 
+| Korisnici i interesi | KORISNIK, TAG, KORISNIK_TAGOVI; status korisničkog profila, uloga, drugi statusi i interesi |
+| Objave i lokacije | OBJAVA, LOKACIJA, OBJAVA_SLIKA, OBJAVA_TAG, SPREMLJENA_OBJAVA; detalji puta, fotografije i spremljene objave |
+| Dogovaranje | ZAHTJEV_ZA_PRIDRUZIVANJE; podnositelj, objava, status  | 
+| Komunikacija | RAZGOVOR, PORUKA, SUGOVORNIK; izravni/grupni razgovori i članstvo | 
+| Povjerenje i troškovi | RECENZIJA, PRIJAVA_NEPRIMJERENOG SADRZAJA, TROSKOVI | 
+
+**Primjer podataka i veza:** Ana kreira objavu na lokaciji `Opatija`; OBJAVA.id_autor upućuje na Anin korisnički id, a OBJAVA.id_lokacija na 
+id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi želi putovati i objava je `aktivna`. Bob se želi pridružiti Ani na putovanju te šalje ZAHTJEV_ZA_PRIDRUŽIVANJE (Bob je podnositelj zahtjeva). Njegov zahtjev za pridruživanje je u stanju `na_čekanju` dok ga Ana ne prihvati. Tek prihvaćeni zahtjevi, zajedno s autorom, čine potvrđene sudionike. U ovom slučaju to su Bob i Ana. Ako se putovanju pridruži još i Charlie, kada objava pređe u stanje `dogovorena`. Bob i Ana mogu voditi pojedinačni razgovor, dok svi u dogovorenom putovanju prelaze i u grupni razgovor. Ovisno o broju suputnika, određuje se trošak po osobi i dodaje se na račun svakog od suputnika. 
+
+
 
 ### 4.3.2 Reprezentativni UML dijagram razreda
 

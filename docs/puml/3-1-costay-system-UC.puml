@@ -1,0 +1,94 @@
+
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "Neregistrirani\nposjetitelj" as Guest
+actor "Registrirani\nkorisnik" as User
+actor "Autor objave /\nvlasnik" as Owner
+actor "Administrator" as Admin
+
+actor "OAuth pružatelj\nidentiteta" as OAuth
+actor "Vanjski servis\nza karte" as Maps
+actor "E-mail servis" as Email
+
+Owner --|> User
+
+rectangle "CoStay" {
+
+  package "Korisnički račun" {
+    usecase "Registracija i prijava" as UC_Login
+    usecase "Upravljanje profilom" as UC_Profile
+  }
+
+  package "Pregled i objave" {
+    usecase "Pregled objava na Discoveru" as UC_Discover
+    usecase "Pretraživanje objava na Searchu" as UC_Search
+    usecase "Izrada objave putovanja" as UC_Create
+    usecase "Uređivanje vlastite objave" as UC_Edit
+    usecase "Spremanje objave" as UC_Save
+    usecase "Pregled spremljenih objava" as UC_Saved
+  }
+
+  package "Zahtjevi za pridruživanje" {
+    usecase "Slanje zahtjeva za pridruživanje" as UC_Join
+    usecase "Pregled vlastitih zahtjeva" as UC_MyRequests
+    usecase "Povlačenje zahtjeva ili sudjelovanja" as UC_Withdraw
+    usecase "Pregled pristiglih zahtjeva" as UC_Received
+    usecase "Prihvaćanje ili odbijanje zahtjeva" as UC_Decide
+    usecase "Pregled prijavljenih osoba" as UC_Applicants
+    usecase "Odluka o putovanju s manjom grupom" as UC_SmallerGroup
+  }
+
+  package "Komunikacija i putovanja" {
+    usecase "Izravna komunikacija" as UC_Messages
+    usecase "Pregled troškova putovanja" as UC_Costs
+    usecase "Simulacija plaćanja" as UC_Payment
+    usecase "Ocjenjivanje sudionika" as UC_Reviews
+  }
+
+  package "Moderiranje" {
+    usecase "Prijavljivanje sadržaja ili korisnika" as UC_Report
+    usecase "Moderiranje sadržaja i računa" as UC_Moderate
+    usecase "Pregled statistike i izvoz podataka" as UC_Statistics
+  }
+
+  usecase "Odabir lokacije" as UC_Location
+  usecase "Slanje automatskih e-mail obavijesti" as UC_Notifications
+}
+
+Guest -- UC_Discover
+Guest -- UC_Search
+
+User -- UC_Login
+User -- UC_Profile
+User -- UC_Discover
+User -- UC_Search
+User -- UC_Create
+User -- UC_Edit
+User -- UC_Save
+User -- UC_Saved
+User -- UC_Join
+User -- UC_MyRequests
+User -- UC_Withdraw
+User -- UC_Messages
+User -- UC_Costs
+User -- UC_Payment
+User -- UC_Reviews
+User -- UC_Report
+
+Owner -- UC_Received
+Owner -- UC_Decide
+Owner -- UC_Applicants
+Owner -- UC_SmallerGroup
+
+Admin -- UC_Moderate
+Admin -- UC_Statistics
+
+OAuth -- UC_Login
+Maps -- UC_Location
+Email -- UC_Notifications
+
+UC_Create ..> UC_Location : <<include>>
+
+@enduml

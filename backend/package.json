@@ -5,7 +5,7 @@
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
-    "test": "echo \"Backend tests passed\" && exit 0"
+    "test": "node --test"
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.118.0",
@@ -13,6 +13,7 @@
     "ejs": "^7.0.2",
     "express": "^5.3.0",
     "express-session": "^1.19.0",
+    "multer": "^2.5.0",
     "openid-client": "^6.8.8"
   }
 }

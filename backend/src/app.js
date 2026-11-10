@@ -1,47 +1,55 @@
 import "./config/env.js";
 import path from "path";
 import { fileURLToPath } from "url";
+import http from "http";
+import express from "express";
+import session from "express-session";
+
 import {
   refreshSession,
   trackSessionResponseEnd,
 } from "./middleware/refreshSession.js";
 
-// Definiranje __dirname za ES module
+import pageRoutes from "./routes/pages.js";
+import authRoutes from "./routes/auth.js";
+import apiRoutes from "./routes/api.js";
+import inboxRoutes from "./routes/inbox.js";
+import discoverRoutes from "./routes/discover.js";
+import searchRoutes from "./routes/search.js";
+import profileRoutes from "./routes/profile.js";
+import discoverGuestRoutes from "./routes/discoverGuest.js";
+
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-import http from "http";
-import express from "express";
-import session from "express-session";
-
-import pageRoutes from "./routes/pages.js";
-import authRoutes from "./routes/auth.js";
-
 const app = express();
 const port = Number(process.env.PORT || 3000);
-// Zdravstveni endpoint iz predloška
+
+// Provjera rada servera, neovisna o sesiji.
 app.get("/health", (req, res) => {
   res.status(200).json({ status: "healthy" });
 });
+
 app.get("/status", (req, res) => {
   return res.type("text/plain").send("API running");
 });
 
-// Putanja do foldera s EJS predlošcima i CSS-om
+// Putanje do frontend datoteka.
 const frontendSrcPath = path.join(__dirname, "../../frontend/src");
 const frontendPagesPath = path.join(frontendSrcPath, "pages");
 
-// EJS POSTAVKE
+// EJS postavke.
 app.set("view engine", "ejs");
 app.set("views", frontendPagesPath);
 
-// Middleware
+// Čitanje zahtjeva i statičke datoteke.
 app.use(express.json());
-app.use(express.urlencoded({ extended: true })); // Važno za čitanje podataka iz formi
+app.use(express.urlencoded({ extended: true }));
 app.use(express.static(frontendSrcPath));
 
+// Mora biti prije Express sesije.
 app.use(trackSessionResponseEnd);
-// Konfiguracija sesije
+
 app.use(
   session({
     name: "app.sid",
@@ -50,24 +58,38 @@ app.use(
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // U produkciji postaviti na true uz HTTPS
+      secure: false, // Za lokalni HTTP; prilagoditi pri HTTPS deployu.
       sameSite: "lax",
     },
   }),
 );
-app.use(refreshSession);
-// rute
-app.use("/", pageRoutes);
-app.use("/auth", authRoutes);
 
-// Globalna obrada grešaka
+app.use(refreshSession);
+
+// Routeri za pojedine funkcionalnosti.
+app.use("/api", apiRoutes);
+app.use("/auth", authRoutes);
+app.use("/inbox", inboxRoutes);
+
+// Specifičnija putanja ide prije općenitije.
+app.use("/discover/guest", discoverGuestRoutes);
+app.use("/discover", discoverRoutes);
+
+app.use("/search", searchRoutes);
+app.use("/profile", profileRoutes);
+
+// Početna stranica, registracija, odjava i ostale stranice.
+app.use("/", pageRoutes);
+
+// Globalna obrada grešaka.
 app.use((error, req, res, next) => {
   console.error("Zahtjev nije uspio:", error.message);
+
   if (res.headersSent) return next(error);
+
   res.status(500).send("Došlo je do greške. Pokušaj ponovno.");
 });
 
-// Pokretanje servera
 const server = http.createServer(app);
 
 server.listen(port, "0.0.0.0", () => {

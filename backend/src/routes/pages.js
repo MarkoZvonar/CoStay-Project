@@ -42,45 +42,9 @@ router.get(
   },
 );
 // Start stranica
-router.get("/discover", (req, res) => {
-  res.render("discover", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
+
 router.get("/create", requireRegistered, (req, res) => {
   res.render("create", {
-    ime: req.korisnik.ime,
-    email: req.korisnik.email,
-    prezime: req.korisnik.prezime,
-    birthday: req.korisnik.datum_rodenja,
-    spol: req.korisnik.spol,
-  });
-});
-router.get("/inbox", requireRegistered, (req, res) => {
-  res.render("inbox", {
-    ime: req.korisnik.ime,
-    email: req.korisnik.email,
-    prezime: req.korisnik.prezime,
-    birthday: req.korisnik.datum_rodenja,
-    spol: req.korisnik.spol,
-  });
-});
-
-router.get("/search", (req, res) => {
-  res.render("search", {
-    ime: req.session.ime || "",
-    email: req.session.email || "",
-    prezime: req.session.prezime || "",
-    birthday: req.session.birthday || "",
-    spol: req.session.spol || "",
-  });
-});
-router.get("/profile", requireRegistered, (req, res) => {
-  res.render("profile", {
     ime: req.korisnik.ime,
     email: req.korisnik.email,
     prezime: req.korisnik.prezime,
