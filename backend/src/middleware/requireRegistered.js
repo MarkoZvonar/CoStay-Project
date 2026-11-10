@@ -93,8 +93,22 @@ export async function requireRegistered(req, res, next) {
       korisnik.mjesto_stanovanja,
     ];
 
-    const datum = new Date(`${korisnik.datum_rodenja}T00:00:00Z`);
+    const birthday = korisnik.datum_rodenja;
+
+    if (typeof birthday !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(birthday)) {
+      return res.status(403).send("Spremljeni datum rođenja nije valjan.");
+    }
+
+    const datum = new Date(`${birthday}T00:00:00Z`);
     const danas = new Date();
+
+    if (
+      Number.isNaN(datum.getTime()) ||
+      datum.toISOString().slice(0, 10) !== birthday ||
+      birthday > danas.toISOString().slice(0, 10)
+    ) {
+      return res.status(403).send("Spremljeni datum rođenja nije valjan.");
+    }
 
     let dob = danas.getUTCFullYear() - datum.getUTCFullYear();
 
@@ -109,7 +123,6 @@ export async function requireRegistered(req, res, next) {
     if (
       !obavezniTekstovi.every(tekstPopunjen) ||
       !["muški", "ženski", "ostalo"].includes(korisnik.spol) ||
-      Number.isNaN(datum.getTime()) ||
       dob < 18
     ) {
       return res
