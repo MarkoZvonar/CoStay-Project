@@ -63,14 +63,30 @@
 
     <!-- Separator između personaliziranih i ostalih objava -->
 
-    <% if (!jeGost) { %>
-      <div class="separatorObjava">
-        <span>Ostale objave</span>
-      </div>
+      <% if (jeGost) { %>
 
-      <div id="ostaleObjave" style="display: contents;"></div>
+        <!-- Element koji prati scroll gosta -->
+        <% if (smjestaji && smjestaji.length > 0) { %>
+          <div
+            id="ucitavanjeOstalih"
+            style="grid-column: 1 / -1; height: 20px;">
+          </div>
+        <% } %>
 
-      <div id="ucitavanjeOstalih" style="grid-column: 1 / -1; height: 20px;"></div>
+      <% } else { %>
+
+        <!-- Separator između personaliziranih i ostalih objava -->
+        <div class="separatorObjava">
+          <span>Ostale objave</span>
+        </div>
+
+        <div id="ostaleObjave" style="display: contents;"></div>
+
+        <div
+          id="ucitavanjeOstalih"
+          style="grid-column: 1 / -1; height: 20px;">
+        </div>
+
       <% } %>
 
 
@@ -243,19 +259,36 @@
         await obradiZahtjev(gumb);
       });
 
-      // 4. INFINITE SCROLL ZA OSTALE OBJAVE
+     // 4. INFINITE SCROLL ZA GOSTA I PRIJAVLJENOG KORISNIKA
 
       const jeGost = <%- JSON.stringify(jeGost) %>;
 
-      if (!jeGost) {
-        const spremnikOstalihObjava = document.getElementById("ostaleObjave");
-        const ucitavanjeOstalih = document.getElementById("ucitavanjeOstalih");
+      const spremnikObjava = jeGost
+        ? document.getElementById("objaveSTagovima")
+        : document.getElementById("ostaleObjave");
 
-        let offset = 0;
+      const ucitavanjeOstalih = document.getElementById("ucitavanjeOstalih");
+
+      // Ako gost nema nijednu početnu objavu, nema potrebe za infinite scrollom
+      if (ucitavanjeOstalih) {
+
+        // Gost je već dobio prvih 10 objava.
+        // Prijavljeni korisnik još nije dobio nijednu ostalu objavu.
+        let offset = jeGost
+          ? <%= smjestaji.length %>
+          : 0;
+
         let ucitavanjeUTijeku = false;
         let imaJosObjava = true;
 
+        // Odabir rute ovisno o tome je li korisnik gost
+        const ruta = jeGost
+          ? "/discover/guest/ostale-objave"
+          : "/discover/ostale-objave";
+
+
         async function ucitajOstaleObjave() {
+
           // Sprječavamo istovremeno slanje više zahtjeva
           if (ucitavanjeUTijeku || !imaJosObjava) {
             return;
@@ -264,57 +297,75 @@
           ucitavanjeUTijeku = true;
 
           try {
+
+            // Dohvaćamo sljedeću grupu objava
             const odgovor = await fetch(
-              `/discover/ostale-objave?offset=${offset}`
+              `${ruta}?offset=${offset}`
             );
 
             if (!odgovor.ok) {
-              throw new Error("Dohvat ostalih objava nije uspio.");
+              throw new Error("Dohvat objava nije uspio.");
             }
 
             const rezultat = await odgovor.json();
 
-            // Dodavanje novih kartica na kraj postojećih
-            spremnikOstalihObjava.insertAdjacentHTML(
+            // Dodajemo nove kartice na kraj postojećih
+            spremnikObjava.insertAdjacentHTML(
               "beforeend",
               rezultat.html
             );
 
-            // Pamtimo gdje smo stali
+            // Pamtimo poziciju za sljedeće učitavanje
             offset = rezultat.sljedeciOffset;
 
             // Provjeravamo postoje li još objave
             imaJosObjava = rezultat.imaJos;
 
+            // Ako više nema objava, prekidamo praćenje scrolla
             if (!imaJosObjava) {
               observer.disconnect();
               ucitavanjeOstalih.remove();
             }
 
           } catch (error) {
-            console.error("Greška kod učitavanja ostalih objava:", error);
+
+            console.error("Greška kod učitavanja objava:", error);
+
             observer.disconnect();
+
             ucitavanjeOstalih.textContent =
               "Došlo je do greške kod učitavanja objava.";
+
           } finally {
+
+            // Omogućujemo sljedeće učitavanje
             ucitavanjeUTijeku = false;
+
           }
         }
 
-        // Učitavanje kada se približimo dnu stranice
+
+        // Pratimo približavanje korisnika elementu na dnu stranice
         const observer = new IntersectionObserver((entries) => {
+
           entries.forEach(entry => {
+
             if (entry.isIntersecting) {
               ucitajOstaleObjave();
             }
+
           });
+
         }, {
           root: null,
           rootMargin: "300px",
           threshold: 0
         });
 
+
+        // Započinjemo praćenje elementa
         observer.observe(ucitavanjeOstalih);
+
       }
 
 

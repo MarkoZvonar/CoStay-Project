@@ -108,48 +108,64 @@
   </div>
 
   <!-- 4. dio: Kontakt -->
-  <div class="karticaKontakt">
-    <div class="organizator">
-      <span class="organizatorNaslov">Organizator</span>
-      <span class="organizatorIme">
-        <%= smjestaj.id_autor
-          ? (smjestaj.id_autor.ime + ' ' + smjestaj.id_autor.prezime)
-          : 'Ivan Horvat' %>
-      </span>
-    </div>
-    <%
-    const mojZahtjev = (mojiZahtjevi || []).find(
-      zahtjev => zahtjev.id_objava === smjestaj.id_objava
-    );
-  %>
-    
-  <% if (
-    mojZahtjev &&
-    ["na_cekanju", "prihvacen"].includes(mojZahtjev.status_zahtjeva)
-  ) { %>
-  
-    <button
-      class="zahtjevGumb zahtjevPoslan"
-      id="zahtjev-<%= smjestaj.id_objava %>"
-      data-id="<%= smjestaj.id_objava %>"
-      data-status="<%= mojZahtjev.status_zahtjeva %>"
-    >
-      <span class="tekstNormalno">ZAHTJEV POSLAN</span>
-      <span class="tekstHover">POVUCI ZAHTJEV</span>
-    </button>
-  
-  <% } else { %>
-  
-    <button
-      class="zahtjevGumb"
-      id="zahtjev-<%= smjestaj.id_objava %>"
-      data-id="<%= smjestaj.id_objava %>"
-      data-status="<%= mojZahtjev ? mojZahtjev.status_zahtjeva : 'nema' %>"
-    >
-      POŠALJI ZAHTJEV
-    </button>
-  
-  <% } %>
 
+<div class="karticaKontakt">
+  <div class="organizator">
+    <span class="organizatorNaslov">Organizator</span>
+    <span class="organizatorIme">
+      <%= smjestaj.id_autor
+        ? (smjestaj.id_autor.ime + ' ' + smjestaj.id_autor.prezime)
+        : 'Ivan Horvat' %>
+    </span>
   </div>
+
+  <% if (jeGost) { %>
+
+    <button
+      type="button"
+      class="zahtjevGumb"
+      onclick="window.location.href='/login'"
+    >
+      PRIJAVA / REGISTRACIJA
+    </button>
+
+  <% } else { %>
+
+    <%
+      const mojZahtjev = (mojiZahtjevi || []).find(
+        zahtjev => String(zahtjev.id_objava) === String(smjestaj.id_objava)
+      );
+    %>
+
+    <% if (
+      mojZahtjev &&
+      ["na_cekanju", "prihvacen"].includes(mojZahtjev.status_zahtjeva)
+    ) { %>
+
+      <button
+        class="zahtjevGumb zahtjevPoslan"
+        id="zahtjev-<%= smjestaj.id_objava %>"
+        data-id="<%= smjestaj.id_objava %>"
+        data-status="<%= mojZahtjev.status_zahtjeva %>"
+      >
+        <span class="tekstNormalno">ZAHTJEV POSLAN</span>
+        <span class="tekstHover">POVUCI ZAHTJEV</span>
+      </button>
+
+    <% } else { %>
+
+      <button
+        class="zahtjevGumb"
+        id="zahtjev-<%= smjestaj.id_objava %>"
+        data-id="<%= smjestaj.id_objava %>"
+        data-status="<%= mojZahtjev ? mojZahtjev.status_zahtjeva : 'nema' %>"
+      >
+        POŠALJI ZAHTJEV
+      </button>
+
+    <% } %>
+
+  <% } %>
+</div>
+
 </div>
