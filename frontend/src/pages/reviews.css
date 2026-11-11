@@ -1,0 +1,187 @@
+
+.recenzijeStranica {
+    width: calc(100% - 40px);
+    max-width: 1000px;
+    margin: 30px auto 50px;
+}
+
+.recenzijeHeader {
+    margin-bottom: 30px;
+}
+
+.povratakProfil {
+    display: inline-block;
+    margin-bottom: 20px;
+
+    color: #344e41;
+    font-size: 14px;
+    text-decoration: none;
+}
+
+.povratakProfil:hover {
+    text-decoration: underline;
+}
+
+.recenzijeHeader h1 {
+    margin-bottom: 15px;
+
+    color: #263b30;
+    font-size: 30px;
+}
+
+.ukupnaOcjena {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+
+    color: #263b30;
+}
+
+.velikaZvjezdica {
+    color: #e5a900;
+    font-size: 27px;
+}
+
+.prosjek {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.odPet {
+    color: #777;
+    font-size: 16px;
+}
+
+.ukupnoRecenzija {
+    margin-left: 5px;
+    color: #888;
+    font-size: 14px;
+}
+
+.recenzijeLista {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.recenzijaKartica {
+    padding: 22px;
+
+    background-color: white;
+    border-radius: 14px;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+}
+
+.recenzijaGornjiDio {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+.recenzijaAutor {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.recenzijaAutor img {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.recenzijaAutorPodaci {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.autorIme {
+    color: #263b30;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.recenzijaDatum {
+    color: #999;
+    font-size: 13px;
+}
+
+.recenzijaOcjena {
+    flex-shrink: 0;
+    color: #263b30;
+    font-size: 15px;
+    font-weight: bold;
+}
+
+.recenzijaOcjena span {
+    color: #e5a900;
+    font-size: 19px;
+}
+
+.recenzijaKomentar {
+    margin-top: 18px;
+
+    color: #444;
+    font-size: 15px;
+    line-height: 1.6;
+
+    overflow-wrap: anywhere;
+}
+
+.prazneRecenzije {
+    padding: 50px 20px;
+
+    background-color: white;
+    border-radius: 14px;
+    text-align: center;
+}
+
+.prazneRecenzije h2 {
+    margin-bottom: 10px;
+    color: #263b30;
+    font-size: 21px;
+}
+
+.prazneRecenzije p {
+    color: #888;
+    font-size: 15px;
+}
+
+@media (max-width: 600px) {
+    .recenzijeStranica {
+        width: calc(100% - 20px);
+        margin-top: 20px;
+    }
+
+    .recenzijeHeader h1 {
+        font-size: 25px;
+    }
+
+    .recenzijaKartica {
+        padding: 16px;
+    }
+
+    .recenzijaGornjiDio {
+        align-items: flex-start;
+    }
+
+    .recenzijaAutor img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .autorIme {
+        font-size: 14px;
+    }
+
+    .recenzijaOcjena {
+        font-size: 13px;
+    }
+
+    .recenzijaKomentar {
+        font-size: 14px;
+    }
+}
