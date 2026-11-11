@@ -1,7 +1,7 @@
 import express from "express";
 import { createClient } from "@supabase/supabase-js";
 import { requireRegistered } from "../middleware/requireRegistered.js";
-
+import { createUserClient } from "../config/supabase.js";
 const router = express.Router();
 function requireIdentity(req, res, next) {
   if (!req.session.user?.id) {
@@ -376,17 +376,168 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
     next(error);
   }
 });
-router.get("/signup3", requireRegistered, (req, res) => {
-  res.render("signup3");
+router.get("/signup3", requireRegistered, async (req, res, next) => {
+  try {
+    const korisnickiSupabase = createUserClient(req.session.accessToken);
+
+    const { data: dostupniTagovi, error: tagoviError } =
+      await korisnickiSupabase
+        .from("TAG")
+        .select("id_tag, ime_tag")
+        .order("ime_tag");
+
+    if (tagoviError) return next(tagoviError);
+
+    const { data: profil, error: profilError } = await korisnickiSupabase
+      .from("KORISNIK")
+      .select("opis")
+      .eq("id_korisnik", req.korisnik.id_korisnik)
+      .maybeSingle();
+
+    if (profilError) return next(profilError);
+
+    if (!profil) {
+      return res.status(404).send("Profil nije pronađen.");
+    }
+
+    const { data: veze, error: vezeError } = await korisnickiSupabase
+      .from("KORISNIK_TAGOVI")
+      .select("id_tag")
+      .eq("id_korisnik", req.korisnik.id_korisnik);
+
+    if (vezeError) return next(vezeError);
+
+    return res.render("signup3", {
+      opis: profil.opis || "",
+      dostupniTagovi: dostupniTagovi || [],
+      odabraniTagovi: (veze || []).map((veza) => veza.id_tag),
+    });
+  } catch (error) {
+    next(error);
+  }
 });
-router.post("/signup3", requireRegistered, (req, res) => {
-  // Ovdje možete obraditi podatke iz forme, npr. spremiti ih u bazu podataka
-  const { opis } = req.body;
-  const { tagovi } = req.body;
-  req.session.opis = opis;
-  req.session.tagovi = tagovi;
-  // Za sada samo preusmjeravamo na početnu
-  res.redirect("/");
+router.post("/signup3", requireRegistered, async (req, res, next) => {
+  let opisSpremljen = false;
+
+  try {
+    // Opis je neobavezan, ali mora biti tekst.
+    const rawOpis = req.body.opis ?? "";
+
+    if (typeof rawOpis !== "string") {
+      return res.status(400).send("Opis mora biti tekst.");
+    }
+
+    const opis = rawOpis.trim();
+
+    if (opis.length > 2000) {
+      return res.status(400).send("Opis može imati najviše 2000 znakova.");
+    }
+
+    // Checkboxi šalju:
+    // - undefined ako ništa nije odabrano,
+    // - string ako je odabran jedan tag,
+    // - niz ako ih je odabrano više.
+    const rawTagovi = req.body.tagovi;
+
+    const odabraniTagovi =
+      rawTagovi === undefined
+        ? []
+        : Array.isArray(rawTagovi)
+          ? rawTagovi
+          : [rawTagovi];
+
+    const uuidFormat =
+      /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+    if (
+      odabraniTagovi.length > 100 ||
+      !odabraniTagovi.every(
+        (tag) => typeof tag === "string" && uuidFormat.test(tag),
+      )
+    ) {
+      return res.status(400).send("Odabrane ključne riječi nisu valjane.");
+    }
+
+    const tagIds = [...new Set(odabraniTagovi.map((id) => id.toLowerCase()))];
+
+    const korisnikId = req.korisnik.id_korisnik;
+    const korisnickiSupabase = createUserClient(req.session.accessToken);
+
+    // Prije upisa provjeravamo postoje li svi poslani tagovi.
+    if (tagIds.length > 0) {
+      const { data: dostupniTagovi, error: provjeraError } =
+        await korisnickiSupabase
+          .from("TAG")
+          .select("id_tag")
+          .in("id_tag", tagIds);
+
+      if (provjeraError) throw provjeraError;
+
+      if (!dostupniTagovi || dostupniTagovi.length !== tagIds.length) {
+        return res
+          .status(400)
+          .send(
+            "Neke ključne riječi više nisu dostupne. " +
+              "Osvježi obrazac i odaberi ih ponovno.",
+          );
+      }
+    }
+
+    // Ažuriramo isključivo opis prijavljenog korisnika.
+    const { data: profil, error: opisError } = await korisnickiSupabase
+      .from("KORISNIK")
+      .update({ opis })
+      .eq("id_korisnik", korisnikId)
+      .select("id_korisnik")
+      .maybeSingle();
+
+    if (opisError) throw opisError;
+
+    if (!profil) {
+      return res.status(403).send("Spremanje opisa nije dopušteno.");
+    }
+
+    opisSpremljen = true;
+
+    // Dodajemo veze s odabranim tagovima.
+    // Postojeće veze preskačemo kako ne bi nastali duplikati.
+    if (tagIds.length > 0) {
+      const veze = tagIds.map((idTag) => ({
+        id_korisnik: korisnikId,
+        id_tag: idTag,
+      }));
+
+      const { error: tagoviError } = await korisnickiSupabase
+        .from("KORISNIK_TAGOVI")
+        .upsert(veze, {
+          onConflict: "id_tag,id_korisnik",
+          ignoreDuplicates: true,
+        });
+
+      if (tagoviError) throw tagoviError;
+    }
+
+    // Ovi podaci sada se čitaju iz baze, ne iz starog nacrta.
+    delete req.session.opis;
+    delete req.session.tagovi;
+
+    return req.session.save((saveError) => {
+      if (saveError) return next(saveError);
+
+      return res.redirect(303, "/discover");
+    });
+  } catch (error) {
+    console.error("Signup3 spremanje — kod:", error.code || "UNKNOWN");
+
+    return res
+      .status(500)
+      .send(
+        (opisSpremljen
+          ? "Opis je spremljen, ali spremanje ključnih riječi nije potvrđeno. "
+          : "Spremanje nije potvrđeno. ") +
+          'Otvori <a href="/signup3">obrazac</a>, provjeri podatke i pokušaj ponovno.',
+      );
+  }
 });
 
 // Otvaranje poveznice prikazuje potvrdu odjave.
@@ -407,5 +558,8 @@ router.post("/logout", (req, res, next) => {
 
     return res.redirect(303, "/start");
   });
+});
+router.get("/forgot-password", (req, res) => {
+  res.render("forgot-password");
 });
 export default router;

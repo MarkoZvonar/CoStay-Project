@@ -13,14 +13,22 @@
 
       <form id="form" action="/auth/login" method="POST">
         <label for="email">Email:</label>
-        <input type="text" id="email" name="email" required />
+        <input
+          type="email"
+          id="email"
+          name="email"
+          autocomplete="email"
+          required
+        />
 
         <label for="password">Password:</label>
         <input type="password" id="password" name="password" required />
 
         <button type="submit">Sljedeći korak</button>
       </form>
-
+      <p class="forgot-password">
+        <a href="/forgot-password">Zaboravljena lozinka?</a>
+      </p>
       <div id="login-container">
         <div id="login-row">
           <div class="link">
