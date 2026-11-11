@@ -1,0 +1,91 @@
+
+<!doctype html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <link rel="stylesheet" href="/pages/main.css" />
+    <link rel="stylesheet" href="/pages/reviews.css" />
+
+    <title>Reviews</title>
+</head>
+
+<body>
+    <div class="recenzijeStranica">
+
+        <div class="recenzijeHeader">
+            <a href="/profile" class="povratakProfil">← Back to profile</a>
+
+            <h1>Reviews</h1>
+
+            <div class="ukupnaOcjena">
+                <span class="velikaZvjezdica">★</span>
+                <span class="prosjek"><%= prosjecnaOcjena %></span>
+                <span class="odPet">/ 5</span>
+                <span class="ukupnoRecenzija">
+                    (<%= brojRecenzija %> reviews)
+                </span>
+            </div>
+        </div>
+
+        <div class="recenzijeLista">
+
+            <% if (recenzije.length === 0) { %>
+
+                <div class="prazneRecenzije">
+                    <h2>No reviews yet</h2>
+                    <p>You haven't received any reviews yet.</p>
+                </div>
+
+            <% } else { %>
+
+                <% recenzije.forEach((recenzija) => { %>
+
+                    <div class="recenzijaKartica">
+
+                        <div class="recenzijaGornjiDio">
+
+                            <div class="recenzijaAutor">
+                                <img
+                                    src="<%= recenzija.id_autor?.profilna_slika_url || '/assets/probnaSlikaKartica.jpg' %>"
+                                    alt="Profile picture"
+                                />
+
+                                <div class="recenzijaAutorPodaci">
+                                    <span class="autorIme">
+                                        <%= recenzija.id_autor?.ime || "Unknown" %>
+                                        <%= recenzija.id_autor?.prezime || "" %>
+                                    </span>
+
+                                    <span class="recenzijaDatum">
+                                        <%= new Date(recenzija.datum_objave_recenzije).toLocaleDateString("hr-HR") %>
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div class="recenzijaOcjena">
+                                <span>★</span>
+                                <%= Number(recenzija.ocjena).toFixed(2) %> / 5
+                            </div>
+
+                        </div>
+
+                        <div class="recenzijaKomentar">
+                            <%= recenzija.komentar || "No comment provided." %>
+                        </div>
+
+                    </div>
+
+                <% }); %>
+
+            <% } %>
+
+        </div>
+    </div>
+
+    <div id="navbar"></div>
+    <%- include('../components/navbar') %>
+
+</body>
+</html>

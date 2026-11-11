@@ -23,7 +23,18 @@
         <div class="profilIme"><%= ime %> <%= prezime %></div>
 
         <div class="profilLokacija"><%= mjestoStanovanja %></div>
-
+        <a href="/profile/reviews" class="profilRecenzije">
+          <span class="recenzijeNaslov">Recenzije</span>
+      
+          <span class="recenzijeOcjena">
+              <span class="zvjezdica">★</span>
+              <%= prosjecnaOcjena %> / 5
+          </span>
+      
+          <span class="recenzijeBroj">
+              (<%= brojRecenzija %>)
+          </span>
+      </a>
         <div class="profilOpis">
           <%= opis %>
         </div>

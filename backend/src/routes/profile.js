@@ -114,6 +114,25 @@ router.get("/", requireRegistered, async(req, res, next) => {
         spremljeneObjave = data || [];
     }
 
+    // Dohvacamo ocjene koje je korisnik primio
+const { data: recenzijeZaProsjek, error: recenzijeError } =
+await korisnickiSupabase
+    .from("RECENZIJA")
+    .select("ocjena")
+    .eq("id_primatelj", req.korisnik.id_korisnik);
+
+if (recenzijeError) return next(recenzijeError);
+
+// Racunamo prosjecnu ocjenu
+const prosjecnaOcjena = recenzijeZaProsjek.length > 0
+? (
+    recenzijeZaProsjek.reduce(
+        (zbroj, recenzija) => zbroj + Number(recenzija.ocjena),
+        0
+    ) / recenzijeZaProsjek.length
+).toFixed(2)
+: "0.00";
+
     return res.render("profile", {
       ime: korisnik.ime || "",
       prezime: korisnik.prezime || "",
@@ -122,12 +141,58 @@ router.get("/", requireRegistered, async(req, res, next) => {
       opis: korisnik.opis || "",
       tagovi: tagovi,
       mojeObjave: mojeObjave || [],
-      spremljeneObjave: spremljeneObjave
+      spremljeneObjave: spremljeneObjave,
+      prosjecnaOcjena: prosjecnaOcjena,
+brojRecenzija: recenzijeZaProsjek.length
     });
   } catch (error) {
     next(error);
   }
 });
+
+// Stranica sa svim recenzijama koje je korisnik primio
+router.get("/reviews", requireRegistered, async (req, res, next) => {
+    try {
+        const korisnickiSupabase = kreirajSupabase(req);
+
+        const { data: recenzije, error } = await korisnickiSupabase
+            .from("RECENZIJA")
+            .select(`
+                id_recenzija,
+                ocjena,
+                komentar,
+                datum_objave_recenzije,
+                id_autor (
+                    ime,
+                    prezime,
+                    profilna_slika_url
+                )
+            `)
+            .eq("id_primatelj", req.korisnik.id_korisnik)
+            .order("datum_objave_recenzije", { ascending: false });
+
+        if (error) return next(error);
+
+        const prosjecnaOcjena = recenzije.length > 0
+            ? (
+                recenzije.reduce(
+                    (zbroj, recenzija) => zbroj + Number(recenzija.ocjena),
+                    0
+                ) / recenzije.length
+            ).toFixed(2)
+            : "0.00";
+
+        return res.render("reviews", {
+            recenzije: recenzije || [],
+            prosjecnaOcjena,
+            brojRecenzija: recenzije.length
+        });
+
+    } catch (error) {
+        next(error);
+    }
+});
+
 
 //ruta koja vraca popis svih tagova u JSON obliku
 router.get("/tags", requireRegistered, async(req, res, next) => {
