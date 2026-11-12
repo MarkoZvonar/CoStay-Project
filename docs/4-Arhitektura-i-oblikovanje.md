@@ -2,15 +2,15 @@
 
 **Cilj:** Definirati arhitekturni stil, dekompoziciju programa na podsustave i module, organizaciju podataka te dinamičko ponašanje tijekom izvođenja. Arhitektura predstavlja temelj za implementaciju i ažurira se pri svakoj važnijoj promjeni projektnih odluka.
 
-| Arhitekturni pogled | Ključno inženjersko pitanje | Primijenjeni model ili dijagram |
-| :--- | :--- | :--- |
-| **Strategija rješenja** | Koji stil i temeljne odluke određuju program? | Tablica odluka (odjeljak 4.1) |
-| **Struktura podsustava** | Koji su glavni dijelovi i kako komuniciraju? | Dijagram komponenata |
-| **Model podataka** | Kako su strukturirani trajni podaci programa? | Relacijski ER dijagram |
-| **Struktura koda** | Kako su dodijeljene odgovornosti i ključne klase? | Reprezentativni dijagram razreda |
-| **Dinamičko ponašanje** | Kako moduli surađuju pri obradi ključnih transakcija? | sekvencijski dijagram |
-| **Stanja sustava** | Kako ključni domenski objekt mijenja svoja stanja? | Dijagram stanja |
-| **Fizički razmještaj** | Na kojim se izvršnim čvorovima program izvodi? | Dijagram razmještaja (poglavlje 6) |
+| Arhitekturni pogled      | Ključno inženjersko pitanje                           | Primijenjeni model ili dijagram    |
+| :----------------------- | :---------------------------------------------------- | :--------------------------------- |
+| **Strategija rješenja**  | Koji stil i temeljne odluke određuju program?         | Tablica odluka (odjeljak 4.1)      |
+| **Struktura podsustava** | Koji su glavni dijelovi i kako komuniciraju?          | Dijagram komponenata               |
+| **Model podataka**       | Kako su strukturirani trajni podaci programa?         | Relacijski ER dijagram             |
+| **Struktura koda**       | Kako su dodijeljene odgovornosti i ključne klase?     | Reprezentativni dijagram razreda   |
+| **Dinamičko ponašanje**  | Kako moduli surađuju pri obradi ključnih transakcija? | sekvencijski dijagram              |
+| **Stanja sustava**       | Kako ključni domenski objekt mijenja svoja stanja?    | Dijagram stanja                    |
+| **Fizički razmještaj**   | Na kojim se izvršnim čvorovima program izvodi?        | Dijagram razmještaja (poglavlje 6) |
 
 ---
 
@@ -20,9 +20,14 @@ Za svaki UML dijagram čuvajte čitljivu sliku i PlantUML izvor, kako je opisano
 
 **Cilj:** Objasniti nekoliko arhitekturnih odluka koje najviše utječu na rješenje i navesti njihove projektno specifične razloge.
 
-| Odluka | Razmatrana alternativa | Projektno specifično obrazloženje i kompromis |
-| --- | --- | --- |
-|  |  |  |
+| Odluka                                                                                        | Razmatrana alternativa                                                                             | Projektno specifično obrazloženje i kompromis                                                                                                                                                                                                                                                                                                                   |
+| --------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Razdvajanje potvrđenog identiteta u Supabase Authu od dovršenog profila u tablici `KORISNIK`. | Smatrati korisnika potpuno registriranim čim uspješno prođe vanjsku autentifikaciju.               | Google i GitHub ne osiguravaju sve podatke koje CoStay zahtijeva. Autentifikacija zato potvrđuje identitet, dok aplikacija zasebno provjerava obavezni profil. Korisnik bez profila upućuje se na dovršavanje registracije. Kompromis je dodatna provjera i mogućnost postojanja Auth računa bez dovršenog CoStay profila.                                      |
+| Korištenje OAuth autorizacijskog toka s PKCE-om i razmjenom povratnog koda na backendu.       | Prethodna implementacija koja je čitala tokene iz URL fragmenta u pregledniku i slala ih backendu. | Podaci potrebni za dovršavanje PKCE toka privremeno se vežu uz Express sesiju koja je pokrenula prijavu. Backend razmjenjuje povratni kod za tokene. Time se uklanja prethodni prijenos tokena iz URL fragmenta putem frontend skripte. Kompromis je potreba očuvanja iste sesije tijekom preusmjeravanja.                                                      |
+| Zajednička provjera pristupa kroz middleware `requireRegistered`.                             | Provjeravati samo postoji li `req.session.user` ili ponavljati različite provjere u svakoj ruti.   | Postojanje sesije nije dovoljno za pristup zaštićenim funkcionalnostima. Middleware provjerava identitet, potvrdu emaila, obavezni profil, ulogu i status računa te provjereni profil predaje sljedećem handleru kroz `req.korisnik`. Moduli aplikacije tako koriste jednaka pravila pristupa. Kompromis su dodatni pozivi Supabaseu pri zaštićenim zahtjevima. |
+| Zaseban Supabase klijent za korisničke operacije, s tokenom trenutačnog korisnika.            | Pohranjivati promjenjivu korisničku autentifikacijsku sesiju u zajedničkom globalnom klijentu.     | Klijent šalje token korisnika čiji se zahtjev obrađuje, pa baza primjenjuje njegova RLS pravila. Korisnička autentifikacijska stanja ne dijele se između zahtjeva različitih korisnika. Klijente treba dosljedno stvarati i obrađivati pogreške njihovih upita.                                                                                                 |
+| Obnova pristupnih tokena kroz zajednički middleware i servis `refreshTokens`.                 | Zahtijevati novu prijavu nakon svakog isteka pristupnog tokena.                                    | Obnovni token omogućuje nastavak valjane prijave bez ponovnog korisničkog unosa. Implementacija razlikuje nevaljanu sesiju od privremene nedostupnosti usluge. Obrada zahtjeva iste sesije koordinira se unutar jednog Node procesa; za više procesa bio bi potreban drukčiji način koordinacije.                                                               |
+| Odvajanje obaveznih podataka profila od neobaveznog opisa i ključnih riječi.                  | Tražiti sve podatke prije dopuštanja pristupa registriranom korisniku.                             | Obavezni podaci i punoljetnost provjeravaju se pri dovršavanju profila. Opis i interesi služe predstavljanju i personalizaciji, ali nisu uvjet registracije. Korisnik može preskočiti završni korak. Spremanje opisa i veza s ključnim riječima izvodi se odvojenim upitima, pa se mora obraditi djelomičan neuspjeh.                                           |
 
 Objasnite glavne arhitekturne odluke bez ponavljanja popisa tehnologija. Ako važna odluka ima ADR, dovoljno je u tablici navesti njegov ID.
 
@@ -31,10 +36,10 @@ Objasnite glavne arhitekturne odluke bez ponavljanja popisa tehnologija. Ako va�
 
 **Primjer — CrisisMap:**
 
-| Odluka | Razmatrana alternativa | Projektno specifično obrazloženje i kompromis |
-| --- | --- | --- |
+| Odluka                                           | Razmatrana alternativa                           | Projektno specifično obrazloženje i kompromis                                                                                                                                                                                |
+| ------------------------------------------------ | ------------------------------------------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Klijent u pregledniku i jedan poslužiteljski API | Više zasebno postavljenih poslužiteljskih usluga | Klijent prikazuje kartu, dok poslužiteljski sustav provjerava i pohranjuje prijave. Jedan poslužiteljski sustav upravljiv je za ovaj opseg; njegov kvar može privremeno prekinuti rad s prijavama. Obrazloženje je u ADR-01. |
-| Relacijska pohrana prijava | Dokumentno orijentirana pohrana | Prijave imaju prepoznatljive veze s korisnicima i lokacijama. Relacijska shema te veze čini eksplicitnima, ali zahtijeva migracije kada se shema promijeni. |
+| Relacijska pohrana prijava                       | Dokumentno orijentirana pohrana                  | Prijave imaju prepoznatljive veze s korisnicima i lokacijama. Relacijska shema te veze čini eksplicitnima, ali zahtijeva migracije kada se shema promijeni.                                                                  |
 
 **Analiza primjera:** Obje odluke navode razlog vezan uz aplikaciju za prijavljivanje kriznih događaja i priznaju kompromis. Odluka o poslužiteljskom sustavu upućuje na ADR-01 umjesto ponavljanja cijele usporedbe. Moduli unutar jedne aplikacije koja se postavlja kao cjelina nisu zasebne mikrousluge. U vlastitoj tablici navedite alternative koje je tim doista razmatrao.
 
@@ -47,9 +52,19 @@ Objasnite glavne arhitekturne odluke bez ponavljanja popisa tehnologija. Ako va�
 **Dijagram komponenata:** [Ugradite čitljiv UML dijagram komponenata.]  
 **PlantUML izvor:** [Poveznica na odgovarajuću `.puml` datoteku.]
 
-| Komponenta | Odgovornost | Razlog za ovu granicu |
-| --- | --- | --- |
-|  |  |  |
+Autentifikacija je organizirana u module unutar iste Express aplikacije. Ti moduli nisu zasebno postavljene usluge. Supabase Auth predstavlja vanjsku uslugu autentifikacije, dok aplikacija zadržava odgovornost za provjeru dovršenosti profila i dopuštenja pristupa.
+
+| Modul                             | Odgovornost                                                                                             |
+| --------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| `routes/auth.js`                  | Povezuje HTTP rute autentifikacije i oporavka lozinke s kontrolerima.                                   |
+| `controllers/authController.js`   | Provodi OAuth prijavu, obradu povratnog koda, prijavu emailom i lozinkom te oporavak lozinke.           |
+| `config/oauthClient.js`           | Stvara Supabase klijent za PKCE tok sa spremištem vezanim uz Express sesiju.                            |
+| `routes/pages.js`                 | Obrađuje stranice i korake registracije te spremanje podataka profila.                                  |
+| `middleware/requireRegistered.js` | Provjerava uvjete pristupa zaštićenim funkcionalnostima i postavlja provjereni profil u `req.korisnik`. |
+| `middleware/refreshSession.js`    | Koordinira obradu zahtjeva iste prijavljene sesije i pokreće obnovu tokena kada je potrebna.            |
+| `services/refreshTokens.js`       | Obnavlja tokene putem Supabase Autha i razlikuje nevaljanu sesiju od privremene nedostupnosti usluge.   |
+
+Podaci o prijavi i Supabase tokeni čuvaju se u poslužiteljskoj Express sesiji. Preglednik koristi sesijski kolačić. Nakon uspješne prijave regenerira se Express sesija, a odjavom se uklanja trenutačna sesija aplikacije.
 
 Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dijelove s različitim odgovornostima; planiranu bazu podataka aplikacije smjestite unutar granice, a usluge trećih strana izvan nje. Važne veze označite podatkom ili uslugom koja njima prolazi. Logička komponenta može biti modul unutar jedne poslužiteljske aplikacije: zaseban pravokutnik ne znači zasebno postavljenu uslugu. Tijekom implementacije ažurirajte dijagram kada se promijene odgovornosti ili veze. U završnoj inačici čitatelj treba moći povezati njegove dijelove s kodom. Dijagram razmještaja odgovara na pitanje gdje se ti dijelovi stvarno izvode.
 
@@ -64,11 +79,11 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 **PlantUML izvor:** [izvor](./puml/4-1-crisismap-system-CMP.puml)
 
-| Dio | Odgovornost | Razlog za ovu granicu |
-| --- | --- | --- |
-| Web-klijent | Prikazuje prijave i prikuplja podatke za novu prijavu. | Korisnička interakcija odvojena je od pravila prijave i trajne pohrane. |
-| API za prijave | Prihvaća zahtjeve za rad s prijavama i vraća odgovore. | Odgovornosti izložene putem HTTP-a odvojene su od obrade prijava. |
-| Usluga za prijave | Primjenjuje pravila prijave i pristupa pohranjenim prijavama. | Pravila provjere valjanosti i pohrane prijava imaju jasno mjesto odgovornosti. |
+| Dio                  | Odgovornost                                                                                     | Razlog za ovu granicu                                                          |
+| -------------------- | ----------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------ |
+| Web-klijent          | Prikazuje prijave i prikuplja podatke za novu prijavu.                                          | Korisnička interakcija odvojena je od pravila prijave i trajne pohrane.        |
+| API za prijave       | Prihvaća zahtjeve za rad s prijavama i vraća odgovore.                                          | Odgovornosti izložene putem HTTP-a odvojene su od obrade prijava.              |
+| Usluga za prijave    | Primjenjuje pravila prijave i pristupa pohranjenim prijavama.                                   | Pravila provjere valjanosti i pohrane prijava imaju jasno mjesto odgovornosti. |
 | Proces za obavijesti | Određuje korisnike koji trebaju primiti obavijest i traži od vanjskog pružatelja da je pošalje. | Obrada obavijesti odvojena je od odgovaranja na korisnikov zahtjev za prijavu. |
 
 **Analiza primjera:** Vanjska granica odvaja predloženi sustav od pružatelja kartografskih usluga i pružatelja obavijesti. Unutarnja granica grupira API za prijave, uslugu za prijave i proces za obavijesti unutar jedne poslužiteljske aplikacije; njihovi zasebni simboli prikazuju predložene odgovornosti, a ne neovisno postavljene usluge. PostgreSQL pohranjuje podatke aplikacije, dok pružatelj kartografskih usluga osigurava kartografske pločice. Strelice sažimaju ovisnosti, a ne redoslijed transakcije; taj redoslijed prikazuje sekvencijski dijagram. Izostavite proces za obavijesti i Firebase Cloud Messaging ako obavijesti nisu dio odobrenog opsega. Pružatelja prijave u sustav uključite samo ako to zahtijeva odobreni zadatak. Kako implementacija napreduje, ispravite svaku predloženu granicu koja se pokaže netočnom; završni dijagram mora odgovarati onome što je tim izgradio. Jedan koherentan prikaz komponenata korisniji je od nekoliko gotovo jednakih inačica s proturječnim vezama.
@@ -87,7 +102,6 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 **Izvor dijagrama:** [puml](./puml/4-3-1-costay-data-ERD.puml)  
 **Implementacija:** [sql](../supabase/migrations/20261109185243_create_costay_database.sql)
 
-
 <summary><strong>Stvaranje objave te podaci i veze </strong></summary>
 
 ![ER dijagram podataka sustava CoStay](./assets/diagrams/4-3-1-costay-data-ERD.svg)
@@ -96,25 +110,28 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 **PlantUML izvor:** [izvor](./puml/4-3-1-costay-data-ERD.puml)
 
-
 **Pregled entiteta CoStay baze podataka:**
-Središnji entitet OBJAVA povezuje autora (KORISNIK) i lokaciju putovanja (LOKACIJA). Uz njega su vezani zahtjevi za pridruživanje, 
+Središnji entitet OBJAVA povezuje autora (KORISNIK) i lokaciju putovanja (LOKACIJA). Uz njega su vezani zahtjevi za pridruživanje,
 fotografije, tagovi, recenzije, troškovi i razgovori. Posredne tablice KORISNIK_TAGOVI, OBJAVE_TAG, SPREMLJENA_OBJAVA i SUGOVORNIKA
 modeliraju veze više-na-više.
 
+| Element               | Opis                                                                                                         |
+| :-------------------- | :----------------------------------------------------------------------------------------------------------- |
+| Korisnici i interesi  | KORISNIK, TAG, KORISNIK_TAGOVI; status korisničkog profila, uloga, drugi statusi i interesi                  |
+| Objave i lokacije     | OBJAVA, LOKACIJA, OBJAVA_SLIKA, OBJAVA_TAG, SPREMLJENA_OBJAVA; detalji puta, fotografije i spremljene objave |
+| Dogovaranje           | ZAHTJEV_ZA_PRIDRUZIVANJE; podnositelj, objava, status                                                        |
+| Komunikacija          | RAZGOVOR, PORUKA, SUGOVORNIK; izravni/grupni razgovori i članstvo                                            |
+| Povjerenje i troškovi | RECENZIJA, PRIJAVA_NEPRIMJERENOG SADRZAJA, TROSKOVI                                                          |
 
-| Element | Opis |
-| :--- | :--- | 
-| Korisnici i interesi | KORISNIK, TAG, KORISNIK_TAGOVI; status korisničkog profila, uloga, drugi statusi i interesi |
-| Objave i lokacije | OBJAVA, LOKACIJA, OBJAVA_SLIKA, OBJAVA_TAG, SPREMLJENA_OBJAVA; detalji puta, fotografije i spremljene objave |
-| Dogovaranje | ZAHTJEV_ZA_PRIDRUZIVANJE; podnositelj, objava, status  | 
-| Komunikacija | RAZGOVOR, PORUKA, SUGOVORNIK; izravni/grupni razgovori i članstvo | 
-| Povjerenje i troškovi | RECENZIJA, PRIJAVA_NEPRIMJERENOG SADRZAJA, TROSKOVI | 
+**Primjer podataka i veza:** Ana kreira objavu na lokaciji `Opatija`; OBJAVA.id*autor upućuje na Anin korisnički id, a OBJAVA.id_lokacija na
+id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi želi putovati i objava je `aktivna`. Bob se želi pridružiti Ani na putovanju te šalje ZAHTJEV_ZA_PRIDRUŽIVANJE (Bob je podnositelj zahtjeva). Njegov zahtjev za pridruživanje je u stanju `na*čekanju`dok ga Ana ne prihvati. Tek prihvaćeni zahtjevi, zajedno s autorom, čine potvrđene sudionike. U ovom slučaju to su Bob i Ana. Ako se putovanju pridruži još i Charlie, kada objava pređe u stanje`dogovorena`. Bob i Ana mogu voditi pojedinačni razgovor, dok svi u dogovorenom putovanju prelaze i u grupni razgovor. Ovisno o broju suputnika, određuje se trošak po osobi i dodaje se na račun svakog od suputnika.
 
-**Primjer podataka i veza:** Ana kreira objavu na lokaciji `Opatija`; OBJAVA.id_autor upućuje na Anin korisnički id, a OBJAVA.id_lokacija na 
-id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi želi putovati i objava je `aktivna`. Bob se želi pridružiti Ani na putovanju te šalje ZAHTJEV_ZA_PRIDRUŽIVANJE (Bob je podnositelj zahtjeva). Njegov zahtjev za pridruživanje je u stanju `na_čekanju` dok ga Ana ne prihvati. Tek prihvaćeni zahtjevi, zajedno s autorom, čine potvrđene sudionike. U ovom slučaju to su Bob i Ana. Ako se putovanju pridruži još i Charlie, kada objava pređe u stanje `dogovorena`. Bob i Ana mogu voditi pojedinačni razgovor, dok svi u dogovorenom putovanju prelaze i u grupni razgovor. Ovisno o broju suputnika, određuje se trošak po osobi i dodaje se na račun svakog od suputnika. 
+**Povezanost autentifikacijskog identiteta i korisničkog profila**
+Supabase Auth upravlja autentifikacijskim identitetom, dok tablica `KORISNIK` sadrži aplikacijski profil. Backend pri stvaranju profila postavlja `id_korisnik` na identifikator potvrđenog Auth korisnika. Time aplikacija povezuje identitet i pripadajuće podatke profila.
 
+Ključne riječi pohranjene su u tablici `TAG`, a veze korisnika s ključnim riječima u tablici `KORISNIK_TAGOVI`. Neobavezni opis pohranjuje se u profilu korisnika.
 
+Lozinka se ne pohranjuje u tablicu `KORISNIK` niti u Express sesiju. Obradu vjerodajnica provodi Supabase Auth.
 
 ### 4.3.2 Reprezentativni UML dijagram razreda
 
@@ -150,6 +167,7 @@ id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi že
 **PlantUML izvor:** [izvor](./puml/4-3-2-inbox-class-diagram.puml)
 
 **Referenca na postojeću implementaciju:**
+
 - [Backend rute Inboxa – inbox.js](../backend/src/routes/inbox.js)
 - [Predložak stranice Inbox – inbox.ejs](../backend/src/views/inbox.ejs)
 
@@ -231,13 +249,13 @@ Napišite nekoliko ADR-a za važne odluke čije obrazloženje, alternative i kom
 
 ### ADR-[ID]: [Naslov odluke]
 
-| Polje | Zapis odluke |
-| --- | --- |
-| Kontekst i cilj | [Koji je arhitekturni problem učinio ovu odluku potrebnom?] |
-| Kriteriji odluke | [Što je timu stvarno bilo važno?] |
-| Razmatrane alternative | [Realne mogućnosti koje je tim razmotrio, ukratko.] |
-| Odluka i obrazloženje | [Odabrana mogućnost, zašto je odabrana i čega se tim odrekao.] |
-| Status | [Predloženo, prihvaćeno ili zamijenjeno; ako je primjenjivo, poveznica na novu odluku.] |
+| Polje                  | Zapis odluke                                                                            |
+| ---------------------- | --------------------------------------------------------------------------------------- |
+| Kontekst i cilj        | [Koji je arhitekturni problem učinio ovu odluku potrebnom?]                             |
+| Kriteriji odluke       | [Što je timu stvarno bilo važno?]                                                       |
+| Razmatrane alternative | [Realne mogućnosti koje je tim razmotrio, ukratko.]                                     |
+| Odluka i obrazloženje  | [Odabrana mogućnost, zašto je odabrana i čega se tim odrekao.]                          |
+| Status                 | [Predloženo, prihvaćeno ili zamijenjeno; ako je primjenjivo, poveznica na novu odluku.] |
 
 ADR pišite samo za odluku čije će obrazloženje ostati važno i nakon promjene implementacije. Značajna promjena odluke može se zabilježiti novim ADR-om koji zamjenjuje stari; rutinski odabiri alata ne trebaju detaljne zapise. Promjene dogovorenog opsega pripadaju zahtjevima i njihovoj povijesti promjena; povratna informacija o zadatku ostaje uz odgovarajući zadatak.
 
@@ -246,19 +264,19 @@ ADR pišite samo za odluku čije će obrazloženje ostati važno i nakon promjen
 
 **Primjer — CrisisMap, ADR-01:**
 
-| ID | Datum | Odluka | Razmatrana alternativa | Obrazloženje i kompromis | Status |
-| --- | --- | --- | --- | --- | --- |
+| ID     | Datum          | Odluka                                     | Razmatrana alternativa                          | Obrazloženje i kompromis                                                                                                      | Status     |
+| ------ | -------------- | ------------------------------------------ | ----------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------- | ---------- |
 | ADR-01 | [Datum odluke] | Jedan poslužiteljski API za obradu prijava | Zasebno postavljene usluge za prijave i resurse | Manji napor postavljanja i integracije za odobreni opseg; kvar poslužiteljskog sustava može utjecati na obje funkcionalnosti. | Prihvaćeno |
 
 ### ADR-01: Jedan poslužiteljski API za obradu prijava
 
-| Polje | Zapis odluke |
-| --- | --- |
-| Kontekst i cilj | Tim tijekom jednog semestra mora izraditi i javno postaviti prijavljivanje kriznih događaja i prikaz usmjeren na kartu. |
-| Kriteriji odluke | Tim može izraditi, integrirati, postaviti i objasniti rješenje; komponente i dalje imaju prepoznatljive odgovornosti. |
-| Razmatrane alternative | **Jedan poslužiteljski sustav:** moduli dijele aplikaciju koja se postavlja kao cjelina. **Zasebne usluge:** svaka se može izvoditi neovisno, ali zahtijeva dodatni rad na integraciji i postavljanju. |
-| Odluka i obrazloženje | Odabrati jedan poslužiteljski sustav s jasno odvojenim odgovornostima vezanim uz prijave. Time se smanjuje rad na postavljanju, uz prihvaćanje da kvar tog sustava može istodobno utjecati na rad s prijavama. |
-| Status | Prihvaćeno. |
+| Polje                  | Zapis odluke                                                                                                                                                                                                   |
+| ---------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Kontekst i cilj        | Tim tijekom jednog semestra mora izraditi i javno postaviti prijavljivanje kriznih događaja i prikaz usmjeren na kartu.                                                                                        |
+| Kriteriji odluke       | Tim može izraditi, integrirati, postaviti i objasniti rješenje; komponente i dalje imaju prepoznatljive odgovornosti.                                                                                          |
+| Razmatrane alternative | **Jedan poslužiteljski sustav:** moduli dijele aplikaciju koja se postavlja kao cjelina. **Zasebne usluge:** svaka se može izvoditi neovisno, ali zahtijeva dodatni rad na integraciji i postavljanju.         |
+| Odluka i obrazloženje  | Odabrati jedan poslužiteljski sustav s jasno odvojenim odgovornostima vezanim uz prijave. Time se smanjuje rad na postavljanju, uz prihvaćanje da kvar tog sustava može istodobno utjecati na rad s prijavama. |
+| Status                 | Prihvaćeno.                                                                                                                                                                                                    |
 
 **Analiza primjera:** Strategija rješenja navodi trenutačni pristup; ADR-01 čuva alternative i kriterije koji su do njega doveli. Dijagrami komponenata i razmještaja trebaju odražavati odabrani pristup kako se sustav razvija. Zaseban ADR koristan je za važnu odluku, a ne za svaki odabir alata.
 
@@ -269,23 +287,26 @@ ADR pišite samo za odluku čije će obrazloženje ostati važno i nakon promjen
 **Cilj:** Prepoznati i opisati globalna pravila i mehanizme oblikovanja koji se primjenjujuju u više dijelova aplikacije, navesti gdje se planira primijeniti i ažurirati objašnjenje kako implementacija poprima konačan oblik. Uključite samo pravila koja su važna za ovaj projekt.
 
 **Implementirani mehanizmi:**
-
 | Aspekt | Mehanizam | Pravilo | Mjesto primjene |
 | --- | --- | --- | --- |
-| [Npr. Sigurnost] | [Npr. Autorizacija korisnika] | [Npr. Ovlasti se provjeravaju na poslužiteljskoj strani za svaki zaštićeni zahtjev; skrivanje elemenata korisničkog sučelja nije dovoljna zaštita.] | [Npr. Middleware za autorizaciju / zaštita API usmjernika.] |
-| [Npr. Validacija podataka] | [Npr. Provjera ulaznih podataka] | [Npr. Geoprostorni podaci, uključujući koordinate, provjeravaju se prije pohrane.] | [Npr. Sloj za obradu zahtjeva / odgovarajuća usluga.] |
+| Autorizacija | `requireRegistered` | Uvjeti pristupa provjeravaju se na backendu prije zaštićene radnje. Skrivanje elemenata sučelja nije zamjena za provjeru ovlasti. | Zaštićene Express rute. |
+| Pristup podacima | Korisnički Supabase klijent i RLS | Upiti se šalju s tokenom korisnika. Identifikator vlasnika pri stvaranju vlastitih podataka određuje backend iz provjerenog konteksta. | Rute koje čitaju ili mijenjaju korisničke podatke. |
+| Validacija | Poslužiteljska provjera unosa | Obavezna polja, datum rođenja, punoljetnost i odabrane ključne riječi provjeravaju se prije pohrane. | Obrada registracije i dopune profila. |
+| Upravljanje sesijom | Regeneracija sesije, obnova tokena i odjava | Nakon uspješne prijave uspostavlja se nova Express sesija. Tokeni se obnavljaju kada je potrebno, a odjavom se uklanja trenutačna sesija aplikacije. | Kontroler autentifikacije, middleware obnove i ruta odjave. |
+| Obrada pogrešaka | Provjera rezultata Supabase poziva | Neuspješan upit ne prikazuje se kao uspješna radnja. Privremena nedostupnost autentifikacije razlikuje se od nevaljane prijave. | Kontroleri, middleware i registracijske rute. |
+| Oporavak lozinke | Privremeni kontekst oporavka i provjera obrasca | Obična prijava nije dovoljna za izvršavanje tijeka oporavka. Promjena zahtijeva valjan kontekst oporavka i provjeru poslanog obrasca. | Povratna ruta oporavka i ruta za postavljanje nove lozinke. | |
 
 <details>
 <summary><strong>Primjer zajedničkih pravila i mehanizama</strong></summary>
 
 **Primjer — CrisisMap:**
 
-| Aspekt | Mehanizam | Pravilo | Mjesto primjene |
-| --- | --- | --- | --- |
-| Sigurnost | Autorizacija moderiranja prijava | Ovlasti moderatora provjeravaju se na poslužiteljskoj strani prije odobravanja ili odbijanja prijave; skrivanje gumba u korisničkom sučelju nije dovoljna zaštita. | Poslužiteljski dio funkcionalnosti za moderiranje prijava. |
-| Validacija podataka | Provjera lokacije prijave | Nedostajuće ili nevaljane koordinate odbijaju se prije pohrane prijave. | Obrada podnošenja prijave. |
-| Aspekt | Mehanizam | Pravilo | Mjesto primjene |
-| Upravljanje ovisnostima | Injektiranje ovisnosti | Objekt koji provodi poslovnu logiku ne stvara sam konkretnu implementaciju repozitorija, nego potrebnu ovisnost prima izvana. | `ReportWorkflow` prima implementaciju sučelja `ReportRepository` pri stvaranju objekta. |
+| Aspekt                  | Mehanizam                        | Pravilo                                                                                                                                                            | Mjesto primjene                                                                         |
+| ----------------------- | -------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ | --------------------------------------------------------------------------------------- |
+| Sigurnost               | Autorizacija moderiranja prijava | Ovlasti moderatora provjeravaju se na poslužiteljskoj strani prije odobravanja ili odbijanja prijave; skrivanje gumba u korisničkom sučelju nije dovoljna zaštita. | Poslužiteljski dio funkcionalnosti za moderiranje prijava.                              |
+| Validacija podataka     | Provjera lokacije prijave        | Nedostajuće ili nevaljane koordinate odbijaju se prije pohrane prijave.                                                                                            | Obrada podnošenja prijave.                                                              |
+| Aspekt                  | Mehanizam                        | Pravilo                                                                                                                                                            | Mjesto primjene                                                                         |
+| Upravljanje ovisnostima | Injektiranje ovisnosti           | Objekt koji provodi poslovnu logiku ne stvara sam konkretnu implementaciju repozitorija, nego potrebnu ovisnost prima izvana.                                      | `ReportWorkflow` prima implementaciju sučelja `ReportRepository` pri stvaranju objekta. |
 
 **Analiza primjera:** Prvi redak pokazuje sigurnosno pravilo koje se provodi neovisno o korisničkom sučelju, a drugi pravilo provjere podataka prije pohrane. U vlastitoj dokumentaciji navedite samo aspekte koji se stvarno primjenjuju u projektu te konkretno mjesto njihove primjene.
 
@@ -299,29 +320,29 @@ Obrasci poput injektiranja ovisnosti (engl. Dependency Injection) ili repozitori
 
 **Tehnički rizici i dug**
 
-| Rizik ili kompromis | Posljedica | Odgovor na rizik  |
-| --- | --- | --- |
-| *Npr. Pohrana slika u lokalni file sustav* | *Pri ponovnom pokretanju kontejnera slike će biti izgubljene.* | *Prihvaćeni tehnički dug za demo verziju. U budućnosti planirana migracija na S3 (AWS).* |
-| *Npr. Nepostojanje paginacije na API-ju* | *Moguće usporenje klijenta pri dohvaćanju velike količine podataka iz baze.* | *Ograničen broj testnih unosa. Dodavanje paginacije ostavljeno za sljedeću iteraciju.* |
-|  |  |  |
+| Rizik ili kompromis                        | Posljedica                                                                   | Odgovor na rizik                                                                         |
+| ------------------------------------------ | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------- |
+| _Npr. Pohrana slika u lokalni file sustav_ | _Pri ponovnom pokretanju kontejnera slike će biti izgubljene._               | _Prihvaćeni tehnički dug za demo verziju. U budućnosti planirana migracija na S3 (AWS)._ |
+| _Npr. Nepostojanje paginacije na API-ju_   | _Moguće usporenje klijenta pri dohvaćanju velike količine podataka iz baze._ | _Ograničen broj testnih unosa. Dodavanje paginacije ostavljeno za sljedeću iteraciju._   |
+|                                            |                                                                              |                                                                                          |
 
 **Poslovni ili domenski rizici, ako su značajni**
 
-| Rizik | Posljedica | Odgovor na rizik |
-| --- | --- | --- |
-| **Jedna instanca aplikacije obrađuje prijave** | Kvar poslužitelja (hostinga) privremeno onemogućuje nove prijave. | Prihvaćeno u okviru ograničenja projekta za kolegij; tim ne tvrdi da postoji automatsko prebacivanje na pričuvni sustav (failover). |
-| **Nedostupnost vanjskke kartografske usluge** | Prikaz karte može prestati raditi iako su pohranjene prijave u bazi i dalje dostupne. | Implementirana je korisniku vidljiva poruka o pogrešci uz alternativu pregleda prijava u tekstualnom obliku. |
-|  |  |  |
+| Rizik                                          | Posljedica                                                                            | Odgovor na rizik                                                                                                                    |
+| ---------------------------------------------- | ------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------- |
+| **Jedna instanca aplikacije obrađuje prijave** | Kvar poslužitelja (hostinga) privremeno onemogućuje nove prijave.                     | Prihvaćeno u okviru ograničenja projekta za kolegij; tim ne tvrdi da postoji automatsko prebacivanje na pričuvni sustav (failover). |
+| **Nedostupnost vanjskke kartografske usluge**  | Prikaz karte može prestati raditi iako su pohranjene prijave u bazi i dalje dostupne. | Implementirana je korisniku vidljiva poruka o pogrešci uz alternativu pregleda prijava u tekstualnom obliku.                        |
+|                                                |                                                                                       |                                                                                                                                     |
 
 <details>
 <summary><strong>Primjer tehničkih i domenskih rizika</strong></summary>
 
 **Primjer — CrisisMap, tehnički rizici:**
 
-| Rizik ili kompromis | Posljedica | Odgovor na rizik |
-| --- | --- | --- |
-| Jedna instanca aplikacije obrađuje podnošenje prijava. | Kvar smještaja aplikacije privremeno onemogućuje nove prijave. | Rizik je prihvaćen za opseg projekta; ne uvodi se pričuvna instanca ni automatsko prebacivanje. |
-| Vanjske kartografske usluge nisu dostupne. | Prikaz karte može prestati raditi iako su pohranjene prijave i dalje dostupne. | Karta se ne može prikazati, ali pohranjene prijave ostaju dostupne. | Aplikacija prikazuje poruku o nedostupnosti karte i omogućuje pregled prijava u tekstualnom obliku. |
+| Rizik ili kompromis                                    | Posljedica                                                                     | Odgovor na rizik                                                                                |
+| ------------------------------------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------- |
+| Jedna instanca aplikacije obrađuje podnošenje prijava. | Kvar smještaja aplikacije privremeno onemogućuje nove prijave.                 | Rizik je prihvaćen za opseg projekta; ne uvodi se pričuvna instanca ni automatsko prebacivanje. |
+| Vanjske kartografske usluge nisu dostupne.             | Prikaz karte može prestati raditi iako su pohranjene prijave i dalje dostupne. | Karta se ne može prikazati, ali pohranjene prijave ostaju dostupne.                             | Aplikacija prikazuje poruku o nedostupnosti karte i omogućuje pregled prijava u tekstualnom obliku. |
 
 **Primjer — CrisisMap, domenski rizik:** Čitatelji mogu neprovjerenu prijavu građanina zamijeniti za službeno upozorenje. Tim može u sučelju jasno razlikovati status provjere prijave i uputiti korisnike na službene izvore.
 
@@ -331,5 +352,4 @@ Obrasci poput injektiranja ovisnosti (engl. Dependency Injection) ili repozitori
 
 ---
 
-
->**Završna provjera:** Usporedite dijagrame komponenata, podataka, razreda, sekvencijski dijagram i dijagram stanja s implementiranim kodom, ponašanjem aplikacije i stvarnim razmještajem. Ažurirajte zastarjele opise oblikovanja i objasnite svaku važnu razliku koja ostaje; poveznice na odgovarajući kod ili ispitivanja korisne su kada odgovaraju na konkretno pitanje.
+> **Završna provjera:** Usporedite dijagrame komponenata, podataka, razreda, sekvencijski dijagram i dijagram stanja s implementiranim kodom, ponašanjem aplikacije i stvarnim razmještajem. Ažurirajte zastarjele opise oblikovanja i objasnite svaku važnu razliku koja ostaje; poveznice na odgovarajući kod ili ispitivanja korisne su kada odgovaraju na konkretno pitanje.
