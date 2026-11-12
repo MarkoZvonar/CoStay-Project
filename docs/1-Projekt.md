@@ -8,7 +8,6 @@ Mnogi mladi ljudi, studenti i ljubitelji putovanja često nailaze na problem kad
 
 Cilj je stvoriti funkcionalnu platformu kojoj primarna svrha nije pronalazak smještaja, već pronalazak ljudi s kojima će se putovanje ostvariti. Platforma korisnicima omogućuje objavu planiranog putovanja (s već odabranim smještajem) te postavljanje željenog profila suputnika. S druge strane, korisnicima koji nemaju društvo za putovanje omogućuje se jednostavan pregled i prijava na postojeća putovanja koja odgovaraju njihovim interesima i budžetu.
 
-
 <details>
 <summary><strong>Očekivane koristi i potkrepljujući dokazi</strong></summary>
 
@@ -22,20 +21,20 @@ Cilj je stvoriti funkcionalnu platformu kojoj primarna svrha nije pronalazak smj
 
 Osobe kojima će koristiti naš projekt možemo podijeliti na dvije skupine, a to su putnici i iznajmljivači. Putnicima naša aplikacija služi da mogu pronaći suputnike koji će s njima podijeliti trošak željenog smještaja. Iznajmljivačima naša aplikacija služi za lakši pronalazak ljudi koji žele unajmiti njihov smještaj.
 
-| Skupina korisnika ili dionika | Potreba ili interes relevantan za ovaj projekt |
-| --- | --- |
-| Putnici | Traže suputnike kako bi jeftinije unajmili neki smještaj |
-| Iznajmljivači | Traže goste koji bi unajmili njihov smještaj |
+| Skupina korisnika ili dionika | Potreba ili interes relevantan za ovaj projekt           |
+| ----------------------------- | -------------------------------------------------------- |
+| Putnici                       | Traže suputnike kako bi jeftinije unajmili neki smještaj |
+| Iznajmljivači                 | Traže goste koji bi unajmili njihov smještaj             |
 
 <details>
 <summary><strong>Korisnici, dionici i neobavezna persona</strong></summary>
 
 **Primjer — CrisisMap:**
 
-| Skupina korisnika ili dionika | Potreba ili interes relevantan za ovaj projekt |
-| --- | --- |
-| Građanin | Pronaći informacije o obližnjim kriznim događajima i podnijeti prijavu kriznog događaja s lokacijom. |
-| Koordinator pomoći | Pregledati prijave relevantne za područje i dostupne resurse, ako je koordinacija unutar odobrenog opsega. |
+| Skupina korisnika ili dionika                              | Potreba ili interes relevantan za ovaj projekt                                                                                                                                |
+| ---------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Građanin                                                   | Pronaći informacije o obližnjim kriznim događajima i podnijeti prijavu kriznog događaja s lokacijom.                                                                          |
+| Koordinator pomoći                                         | Pregledati prijave relevantne za područje i dostupne resurse, ako je koordinacija unutar odobrenog opsega.                                                                    |
 | Regulatorno tijelo / Agencija za zaštitu podataka (Dionik) | Zahtijeva osiguravanje anonimnosti prijavitelja i zaštitu osobnih podataka (npr. usklađenost s GDPR-om). Ovaj dionik ne koristi aplikaciju, ali definira ograničenja sustava. |
 
 Riječ je o dvjema različitim potrebama, a ne o dvjema izmišljenim biografijama. Akter komunicira s aplikacijom; demonstrator na kolegiju kojem je rezultat zanimljiv ne mora biti akter aplikacije. Koristite uloge i ovlasti iz svojeg odobrenog zadatka. Persona je neobavezna i korisna je kada pomaže riješiti konkretno projektno pitanje.
@@ -48,9 +47,12 @@ Riječ je o dvjema različitim potrebama, a ne o dvjema izmišljenim biografijam
 
 **Cilj:** Jasno definirati granice sustava — što je obuhvaćeno odobrenim zadatkom, što je svjesno izostavljeno ili odgođeno te o kojim vanjskim uslugama sustav izravno ovisi.
 
-**Uključeno:**  Objavljivanje smještaja, pretraživanje smještaja (Search), preporuke smještaja (Discover), prijava za smještaj.
+**Uključeno:** Objavljivanje smještaja, pretraživanje smještaja (Search), preporuke smještaja (Discover), prijava za smještaj.
 **Izvan opsega ili odgođeno:** Automatsko "scrapeanje" objava sa drugih sličnih stranica.
-**Vanjske ovisnosti:** Vanjski pružatelj identiteta (OAuth), API za karte (Leaflet i Openstreetmap), API za slanje mailova (Resend), naša baza podataka za korisnike i objave
+**Vanjske ovisnosti:** Vanjski pružatelj identiteta (OAuth), API za karte (Leaflet i Openstreetmap), API za slanje mailova (Resend), naša baza podataka za korisnike i objave.
+Sustav obuhvaća registraciju i prijavu korisnika, dovršavanje korisničkog profila te ograničavanje pristupa zaštićenim funkcionalnostima. Za autentifikaciju koristi Supabase Auth, uz podršku prijavi putem Googlea i GitHuba te emaila i lozinke.
+
+CoStay pohranjuje podatke korisničkog profila u vlastitoj bazi i na poslužitelju provjerava ispunjava li korisnik uvjete za pristup. Uspješna autentifikacija bez dovršenog obaveznog profila nije dovoljna za korištenje funkcionalnosti namijenjenih registriranim korisnicima. Upravljanje identitetom i vjerodajnicama povjereno je Supabase Authu. CoStay ne upravlja lozinkama Googleovih ili GitHubovih računa.
 
 <details>
 <summary><strong>Primjer početne granice projekta</strong></summary>
@@ -85,4 +87,4 @@ Ako je postojeće rješenje stvarno utjecalo na projekt, usporedite samo relevan
 
 ---
 
->**Završna provjera:** Opis problema, cilj projekta, korisnici i dionici, granice opsega te postojeći pristupi međusobno su usklađeni. Navedene koristi ne predstavljaju neprovjerene tvrdnje, a uključene i izostavljene funkcionalnosti odgovaraju odobrenom projektnom zadatku.
+> **Završna provjera:** Opis problema, cilj projekta, korisnici i dionici, granice opsega te postojeći pristupi međusobno su usklađeni. Navedene koristi ne predstavljaju neprovjerene tvrdnje, a uključene i izostavljene funkcionalnosti odgovaraju odobrenom projektnom zadatku.
