@@ -139,6 +139,32 @@ id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi že
 
 </details>
 
+**Cilj:** Modelirati odgovornosti i međusobne odnose komponenti potrebnih za prikaz razgovora, dohvat i slanje poruka te komunikaciju u stvarnom vremenu unutar funkcionalnosti Inbox.
+
+**Dijagram razreda:**
+
+![Dijagram razreda za Inbox sustava CoStay](./assets/diagrams/4-3-2-inbox-class-diagram.svg)
+
+**Slika 4.3.2. Dijagram razreda za Inbox sustava CoStay**
+
+**PlantUML izvor:** [izvor](./puml/4-3-2-inbox-class-diagram.puml)
+
+**Referenca na postojeću implementaciju:**
+- [Backend rute Inboxa – inbox.js](../backend/src/routes/inbox.js)
+- [Predložak stranice Inbox – inbox.ejs](../backend/src/views/inbox.ejs)
+
+**Analiza oblikovanja:**
+
+Dijagram prikazuje postojeću implementaciju Inbox funkcionalnosti i predloženo oblikovanje njezinih odgovornosti. Postojeći Express modul `InboxRouter` obrađuje HTTP zahtjeve za prikaz stranice Inbox, dohvat razgovora, dohvat poruka i slanje novih poruka. Pristup podacima ostvaruje se korištenjem Supabase klijenta. Predložak `InboxView` definira korisničko sučelje koje sadrži popis razgovora, prikaz poruka i obrazac za slanje poruka.
+
+U trenutačnoj implementaciji obrada zahtjeva i komunikacija s bazom nalaze se unutar istog modula. Predloženo oblikovanje zato uvodi `ConversationService` i `MessageService`, kojima se odvajaju poslovna logika razgovora i obrada poruka. Sučelja `ConversationRepository` i `MessageRepository` definiraju operacije potrebne za dohvat razgovora, sudionika i poruka te pohranu novih poruka.
+
+Za podršku komunikaciji u stvarnom vremenu predložen je `RealtimeService`, koji upravlja pretplatama na promjene u odabranom razgovoru. Sučelje `RealtimeGateway` definira operacije potrebne za pretplatu na nove poruke i odjavu s pretplate. Time se odgovornost primanja novih poruka odvaja od odgovornosti njihova slanja i pohrane.
+
+Razredi `Conversation`, `Message` i `Participant` predstavljaju konceptualne modele podataka. Jedan razgovor sadrži sudionike i poruke, a svaka poruka ima jednog pošiljatelja.
+
+**Razlika između oblikovanja i implementacije:** `InboxRouter`, `InboxView` i korištenje `SupabaseClient` potvrđeni su u trenutačnom kodu. `ConversationService`, `MessageService`, `RealtimeService`, navedena sučelja i konceptualni modeli predstavljaju predloženo oblikovanje odgovornosti, a ne postojeće JavaScript klase. Dijagram će se ažurirati ako se tijekom dovršetka Inbox funkcionalnosti promijeni raspodjela odgovornosti ili način implementacije Realtime komunikacije.
+
 ## 4.4 Ponašanje tijekom izvođenja
 
 **Cilj:** Objasniti jednu važnu interakciju među dijelovima koji se izvode i životni ciklus jednog smislenog objekta. Odaberite primjere koji otkrivaju odluke ili neuspješne putove umjesto izrade dijagrama za svaku CRUD radnju.

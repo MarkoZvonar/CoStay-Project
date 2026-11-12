@@ -132,7 +132,27 @@ Ako odobreni zadatak umjesto toga koristi isključivo OAuth prijavu, zamijenite 
 | **Alternativni tokovi / Iznimke** | **3a — Korisnik nije prijavljen:** Ako korisnik nije prijavljen, aplikacija zahtijeva prijavu prije slanja zahtjeva.<br>**4a — Objava više nije otvorena:** Ako se status objave promijenio prije slanja zahtjeva, aplikacija obavještava korisnika da slanje zahtjeva više nije moguće.<br>**5a — Neuspješna pohrana zahtjeva:** Ako pohrana zahtjeva ne uspije, aplikacija obavještava korisnika o pogrešci i ne prikazuje potvrdu uspješnog slanja. |
 | **Posljedice (ishod)** | Zahtjev za pridruživanje uspješno je pohranjen sa statusom „na čekanju”. Korisnik može pregledati status svojih zahtjeva. Zahtjev na čekanju ne povećava broj potvrđenih sudionika objave. |
 
+### UC-004: Izravni razgovor
 
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-012 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i sudionik je razgovora koji želi otvoriti. |
+| **Glavni uspješni tok** | 1. Korisnik otvara stranicu Inbox.<br>2. Aplikacija dohvaća i prikazuje popis razgovora u kojima je korisnik sudionik.<br>3. Korisnik odabire izravni razgovor s drugim korisnikom.<br>4. Aplikacija dohvaća i prikazuje do 100 najnovijih poruka odabranog razgovora.<br>5. Korisnik unosi tekst poruke i odabire opciju slanja.<br>6. Aplikacija provjerava ispravnost poruke i ovlasti korisnika za sudjelovanje u razgovoru.<br>7. Aplikacija pohranjuje poruku i prikazuje potvrdu uspješnog slanja.<br>8. Nove poruke sudionika prikazuju se u razgovoru putem Realtime komunikacije, bez potrebe za osvježavanjem stranice. |
+| **Alternativni tokovi / Iznimke** | **2a — Nema razgovora:** Ako korisnik nema nijedan razgovor, aplikacija prikazuje odgovarajuću poruku.<br>**3a — Razgovor nije dostupan:** Ako korisnik nije sudionik odabranog razgovora, aplikacija odbija pristup razgovoru.<br>**6a — Nevaljana poruka:** Ako je poruka prazna ili dulja od 2000 znakova, aplikacija odbija slanje i prikazuje odgovarajuću poruku o pogrešci.<br>**7a — Neuspješno slanje:** Ako pohrana poruke ne uspije, aplikacija obavještava korisnika da poruka nije poslana.<br>**8a — Realtime veza nije dostupna:** Ako se nove poruke ne mogu primati u stvarnom vremenu, aplikacija obavještava korisnika o problemu i omogućuje ponovno uspostavljanje veze. |
+| **Posljedice (ishod)** | Poruka je pohranjena u razgovoru i dostupna njegovim sudionicima. Nove poruke prikazuju se sudionicima putem Realtime komunikacije. |
+
+### UC-005: Grupni razgovor
+
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik koji je autor objave ili konačno potvrđeni sudionik dogovorenog putovanja |
+| **Povezani zahtjevi** | F-012, F-013 |
+| **Preduvjeti** | Putovanje je dogovoreno i postoji grupni razgovor kojem pripadaju autor objave i konačno potvrđeni sudionici. |
+| **Glavni uspješni tok** | 1. Nakon dogovaranja putovanja aplikacija automatski stvara grupni razgovor.<br>2. Aplikacija dodaje autora objave i konačno potvrđene sudionike u grupni razgovor.<br>3. Sudionik otvara stranicu Inbox.<br>4. Aplikacija prikazuje grupni razgovor na popisu dostupnih razgovora.<br>5. Sudionik odabire grupni razgovor.<br>6. Aplikacija dohvaća i prikazuje do 100 najnovijih poruka grupnog razgovora.<br>7. Sudionik unosi tekst poruke i odabire opciju slanja.<br>8. Aplikacija provjerava pripadnost sudionika razgovoru, pohranjuje poruku i prikazuje potvrdu uspješnog slanja.<br>9. Nove poruke prikazuju se ostalim sudionicima putem Realtime komunikacije. |
+| **Alternativni tokovi / Iznimke** | **1a — Neuspješno stvaranje razgovora:** Ako aplikacija ne uspije stvoriti grupni razgovor, obavještava odgovarajući dio sustava o pogrešci kako bi se stvaranje moglo ponoviti ili obraditi.<br>**2a — Neuspješno dodavanje sudionika:** Ako dodavanje sudionika ne uspije, aplikacija ne smije omogućiti pristup razgovoru korisnicima koji nisu uspješno dodani.<br>**5a — Korisnik nije sudionik razgovora:** Aplikacija odbija pristup grupnom razgovoru.<br>**8a — Nevaljana poruka ili neuspješna pohrana:** Aplikacija odbija slanje nevaljane poruke ili obavještava korisnika da pohrana nije uspjela.<br>**9a — Realtime veza nije dostupna:** Ako se nove poruke ne mogu primati u stvarnom vremenu, aplikacija obavještava korisnika o problemu. |
+| **Posljedice (ishod)** | Stvoren je grupni razgovor koji je dostupan autoru objave i konačno potvrđenim sudionicima dogovorenog putovanja. Sudionici mogu razmjenjivati poruke unutar razgovora. |
 
 
 ## 3.3 Provjera dosljednosti obrazaca uporabe
