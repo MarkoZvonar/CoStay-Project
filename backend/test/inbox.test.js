@@ -5,7 +5,7 @@ import { fileURLToPath } from "node:url";
 
 // Testni proces koristi isključivo izmišljeni Supabase projekt.
 process.env.SUPABASE_URL = "https://costay-test.invalid";
-process.env.SUPABASE_ANON_KEY = "test-key";
+process.env.SUPABASE_ANON_KEY = "sb_publishable_test-key";
 const { default: inboxRouter } = await import("../src/routes/inbox.js");
 const { default: apiRouter } = await import("../src/routes/api.js");
 const originalFetch = globalThis.fetch;
@@ -100,6 +100,7 @@ async function fixture(options = {}) {
       : {
           user: { id: korisnikId },
           accessToken: options.noToken ? undefined : "test-token",
+          refreshToken: "test-refresh-token",
         };
     next();
   });
@@ -270,7 +271,54 @@ test("direct router renders the inbox page at /inbox", async () => {
     const html = await response.text();
     assert.match(html, /id="porukaObrazac"/);
     assert.match(html, /id="razgovoriLista"/);
+    assert.match(html, /data-supabase-key="sb_publishable_test-key"/);
+    assert.ok(!html.includes("test-token"));
+    assert.ok(!html.includes("test-refresh-token"));
+    assert.ok(html.indexOf("/inbox/supabase.js") >= 0);
+    assert.ok(html.indexOf("/inbox/supabase.js") < html.indexOf("/services/inbox.js"));
   });
+});
+
+test("inbox serves the installed Supabase browser library", async () => {
+  await run({}, async (f) => {
+    const response = await f.request("/supabase.js");
+    assert.equal(response.status, 200);
+    assert.match(await response.text(), /createClient/);
+  });
+});
+
+test("Realtime session requires registration and returns only the current access token", async () => {
+  await run({ guest: true }, async (f) => {
+    const response = await f.request("/realtime-session");
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get("location"), "/login");
+  });
+  await run({ noProfile: true }, async (f) => {
+    const response = await f.request("/realtime-session");
+    assert.equal(response.status, 302);
+    assert.equal(response.headers.get("location"), "/signup2");
+  });
+  await run({}, async (f) => {
+    const response = await f.request("/realtime-session");
+    assert.equal(response.headers.get("cache-control"), "no-store");
+    assert.deepEqual(await response.json(), { accessToken: "test-token" });
+  });
+});
+
+test("inbox page keeps privileged Supabase keys out of the HTML", async () => {
+  const publicKey = process.env.SUPABASE_ANON_KEY;
+  process.env.SUPABASE_ANON_KEY = "sb_secret_test-key";
+  try {
+    await run({}, async (f) => {
+      const response = await f.page();
+      assert.equal(response.status, 200);
+      const html = await response.text();
+      assert.match(html, /data-supabase-key=""/);
+      assert.ok(!html.includes("sb_secret_test-key"));
+    });
+  } finally {
+    process.env.SUPABASE_ANON_KEY = publicKey;
+  }
 });
 
 test("message query errors never return successful reads or writes", async () => {

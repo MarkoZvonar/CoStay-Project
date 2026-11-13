@@ -1,24 +1,44 @@
 import express from "express";
 import { createClient } from "@supabase/supabase-js";
+import { fileURLToPath } from "node:url";
 import { requireRegistered } from "../middleware/requireRegistered.js";
 
 const router = express.Router();
 const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+const supabaseSkripta = fileURLToPath(
+  new URL("./umd/supabase.js", import.meta.resolve("@supabase/supabase-js")),
+);
+
+function javniSupabaseKljuc(kljuc = "") {
+  if (kljuc.startsWith("sb_publishable_")) return kljuc;
+
+  try {
+    const payload = JSON.parse(Buffer.from(kljuc.split(".")[1], "base64url"));
+    return payload.role === "anon" ? kljuc : "";
+  } catch {
+    return "";
+  }
+}
+
+router.get("/supabase.js", (req, res) => {
+  return res.sendFile(supabaseSkripta);
+});
 
 router.use((req, res, next) => {
   res.set("Cache-Control", "no-store");
   next();
 });
 
-// GET /inbox — profil je već provjeren u requireRegistered.
 router.get("/", requireRegistered, (req, res) => {
   return res.render("inbox", {
-    ime: req.korisnik.ime,
-    email: req.korisnik.email,
-    prezime: req.korisnik.prezime,
-    birthday: req.korisnik.datum_rodenja,
-    spol: req.korisnik.spol,
+    supabaseUrl: process.env.SUPABASE_URL,
+    supabaseKey: javniSupabaseKljuc(process.env.SUPABASE_ANON_KEY),
   });
+});
+
+// refreshSession u app.js prije ove rute osigurava važeći pristupni token.
+router.get("/realtime-session", requireRegistered, (req, res) => {
+  return res.json({ accessToken: req.session.accessToken });
 });
 
 // GET /inbox/razgovori
