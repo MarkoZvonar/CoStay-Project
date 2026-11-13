@@ -1,37 +1,36 @@
-// API vraća samo podatke potrebne inboxu; Supabase token ostaje u sesiji na serveru.
+const { supabaseUrl, supabaseKey } = document.querySelector(".inboxTijelo").dataset;
 const lista = document.getElementById("razgovoriLista");
 const poruke = document.getElementById("porukeLista");
 const naslov = document.getElementById("chatNaslov");
 const sudionici = document.getElementById("chatSudionici");
 const status = document.getElementById("inboxStatus");
+const veza = document.getElementById("inboxVeza");
 const slanjeStatus = document.getElementById("slanjeStatus");
 const unos = document.getElementById("sadrzaj");
 const posalji = document.getElementById("posalji");
 let odabrani = null;
 let ucitavanje = false;
+let cekaOsvjezenje = false;
 let salje = false;
 let zadnjePoruke = "";
-let povezivanjeNedovrseno = false;
 let zadnjiPopis = "";
+let realtimeKanal = null;
+let povezivanjeRealtime = false;
 
 async function api(url, options = {}) {
   const odgovor = await fetch(url, { ...options, headers: { "Content-Type": "application/json", ...options.headers } });
   if (odgovor.redirected) {
-    povezivanjeNedovrseno = true;
     throw new Error("Za pristup inboxu prijavi se i dovrši profil.");
   }
   if (odgovor.status === 401) {
-    povezivanjeNedovrseno = true;
     throw new Error("Prijava je istekla. Ponovno se prijavi za pristup porukama.");
   }
   if (!odgovor.ok) {
     const podaci = odgovor.headers.get("content-type")?.includes("application/json")
       ? await odgovor.json()
       : {};
-    povezivanjeNedovrseno = odgovor.status === 503;
     throw new Error(podaci.error || "Zahtjev nije uspio. Pokušaj ponovno.");
   }
-  povezivanjeNedovrseno = false;
   return odgovor.json();
 }
 
@@ -131,7 +130,11 @@ async function ucitajPoruke() {
 }
 
 async function osvjezi() {
-  if (ucitavanje || document.hidden) return;
+  if (document.hidden) return;
+  if (ucitavanje) {
+    cekaOsvjezenje = true;
+    return;
+  }
   ucitavanje = true;
   try {
     const podaci = await api("/inbox/razgovori");
@@ -152,8 +155,13 @@ async function osvjezi() {
   } catch (error) {
     status.textContent = error.message;
     if (!lista.querySelector("button")) prazno(lista, "Razgovore trenutačno nije moguće učitati.");
+  } finally {
+    ucitavanje = false;
+    if (cekaOsvjezenje) {
+      cekaOsvjezenje = false;
+      void osvjezi();
+    }
   }
-  finally { ucitavanje = false; }
 }
 
 document.getElementById("porukaObrazac").addEventListener("submit", async (event) => {
@@ -179,8 +187,51 @@ document.getElementById("porukaObrazac").addEventListener("submit", async (event
     if (odabrani) unos.focus();
   }
 });
-document.getElementById("osvjezi").addEventListener("click", osvjezi);
-document.addEventListener("visibilitychange", () => { if (!document.hidden) osvjezi(); });
-osvjezi();
-// Početna verzija koristi periodično osvježavanje. Realtime se može dodati naknadno.
-setInterval(() => { if (!povezivanjeNedovrseno) osvjezi(); }, 5000);
+async function pokreniRealtime() {
+  if (realtimeKanal || povezivanjeRealtime) return;
+  povezivanjeRealtime = true;
+
+  try {
+    const klijent = window.supabase.createClient(supabaseUrl, supabaseKey, {
+      accessToken: async () => {
+        const { accessToken } = await api("/inbox/realtime-session");
+        return accessToken;
+      },
+    });
+    await klijent.realtime.setAuth();
+
+    realtimeKanal = klijent.channel("inbox-poruke", {
+      config: { postgres_changes_options: { wait: true } },
+    });
+    realtimeKanal
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "PORUKA" },
+        () => void osvjezi(),
+      )
+      .subscribe((stanje) => {
+        veza.hidden = stanje === "SUBSCRIBED";
+        if (stanje === "SUBSCRIBED") void osvjezi();
+        if (stanje === "CLOSED") {
+          realtimeKanal = null;
+          klijent.realtime.disconnect();
+        }
+      });
+  } catch {
+    realtimeKanal = null;
+    veza.hidden = false;
+  } finally {
+    povezivanjeRealtime = false;
+  }
+}
+
+function osvjeziInbox() {
+  if (document.hidden) return;
+  void pokreniRealtime();
+  void osvjezi();
+}
+
+document.getElementById("osvjezi").addEventListener("click", osvjeziInbox);
+document.addEventListener("visibilitychange", osvjeziInbox);
+window.addEventListener("online", osvjeziInbox);
+osvjeziInbox();

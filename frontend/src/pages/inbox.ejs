@@ -6,10 +6,15 @@
     <link rel="stylesheet" href="/pages/main.css" />
     <link rel="stylesheet" href="/pages/inbox.css" />
     <title>Inbox | CoStay</title>
+    <script src="/inbox/supabase.js" defer></script>
     <script src="/services/inbox.js" defer></script>
   </head>
   <body>
-    <main class="inboxTijelo">
+    <main
+      class="inboxTijelo"
+      data-supabase-url="<%= supabaseUrl %>"
+      data-supabase-key="<%= supabaseKey %>"
+    >
       <header class="inboxZaglavlje">
         <div>
           <h1>Inbox</h1>
@@ -19,6 +24,9 @@
           Osvježi
         </button>
       </header>
+      <p id="inboxVeza" class="chatNapomena" role="status" hidden>
+        Osvježavanje uživo trenutačno nije dostupno. Poruke možeš učitati gumbom Osvježi.
+      </p>
       <p id="inboxStatus" role="status" aria-live="polite"></p>
       <div class="inboxRaspored">
         <section class="razgovori" aria-labelledby="razgovoriNaslov">
