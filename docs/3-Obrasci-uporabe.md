@@ -100,6 +100,12 @@ Ako odobreni zadatak umjesto toga koristi isključivo OAuth prijavu, zamijenite 
 
 ---
 
+## 3.2 Specifikacije obrazaca uporabe
+
+**Cilj:** Za svaki obrazac uporabe iz dijagrama opisati cilj aktera, glavni uspješni tok i značajne alternative.
+
+Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifikacije UC-011 do UC-029 proširuju pokrivenost dijagrama obrazaca uporabe; njihovu usklađenost s implementacijom potrebno je potvrditi prije predaje.
+
 ### UC-001: Pregled objava na Discoveru
 
 | Element specifikacije             | Opis                                                                                                                                                                                                                                                                                                                                                                       |
@@ -209,6 +215,215 @@ Ako odobreni zadatak umjesto toga koristi isključivo OAuth prijavu, zamijenite 
 | **Glavni uspješni tok**           | 1. Korisnik odabire poveznicu za zaboravljenu lozinku.<br>2. Korisnik unosi adresu e-pošte i šalje zahtjev.<br>3. Sustav pokreće postupak oporavka putem Supabase Autha i prikazuje neutralnu poruku o zahtjevu.<br>4. Korisnik otvara primljenu poveznicu u pregledniku u kojem je pokrenuo postupak.<br>5. Sustav provjerava povratni kod i uspostavlja privremeni kontekst za ponovno postavljanje lozinke.<br>6. Korisnik unosi novu lozinku i njezinu potvrdu.<br>7. Sustav provjerava valjanost zahtjeva, uvjete lozinke i podudaranje unosa te mijenja lozinku putem Supabase Autha.<br>8. Sustav završava privremenu sesiju i upućuje korisnika na novu prijavu.                          |
 | **Alternativni tokovi / Iznimke** | **2a — Nevaljan format emaila:** Sustav odbija zahtjev i traži ispravan unos.<br>**3a — Privremena nedostupnost ili ograničenje broja zahtjeva:** Sustav prikazuje poruku da postupak trenutačno nije moguće provesti.<br>**5a — Nevaljana, istekla ili iskorištena poveznica:** Sustav ne dopušta promjenu lozinke i korisnik treba pokrenuti novi postupak.<br>**5b — Nedostaje sesija u kojoj je postupak pokrenut:** Sustav ne može dovršiti PKCE provjeru i korisnik treba ponovno pokrenuti postupak.<br>**7a — Lozinke se ne podudaraju ili ne zadovoljavaju uvjete:** Sustav odbija promjenu.<br>**7b — Promjena lozinke nije uspjela:** Sustav prikazuje pogrešku i ne potvrđuje uspjeh. |
 | **Posljedice (ishod)**            | Nakon uspješne promjene korisnik se može prijaviti novom lozinkom za CoStay račun. Lozinka Googleova ili GitHubova računa time se ne mijenja.                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     |
+
+### UC-011: Upravljanje korisničkim profilom
+
+| Element specifikacije             | Opis                                                                                                                                                                          |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                                                         |
+| **Povezani zahtjevi**             | F-002                                                                                                                                                                         |
+| **Preduvjeti**                    | Korisnik je prijavljen i ima dovršen profil.                                                                                                                                  |
+| **Glavni uspješni tok**           | 1. Korisnik otvara profil<br>2. sustav prikazuje njegove podatke<br>3. korisnik mijenja dopuštena polja i potvrđuje spremanje<br>4. sustav provjerava unos i sprema promjene. |
+| **Alternativni tokovi / Iznimke** | Neispravni podaci ili neuspješno spremanje: sustav prikazuje pogrešku i ne potvrđuje promjenu.                                                                                |
+| **Posljedice (ishod)**            | Ažurirani podaci profila dostupni su korisniku.                                                                                                                               |
+
+### UC-012: Pretraživanje objava na Searchu
+
+| Element specifikacije             | Opis                                                                                                                                                                                                      |
+| :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Neregistrirani posjetitelj ili registrirani korisnik                                                                                                                                                      |
+| **Povezani zahtjevi**             | F-006, F-022                                                                                                                                                                                              |
+| **Preduvjeti**                    | Aplikacija je dostupna.                                                                                                                                                                                   |
+| **Glavni uspješni tok**           | 1. Korisnik otvara Search, unosi kriterije lokacije, vremena, cijene ili drugih filtara<br>2. sustav pronalazi i prikazuje objave koje odgovaraju zadanim uvjetima<br>3. korisnik otvara odabranu objavu. |
+| **Alternativni tokovi / Iznimke** | Nema rezultata: sustav prikazuje prazan popis; neispravni kriteriji ili neuspješno dohvaćanje: prikazuje obavijest.                                                                                       |
+| **Posljedice (ishod)**            | Korisnik pregledava rezultate bez promjene podataka.                                                                                                                                                      |
+
+### UC-013: Izrada objave putovanja
+
+| Element specifikacije             | Opis                                                                                                                                                                               |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                                                              |
+| **Povezani zahtjevi**             | F-003, F-021                                                                                                                                                                       |
+| **Preduvjeti**                    | Korisnik je prijavljen i smije izrađivati objave.                                                                                                                                  |
+| **Glavni uspješni tok**           | 1. Korisnik odabire izradu objave<br>2. unosi potrebne podatke o putovanju i lokaciji<br>3. sustav provjerava unos<br>4. korisnik potvrđuje izradu<br>5. sustav pohranjuje objavu. |
+| **Alternativni tokovi / Iznimke** | Nedostaju obavezni podaci, lokacija nije valjana ili pohrana nije uspjela: sustav prikazuje pogrešku bez potvrde uspjeha.                                                          |
+| **Posljedice (ishod)**            | Objava je evidentirana i dostupna u skladu sa svojim statusom.                                                                                                                     |
+
+### UC-014: Uređivanje vlastite objave
+
+| Element specifikacije             | Opis                                                                                                                                           |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Autor objave / vlasnik                                                                                                                         |
+| **Povezani zahtjevi**             | F-004                                                                                                                                          |
+| **Preduvjeti**                    | Korisnik je prijavljen i autor je postojeće objave.                                                                                            |
+| **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i odabire uređivanje<br>2. mijenja dopuštene podatke<br>3. sustav provjerava ovlasti i unos te sprema izmjene. |
+| **Alternativni tokovi / Iznimke** | Objava ne postoji ili korisnik nije autor: pristup se odbija; neispravni podaci: promjena se ne sprema.                                        |
+| **Posljedice (ishod)**            | Podaci objave ažurirani su.                                                                                                                    |
+
+### UC-015: Pregled spremljenih objava
+
+| Element specifikacije             | Opis                                                                                                                                       |
+| :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                      |
+| **Povezani zahtjevi**             | F-007                                                                                                                                      |
+| **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                                    |
+| **Glavni uspješni tok**           | 1. Korisnik otvara popis spremljenih objava<br>2. sustav dohvaća objave koje je korisnik spremio<br>3. korisnik odabire objavu za pregled. |
+| **Alternativni tokovi / Iznimke** | Nema spremljenih objava: sustav prikazuje odgovarajuću poruku; dohvat ne uspije: prikazuje pogrešku.                                       |
+| **Posljedice (ishod)**            | Korisnik vidi spremljene objave; samo pregledavanje ne mijenja podatke.                                                                    |
+
+### UC-016: Pregled vlastitih zahtjeva za pridruživanje
+
+| Element specifikacije             | Opis                                                                                                                         |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                        |
+| **Povezani zahtjevi**             | F-008, F-025                                                                                                                 |
+| **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                      |
+| **Glavni uspješni tok**           | 1. Korisnik otvara pregled svojih zahtjeva<br>2. sustav prikazuje putovanja na koja se prijavio i aktualne statuse zahtjeva. |
+| **Alternativni tokovi / Iznimke** | Nema zahtjeva ili dohvat nije uspio: sustav prikazuje odgovarajuću informaciju.                                              |
+| **Posljedice (ishod)**            | Korisnik vidi stanje svojih prijava.                                                                                         |
+
+### UC-017: Povlačenje zahtjeva ili sudjelovanja
+
+| Element specifikacije             | Opis                                                                                                                                                        |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                                       |
+| **Povezani zahtjevi**             | F-025, F-010                                                                                                                                                |
+| **Preduvjeti**                    | Korisnik je prijavljen i ima zahtjev ili sudjelovanje koje je dopušteno povući.                                                                             |
+| **Glavni uspješni tok**           | 1. Korisnik otvara vlastiti zahtjev ili sudjelovanje<br>2. odabire povlačenje i potvrđuje ga<br>3. sustav provjerava pravila i evidentira promjenu statusa. |
+| **Alternativni tokovi / Iznimke** | Povlačenje nije dopušteno ili je stanje u međuvremenu promijenjeno: sustav odbija zahtjev; pohrana ne uspije: prikazuje pogrešku.                           |
+| **Posljedice (ishod)**            | Zahtjev ili sudjelovanje više nije aktivno u prethodnom statusu.                                                                                            |
+
+### UC-018: Pregled pristiglih zahtjeva
+
+| Element specifikacije             | Opis                                                                                                           |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Autor objave / vlasnik                                                                                         |
+| **Povezani zahtjevi**             | F-009, F-026                                                                                                   |
+| **Preduvjeti**                    | Korisnik je prijavljen i autor je objave.                                                                      |
+| **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i pregled prijava<br>2. sustav prikazuje pristigle zahtjeve i njihove statuse. |
+| **Alternativni tokovi / Iznimke** | Nema prijava: prikazuje se prazan popis; korisnik nije autor: pristup se odbija.                               |
+| **Posljedice (ishod)**            | Autor dobiva uvid u zahtjeve za svoje putovanje.                                                               |
+
+### UC-019: Prihvaćanje ili odbijanje zahtjeva
+
+| Element specifikacije             | Opis                                                                                                                                            |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Autor objave / vlasnik                                                                                                                          |
+| **Povezani zahtjevi**             | F-009, F-010                                                                                                                                    |
+| **Preduvjeti**                    | Autor je prijavljen; postoji zahtjev na čekanju za njegovu objavu.                                                                              |
+| **Glavni uspješni tok**           | 1. Autor otvara zahtjeve, bira prijavu i prihvaća je ili odbija<br>2. sustav provjerava ovlasti, stanje putovanja i kapacitet te sprema odluku. |
+| **Alternativni tokovi / Iznimke** | Zahtjev je već obrađen, kapacitet je popunjen ili spremanje nije uspjelo: sustav odbija promjenu i obavještava autora.                          |
+| **Posljedice (ishod)**            | Zahtjev ima novi status; prihvaćeni sudionici uračunavaju se u kapacitet prema pravilima sustava.                                               |
+
+### UC-020: Pregled prijavljenih osoba
+
+| Element specifikacije             | Opis                                                                                                              |
+| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Autor objave / vlasnik                                                                                            |
+| **Povezani zahtjevi**             | F-026                                                                                                             |
+| **Preduvjeti**                    | Autor je prijavljen i ima vlastitu objavu.                                                                        |
+| **Glavni uspješni tok**           | 1. Autor otvara popis osoba prijavljenih na putovanje<br>2. sustav prikazuje informacije o prijavama i statusima. |
+| **Alternativni tokovi / Iznimke** | Nema prijavljenih osoba: sustav prikazuje prazno stanje; pristup tuđoj objavi: odbija se.                         |
+| **Posljedice (ishod)**            | Autor vidi pregled osoba povezanih s njegovim putovanjem.                                                         |
+
+### UC-021: Odluka o putovanju s manjom grupom
+
+| Element specifikacije             | Opis                                                                                                                                                                                                 |
+| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Autor objave / vlasnik                                                                                                                                                                               |
+| **Povezani zahtjevi**             | F-011, F-010, F-013                                                                                                                                                                                  |
+| **Preduvjeti**                    | Korisnik je autor putovanja kojem je istekao rok te su zadovoljeni uvjeti za odluku o manjoj grupi.                                                                                                  |
+| **Glavni uspješni tok**           | 1. Sustav prikazuje autoru stanje prijava i mogućnost odluke<br>2. autor bira nastavak putovanja s postojećim sudionicima ili odustajanje<br>3. sustav evidentira odluku i ažurira status putovanja. |
+| **Alternativni tokovi / Iznimke** | Odluka više nije dopuštena, podaci su se promijenili ili spremanje ne uspije: sustav ne potvrđuje završetak.                                                                                         |
+| **Posljedice (ishod)**            | Putovanje dobiva odgovarajući status; daljnji postupci ovise o donesenoj odluci.                                                                                                                     |
+
+### UC-022: Pregled troškova putovanja
+
+| Element specifikacije             | Opis                                                                                                                                               |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik koji sudjeluje u putovanju                                                                                                   |
+| **Povezani zahtjevi**             | F-023                                                                                                                                              |
+| **Preduvjeti**                    | Korisnik smije pregledavati troškove odabranog dogovorenog putovanja.                                                                              |
+| **Glavni uspješni tok**           | 1. Korisnik otvara troškove putovanja<br>2. sustav dohvaća evidentirane stavke i pripadajuće iznose<br>3. prikazuje ukupne ili pojedinačne obveze. |
+| **Alternativni tokovi / Iznimke** | Nema evidentiranih troškova: prikazuje se prazno stanje; neovlašten pristup ili pogreška dohvata: pristup se odbija ili se prikazuje pogreška.     |
+| **Posljedice (ishod)**            | Korisnik dobiva pregled financijskih obveza bez izvršavanja plaćanja.                                                                              |
+
+### UC-023: Simulacija plaćanja
+
+| Element specifikacije             | Opis                                                                                                                                         |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik s nepodmirenom obvezom                                                                                                 |
+| **Povezani zahtjevi**             | F-024                                                                                                                                        |
+| **Preduvjeti**                    | Korisnik ima pravo pristupa trošku i postoji nepodmireni iznos.                                                                              |
+| **Glavni uspješni tok**           | 1. Korisnik otvara obvezu, odabire simulaciju plaćanja i potvrđuje radnju<br>2. sustav provjerava stanje i evidentira simulirano podmirenje. |
+| **Alternativni tokovi / Iznimke** | Trošak je već podmiren, korisnik nema ovlast ili operacija ne uspije: sustav ne prikazuje uspješno podmirenje.                               |
+| **Posljedice (ishod)**            | Ažurira se evidencija simuliranog plaćanja; ne dolazi do stvarnog prijenosa novca.                                                           |
+
+### UC-024: Ocjenjivanje sudionika
+
+| Element specifikacije             | Opis                                                                                                                                                                                   |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik koji je sudjelovao u putovanju                                                                                                                                   |
+| **Povezani zahtjevi**             | F-014, F-015                                                                                                                                                                           |
+| **Preduvjeti**                    | Putovanje je završeno i korisnik ima pravo ocijeniti drugog sudionika.                                                                                                                 |
+| **Glavni uspješni tok**           | 1. Korisnik odabire sudionika, unosi dopuštenu ocjenu i potvrđuje<br>2. sustav provjerava uvjete i pohranjuje ocjenu<br>3. prema pohranjenim ocjenama osvježava se prikaz opće ocjene. |
+| **Alternativni tokovi / Iznimke** | Nevaljana ocjena, pokušaj nedopuštenog ili ponovljenog ocjenjivanja ili greška spremanja: radnja se odbija.                                                                            |
+| **Posljedice (ishod)**            | Ocjena je evidentirana i može utjecati na prikaz korisnikove ukupne ocjene.                                                                                                            |
+
+### UC-025: Prijavljivanje sadržaja ili korisnika
+
+| Element specifikacije             | Opis                                                                                                                                   |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                  |
+| **Povezani zahtjevi**             | F-016                                                                                                                                  |
+| **Preduvjeti**                    | Korisnik je prijavljen i može otvoriti sadržaj ili profil koji želi prijaviti.                                                         |
+| **Glavni uspješni tok**           | 1. Korisnik odabire prijavu, navodi razlog i potvrđuje<br>2. sustav provjerava unos i evidentira prijavu za moderatorski pregled.      |
+| **Alternativni tokovi / Iznimke** | Nije naveden valjan razlog ili evidentiranje ne uspije: prikazuje se pogreška; duplicirana prijava može biti odbijena prema pravilima. |
+| **Posljedice (ishod)**            | Prijava je dostupna postupku moderiranja.                                                                                              |
+
+### UC-026: Moderiranje sadržaja i računa
+
+| Element specifikacije             | Opis                                                                                                                                                   |
+| :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Administrator                                                                                                                                          |
+| **Povezani zahtjevi**             | F-017, F-018                                                                                                                                           |
+| **Preduvjeti**                    | Administrator je autentificiran i ima moderatorske ovlasti.                                                                                            |
+| **Glavni uspješni tok**           | 1. Administrator pregledava prijave i povezani sadržaj<br>2. odabire dopuštenu moderatorsku mjeru<br>3. sustav provjerava ovlasti i evidentira odluku. |
+| **Alternativni tokovi / Iznimke** | Nema otvorenih prijava, stanje je promijenjeno ili provjera ovlasti nije uspjela: mjera se ne izvršava.                                                |
+| **Posljedice (ishod)**            | Sadržaj ili račun ima ažuriran status, uz evidenciju odluke.                                                                                           |
+
+### UC-027: Pregled statistike i izvoz podataka
+
+| Element specifikacije             | Opis                                                                                                                                               |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Administrator                                                                                                                                      |
+| **Povezani zahtjevi**             | F-019                                                                                                                                              |
+| **Preduvjeti**                    | Administrator je autentificiran i ima pravo pristupa izvještajima.                                                                                 |
+| **Glavni uspješni tok**           | 1. Administrator otvara statistiku<br>2. sustav izračunava i prikazuje dostupne pokazatelje<br>3. administrator po potrebi pokreće izvoz podataka. |
+| **Alternativni tokovi / Iznimke** | Nema podataka, izvoz nije dostupan ili zahtjev ne uspije: sustav prikazuje odgovarajuću poruku.                                                    |
+| **Posljedice (ishod)**            | Administrator ima uvid u statistiku ili dobiva izvezene podatke.                                                                                   |
+
+### UC-028: Odabir lokacije
+
+| Element specifikacije             | Opis                                                                                                                                                                                          |
+| :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Primarni akter**                | Registrirani korisnik                                                                                                                                                                         |
+| **Povezani zahtjevi**             | F-021                                                                                                                                                                                         |
+| **Preduvjeti**                    | Korisnik uređuje ili stvara sadržaj za koji je potreban unos lokacije; vanjski servis za karte je dostupan.                                                                                   |
+| **Glavni uspješni tok**           | 1. Korisnik pokreće odabir lokacije<br>2. sustav nudi pretraživanje ili odabir uz pomoć servisa za karte<br>3. korisnik potvrđuje lokaciju<br>4. sustav sprema odabranu vrijednost u obrazac. |
+| **Alternativni tokovi / Iznimke** | Lokacija nije pronađena ili servis nije dostupan: sustav prikazuje pogrešku ili omogućuje ponovni pokušaj.                                                                                    |
+| **Posljedice (ishod)**            | Obrazac sadrži odabranu lokaciju za daljnju obradu.                                                                                                                                           |
+
+### UC-029: Slanje automatskih e-mail obavijesti
+
+| Element specifikacije             | Opis                                                                                                                                  |
+| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ | --- |
+| **Primarni akter**                | Registrirani korisnik kao primatelj obavijesti; e-mail servis kao sekundarni akter                                                    |
+| **Povezani zahtjevi**             | F-020                                                                                                                                 |
+| **Preduvjeti**                    | Nastao je događaj za koji pravila sustava predviđaju obavještavanje.                                                                  |
+| **Glavni uspješni tok**           | 1. Sustav prepoznaje događaj i priprema poruku za primatelja<br>2. predaje je e-mail servisu<br>3. servis prihvaća zahtjev za slanje. |
+| **Alternativni tokovi / Iznimke** | Nedostaje valjana adresa ili e-mail servis nije dostupan: slanje se ne dovršava i treba obraditi neuspjeh.                            |
+| **Posljedice (ishod)**            | Obavijest je predana na slanje; to ne jamči dostavu u korisnikov sandučić.                                                            |     |
 
 ## 3.3 Provjera dosljednosti obrazaca uporabe
 

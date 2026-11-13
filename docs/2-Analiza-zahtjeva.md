@@ -91,31 +91,6 @@ Za složenu interakciju kratak scenarij _Given / When / Then_ može pojasniti kr
 | NF-11 | Sustav mora podržavati pouzdanu integraciju s vanjskim servisom za karte i slanje e-pošte.                                          | Srednji   | Uputa     | Testirati uobičajene zahtjeve prema vanjskom servisu te provjeriti ponašanje aplikacije kada vanjski servis privremeno nije dostupan.                                                                                                                                                                                            |
 | NF-12 | Sustav mora omogućiti dosljedan izvoz statističkih podataka u CSV formatu.                                                          | Srednji   | SLA       | Izvesti odabrane statističke podatke te provjeriti jesu li stupci, vrijednosti i zapisi u datoteci u skladu s odabranim podacima.                                                                                                                                                                                                |
 
-<details>
-<summary><strong>Nefunkcijski zahtjevi za analizu</strong></summary>
-
-Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost, performanse ili pouzdanost. Odaberite svojstva specifična za projekt i opišite kako ih je moguće provjeriti. Zahtjev navodi što se očekuje; stvarna opažanja i dokazi pripadaju rezultatima ispitivanja, a ne drugom stupcu s rezultatima u ovoj tablici.
-
-**Primjer — nefunkcijski zahtjevi za aplikaciju CrisisMap:**
-
-| ID         | Opis                                                                                            | Prioritet | Izvor                        |
-| ---------- | ----------------------------------------------------------------------------------------------- | --------- | ---------------------------- | ----------------------------------------------------------------------------------------- |
-| NF-1.1     | Sustav mora podržati 1.000 istodobnih korisnika uz vrijeme odziva kraće od 1 s.                 | Visok     | SLA                          | Opteretiti sustav zadanim brojem istodobnih korisnika i izmjeriti vrijeme odziva.         |
-| NF-1.2     | Svi osjetljivi podaci moraju biti šifrirani algoritmom AES-256.                                 | Visok     | Sigurnosna politika          | Pregledati način pohrane i konfiguraciju šifriranja za podatke na koje se zahtjev odnosi. |
-| NF-1.3     | Korisničko sučelje mora podržavati engleski i španjolski jezik.                                 | Srednji   | Povratna informacija dionika | Pregledati reprezentativne korisničke tijekove u oba jezika.                              |
-| NF-1.4     | Dostupnost sustava mora iznositi najmanje 99,5 % mjesečno.                                      | Visok     | SLA                          | Izračunati mjesečnu dostupnost iz zapisa sustava za nadzor, ako takvi podaci postoje.     |
-| NF-3.1.7   | Sustav treba imati odgovarajuću dokumentaciju.                                                  | Visok     | Pravila dokumentiranja       | Pregledati zahtijevane dokumentaciju prema obavezama.                                     |
-| NF-3.1.7.1 | Kod sustava treba biti dokumentiran prema „Code Conventions for the Java Programming Language”. | Visok     | Pravila dokumentiranja       | Pregledati kod.                                                                           |
-| NF-3.1.7.2 | Sustav treba biti opisan projektnim dokumentom/SRS-om.                                          | Visok     | Pravila dokumentiranja       | Pregledati strukturu dokumenta                                                            |
-| NF-3.1.7.3 | Sustav treba imati „Operativni priručnik” koji opisuje pravilnu uporabu.                        | Visok     | Pravila dokumentiranja       | Pregledati postoji li priručnik i mogu li se prema njemu izvršiti opisane radnje.         |
-| NF-3.1.7.4 | Sustav treba imati „Plan implementacije” za pravilno postavljanje.                              | Visok     | Smjernice za postavljanje    | Pregledati odgovara li opisani postupak stvarnom postupku postavljanja.                   |
-
-**Provjerljivost i opseg:** Primjer uvodi performanse, sigurnost, lokalizaciju, dostupnost i dokumentaciju, uključujući hijerarhijski ID zahtjeva. Navedeni izvori primjeri su podrijetla zahtjeva, a ne dokaz da za studentski projekt stvarno postoji SLA ili sigurnosna politika. Vrijednosti poput 1.000 korisnika, 99,5 % mjesečne dostupnosti i AES-256 moraju imati odobren izvor i izvediv način provjere prije nego što postanu zahtjevi tima. Skup zahtjeva o dokumentaciji ilustrira razlaganje zahtjeva, ali zahtjevi za izradu _ove dokumentacije kolegija_ u pravilu pripadaju uputama zadatka, a ne zahtjevima kvalitete web-aplikacije.
-
-**Primjer prilagodbe:** Ako je pristupačnost zahtjevana za projekt, projektno specifičan zahtjev može glasiti: „NF-01: Sve obavezne radnje u obrascu za podnošenje prijave moguće je izvršiti samo tipkovnicom, uz vidljiv fokus na aktivnoj kontroli.” Provjera: navigirati kroz obrazac bez pokazivačkog uređaja, odabrati ili unijeti lokaciju, poslati prijavu i provjeriti može li se pročitati rezultat. To je provjerljivo svojstvo kvalitete, a ne dodatna funkcionalnost koju svaki projekt mora implementirati.
-
-</details>
-
 ## 2.3 Dionici i akteri
 
 **Cilj:** Utvrditi uloge koje utječu na zahtjeve i razlikovati dionike od aktera koji komuniciraju s aplikacijom.
@@ -129,23 +104,6 @@ Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost
 | A-05                | Vanjski servisi (Sustavni akter) — Vanjski API servisi koji komuniciraju sa sustavom (OAuth pružatelji identiteta poput Googlea/GitHuba i vanjski servis za karte).                                       | F-001, F-020, F-021, NF-11                                                                                                                 |
 | D-01                | Naručitelj / Dionik projekta (Dionik) — Osoba ili organizacija koja definira poslovne ciljeve, odobrava funkcionalnosti i prati uspješnost razvoja aplikacije (ne sudjeluje nužno u izravnom korištenju). | NF-02, NF-10, NF-11, NF-12                                                                                                                 |
 | D-02                | Mentori / Nastavnici (Dionik) — Ocjenjivači projekta koji postavljaju formalne i tehničke kriterije kvalitete te evaluiraju konačnu implementaciju sustava.                                               | Svi F i NF zahtjevi                                                                                                                        |
-
-<details>
-<summary><strong>Akteri i povezani zahtjevi</strong></summary>
-
-**Primjer — akteri aplikacije CrisisMap:**
-
-| ID aktera | Uloga                 | Obuhvaćeni funkcijski zahtjevi                                      |
-| --------- | --------------------- | ------------------------------------------------------------------- |
-| A-01      | Koordinator pomoći    | F-003: Pregled resursa; F-004: Podnošenje prijave kriznog događaja. |
-| A-02      | Građanin              | F-001: Izrada računa; F-005: Primanje obavijesti.                   |
-| A-03      | Administrator sustava | NF-1.2: Provođenje sigurnosnih pravila; upravljanje korisnicima.    |
-| A-04      | Posjetitelj           | F-007: Pregled prijava na karti.                                    |
-| A-05      | Moderator             | F-008: Odobravanje ili odbijanje prijava.                           |
-
-**Odgovornosti aktera:** Uloga aktera treba biti povezana s interakcijom, a ne samo s nazivom. Provjerite podnosi li koordinator pomoći u odobrenom zadatku doista prijave kriznih događaja. Poveznica administratora s NF-1.2 navodi sigurnosni aspekt, ali sama po sebi ne opisuje obrazac uporabe; navedite stvarnu radnju administratora ili izostavite ulogu ako je nema. Nastavnici zainteresirani za rezultat mogu biti dionici, a da nisu akteri aplikacije. Tablica je polazište za razmišljanje, a ne potvrđen opis ovlasti u CrisisMapu.
-
-</details>
 
 ---
 
@@ -163,71 +121,66 @@ Relevantna svojstva mogu se odnositi na uporabljivost, pristupačnost, sigurnost
 | AS-02 | Pretpostavka | Vanjski e-mail servis pouzdano isporučuje transakcijske obavijesti korisnicima na navedene e-mail adrese.                                                                                                 | Pretpostavka o sustavu obavješćivanja | Testirati slanje obavijesti; u kodu osigurati da neuspjeh u slanju e-pošte ne blokira poslužiteljske procese automatskog brisanja ili promjene stanja objava.                                              |
 | AS-03 | Pretpostavka | Korisnici unose točne datume dolaska, odlaska i krajnjeg roka, pri čemu je krajnji rok uvijek kronološki prije datuma polaska na putovanje.                                                               | Pretpostavka o podacima               | Uvesti klijentske i poslužiteljske validacije formi na ekranu Create koje sprječavaju odabir roka koji je jednak ili kasniji od datuma dolaska.                                                            |
 
-<details>
-<summary><strong>Ograničenja nasuprot pretpostavkama</strong></summary>
-
-Ograničenje je uvjet koji tim mora poštovati; pretpostavka je uvjet na koji se tim oslanja i koji treba ponovno provjeravati.
-
-**Primjer — projektni kontekst CrisisMapa:**
-
-| ID    | Ograničenje ili pretpostavka                                                                 | Izvor                   | Posljedica ili način provjere                                                                                             |
-| ----- | -------------------------------------------------------------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------------------------- |
-| C-01  | Odobreni zadatak zahtijeva OAuth prijavu u sustav za uređivanje vlastitih prijava korisnika. | Odobreni zadatak        | Zaštićeno uređivanje projektirati oko odabranog pružatelja identiteta; provjeriti autorizirane i neautorizirane zahtjeve. |
-| AS-01 | Prijave koje se prikazuju na karti imaju uporabive koordinate.                               | Pretpostavka o podacima | Pregledati ogledne i uvezene prijave; planirati prikaz prijava bez valjanih koordinata.                                   |
-
-**Ograničenje nasuprot pretpostavci:** C-01 navodi obvezujuću odluku i njezin arhitekturni učinak; AS-01 je moguće provjeriti i može se pokazati netočnim. Nemojte kopirati C-01 ako OAuth nije dio stvarnog odobrenog zadatka. Projektni odgovor objasnite u arhitekturi bez prepisivanja ove tablice.
-
-</details>
-
 ---
 
 ## 2.5 Značajne promjene zahtjeva
 
 **Cilj:** Sačuvati razlog promjena koje mijenjaju dogovoreni opseg, prioritet ili kriterije prihvaćanja, uz istodobno održavanje prethodnih zahtjeva ažurnima.
 
-| Datum | ID zahtjeva | Promjena i razlog | Dogovoreno s / dokaz |
-| ----- | ----------- | ----------------- | -------------------- |
-|       |             |                   |                      |
-
-<details>
-<summary><strong>Primjer značajne promjene</strong></summary>
-
-**Primjer scenarija — odluka tijekom pregleda CrisisMapa:**
-
-| Datum            | ID zahtjeva  | Promjena i razlog                                                                                                                                    | Dogovoreno s / dokaz                                      |
-| ---------------- | ------------ | ---------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------- |
-| [Datum pregleda] | F-004, NF-01 | Dodati ručni odabir lokacije kada korisnik odbije geolokaciju preglednika; bez toga građanin ne može podnijeti prijavu kriznog događaja s lokacijom. | [Poveznica na stvarnu bilješku pregleda ili zadatak tima] |
-
-**Razlog promjene:** Zapis navodi zahvaćene stavke i objašnjava razlog iz perspektive korisnika, a zatim upućuje na dokaz odluke. Nakon stvarne odluke ažurirajte trenutačne zahtjeve; stilska izmjena teksta ne zahtijeva zapis u dnevniku promjena. Trenutačni red zadataka držite u alatu za praćenje zadataka.
-
-</details>
+| Datum   | ID zahtjeva | Promjena i razlog                                                                                                                                                                                                                                                   | Dogovoreno s / dokaz                                       |
+| ------- | ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------- |
+| [Datum] | F-001       | Početna registracija i prijava putem vanjskih pružatelja identiteta Google i GitHub proširena je mogućnošću registracije i prijave putem adrese e-pošte i lozinke. Time je korisnicima omogućena uporaba aplikacije bez povezivanja s vanjskim korisničkim računom. | [Poveznica na GitHub Issue, Pull Request ili dogovor tima] |
+| [Datum] | F-027       | Dodana je mogućnost odjave iz trenutačne sesije aplikacije. Promjena omogućuje korisniku siguran završetak rada i sprječava daljnji pristup zaštićenim funkcionalnostima putem prethodne sesije.                                                                    | [Poveznica na GitHub Issue, Pull Request ili dogovor tima] |
+| [Datum] | F-028       | Dodana je mogućnost ponovnog postavljanja zaboravljene lozinke putem e-pošte. Time je omogućen oporavak pristupa korisničkom računu bez potrebe za administratorskom intervencijom.                                                                                 | [Poveznica na GitHub Issue, Pull Request ili dogovor tima] |
 
 ---
 
 ## 2.6 Sljedivost zahtjeva
 
 **Cilj:** Osigurati dvosmjernu sljedivost — povezati zahtjeve s opisanim ponašanjem, dijelovima sustava koji ih ostvaruju te ispitivanjem ili drugom provjerom.
-| ID zahtjeva | Obrazac uporabe / modul | Arhitekturna realizacija | Ispitivanje ili provjera |
-| --- | --- | --- | --- |
-| F-001 | UC-006, UC-007 | `authController.js`, `oauthClient.js`, registracijske rute u `pages.js`, Supabase Auth i tablica `KORISNIK`. | Na čekanju: povezivanje s evidentiranim provjerama registracije, prijave, potvrde emaila i dovršavanja profila. |
-| F-002 — početni unos opisa i interesa | UC-008 | Rute `/signup3`, tablice `KORISNIK`, `TAG` i `KORISNIK_TAGOVI`. | Na čekanju: povezivanje s provjerama spremanja opisa, ključnih riječi i preskakanja koraka. |
-| F-027 | UC-009 | Ruta za odjavu, Express sesija i sesijski kolačić. | Na čekanju: povezivanje s provjerom odjave i pristupa zaštićenim rutama nakon odjave. |
-| F-028 | UC-010 | Rute oporavka lozinke, `authController.js`, `oauthClient.js` i Supabase Auth. | Na čekanju: povezivanje s provjerama valjanog i nevaljanog tijeka oporavka lozinke. |
-| NF-07 — pristup registriranog korisnika | `requireRegistered` | Provjera identiteta, profila, uloge i statusa računa; korisnički Supabase klijent i RLS. | Na čekanju: povezivanje s provjerama dopuštenog i nedopuštenog pristupa. Administratorske radnje zahtijevaju zasebne provjere ovlasti. |
 
-<details>
-<summary><strong>Sljedivost zahtjeva do obrazaca uporabe i ispitivanja</strong></summary>
-
-**Primjer — poveznice zahtjeva CrisisMapa:**
-
-| ID zahtjeva | Obrazac uporabe / ponašanje                | Arhitekturna realizacija                       | Ispitivanje / provjera                                                                                     |
-| ----------- | ------------------------------------------ | ---------------------------------------------- | ---------------------------------------------------------------------------------------------------------- |
-| F-004       | UC-002 Podnošenje prijave kriznog događaja | Web-klijent; API za prijave; usluga za prijave | ST-01 Valjano podnošenje prijave; ST-02 Nedostaje obavezna lokacija; ST-03 Dopuštenje geolokacije odbijeno |
-| F-005       | Odabir primatelja obavijesti               | Proces za obavijesti                           | CT-06 Primatelji obavijesti; potpuna dostava obavijesti nije pokrivena ovom provjerom                      |
-
-**Pokrivenost i dokazi:** CT-06 provjerava odabir primatelja za F-005, ali sam po sebi ne dokazuje da je obavijest stvarno dostavljena; ako projekt zahtijeva potpunu dostavu od početka do kraja, za taj dio treba postojati zasebna provjera. Svaki redak pokazuje gdje je zahtjev opisan kao ponašanje, gdje je ostvaren u sustavu i gdje se nalazi dokaz njegove provjere. Zahtjev ne mora imati zaseban obrazac uporabe ako ne opisuje korisničku interakciju; tada navedite relevantno ponašanje, arhitekturni element ili drugi prikladan način realizacije. U svojem projektu koristite stvarne nazive komponenata, modula i provjera iz dokumentacije i implementacije. Nedostajuću poveznicu ostavite praznom ili označite kao _na čekanju_ uz kratak razlog. Stvarni rezultati ispitivanja bilježe se uz ispitne slučajeve; ova tablica pokazuje gdje ih pronaći.
-
-</details>
+| ID zahtjeva | Obrazac uporabe / modul                | Arhitekturna realizacija                                                                                 | Ispitivanje ili provjera |
+| ----------- | -------------------------------------- | -------------------------------------------------------------------------------------------------------- | ------------------------ |
+| F-001       | UC-006, UC-007                         | `authController.js`, `oauthClient.js`, `auth.js`, `pages.js`, Supabase Auth i tablica `KORISNIK`.        | na čekanju               |
+| F-002       | UC-008, UC-011                         | `profile.js`, `pages.js`, tablice `KORISNIK`, `TAG` i `KORISNIK_TAGOVI`.                                 | na čekanju               |
+| F-003       | UC-013                                 | Modul za izradu objava, obrazac Create i tablice za pohranu podataka o putovanjima.                      | na čekanju               |
+| F-004       | UC-014                                 | Modul za uređivanje objava i provjera vlasništva nad objavom.                                            | na čekanju               |
+| F-005       | UC-001                                 | `discover.js`, `discoverGuest.js`, dohvat i prikaz objava te preporuke prema ključnim riječima.          | na čekanju               |
+| F-006       | UC-012                                 | `search.js`, filtriranje objava prema lokaciji, datumima i ključnim riječima.                            | na čekanju               |
+| F-007       | UC-002, UC-015                         | Modul za spremanje objava i povezivanje spremljenih objava s korisnikom.                                 | na čekanju               |
+| F-008       | UC-003, UC-016                         | Modul za slanje zahtjeva za pridruživanje putovanju i evidenciju statusa zahtjeva.                       | na čekanju               |
+| F-009       | UC-018, UC-019                         | Modul za obradu zahtjeva za pridruživanje i provjeru ovlasti autora objave.                              | na čekanju               |
+| F-010       | UC-003, UC-019, UC-021                 |                                                                                                          | na čekanju               |
+| F-011       | UC-021                                 |                                                                                                          | na čekanju               |
+| F-012       | UC-004, UC-005                         | `inbox.js`, tablice `RAZGOVOR`, `PORUKA` i `SUGOVORNIK`, Supabase Realtime.                              | na čekanju               |
+| F-013       | UC-005                                 |                                                                                                          | na čekanju               |
+| F-014       | UC-024                                 |                                                                                                          | na čekanju               |
+| F-015       | UC-011, UC-024                         |                                                                                                          | na čekanju               |
+| F-016       | UC-025                                 |                                                                                                          | na čekanju               |
+| F-017       | UC-026                                 |                                                                                                          | na čekanju               |
+| F-018       | UC-026                                 |                                                                                                          | na čekanju               |
+| F-019       | UC-027                                 |                                                                                                          | na čekanju               |
+| F-020       | UC-029                                 | Supabase Auth za autentifikacijske poruke e-pošte.                                                       | na čekanju               |
+| F-021       | UC-028                                 | Integracija s vanjskim servisom za karte i odabir geografske lokacije prilikom izrade objave.            | na čekanju               |
+| F-022       | UC-001                                 | `discoverGuest.js`, prikaz javno dostupnih objava bez prijave korisnika.                                 | na čekanju               |
+| F-023       | UC-022                                 |                                                                                                          | na čekanju               |
+| F-024       | UC-023                                 |                                                                                                          | na čekanju               |
+| F-025       | UC-016, UC-017                         | Modul za upravljanje vlastitim zahtjevima i povlačenje zahtjeva ili prihvaćenog sudjelovanja.            | na čekanju               |
+| F-026       | UC-018, UC-020                         | Modul za dohvat i prikaz prijavljenih korisnika na pripadajućoj objavi putovanja.                        | na čekanju               |
+| F-027       | UC-009                                 | `auth.js`, `authController.js`, Express sesija i sesijski kolačić.                                       | na čekanju               |
+| F-028       | UC-010                                 | `auth.js`, `authController.js`, `oauthClient.js` i Supabase Auth za oporavak lozinke.                    | na čekanju               |
+| NF-01       | Korisničko sučelje                     | EJS predlošci, CSS i responzivan raspored elemenata prilagođen mobilnim uređajima.                       | na čekanju               |
+| NF-02       | Poslužiteljska aplikacija              | Node.js, Express i Supabase; provjera ponašanja sustava pri istodobnim zahtjevima većeg broja korisnika. | na čekanju               |
+| NF-03       | UC-004, UC-005                         | `inbox.js`, Supabase Realtime i poslužiteljska kontrola pristupa razgovorima.                            | na čekanju               |
+| NF-04       | Upravljanje objavama                   |                                                                                                          | na čekanju               |
+| NF-05       | Upravljanje rokovima putovanja         |                                                                                                          | na čekanju               |
+| NF-06       | UC-024                                 |                                                                                                          | na čekanju               |
+| NF-07       | UC-006, UC-007, UC-008, UC-009, UC-010 | `requireRegistered.js`, `refreshSession.js`, `refreshTokens.js`, Supabase Auth i RLS pravila.            | na čekanju               |
+| NF-08       | UC-005                                 | `inbox.js`, provjera članstva u razgovoru i RLS pravila za ograničavanje pristupa porukama.              | na čekanju               |
+| NF-09       | Upravljanje sudionicima i troškovima   |                                                                                                          | na čekanju               |
+| NF-10       | UC-025, UC-026                         |                                                                                                          | na čekanju               |
+| NF-11       | UC-028, UC-029                         | Integracija s vanjskim servisom za karte, slanje e-pošte i obrada pogrešaka vanjskih usluga.             | na čekanju               |
+| NF-12       | UC-027                                 |                                                                                                          | na čekanju               |
 
 ---
 
