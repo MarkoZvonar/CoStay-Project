@@ -240,190 +240,183 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 
 ### UC-013: Izrada objave putovanja
 
-| Element specifikacije             | Opis                                                                                                                                                                               |
-| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                                                                              |
-| **Povezani zahtjevi**             | F-003, F-021                                                                                                                                                                       |
-| **Preduvjeti**                    | Korisnik je prijavljen i smije izrađivati objave.                                                                                                                                  |
-| **Glavni uspješni tok**           | 1. Korisnik odabire izradu objave<br>2. unosi potrebne podatke o putovanju i lokaciji<br>3. sustav provjerava unos<br>4. korisnik potvrđuje izradu<br>5. sustav pohranjuje objavu. |
-| **Alternativni tokovi / Iznimke** | **2a - nisu uneseni obavezni podaci** - Sustav odbija zahtjev i traži da se  unesu podaci u sva polja koja su označena kao obavezna.<br> **2b - unesena je lokacija koja ne postoji**- Sustav odbija zahtjev i traži se ponovni unos lokacije.<br> **5a - pohrana nije uspjela** - Sustav javlja kako pohrana objave nije uspjela.                                                      |
-| **Posljedice (ishod)**            | Objava je evidentirana i dostupna u skladu sa svojim statusom.                                                                                                                     |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-003, F-021 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i ima ovlasti za izradu objava. |
+| **Glavni uspješni tok** | 1. Korisnik odabire mogućnost izrade nove objave putovanja.<br>2. Korisnik unosi podatke o putovanju, odabire lokaciju i potvrđuje izradu objave.<br>3. Sustav provjerava jesu li unesena sva obavezna polja i je li lokacija valjana.<br>4. Sustav pohranjuje objavu i prikazuje potvrdu o uspješnom objavljivanju. |
+| **Alternativni tokovi / Iznimke** | **2a — Korisnik odustaje od izrade:** Korisnik prekida unos prije potvrde; sustav ne pohranjuje objavu i vraća korisnika na prethodni zaslon.<br>**3a — Nisu uneseni obavezni podaci:** Sustav zadržava već unesene podatke, odbija pohranu i traži popunjavanje svih obaveznih polja; tijek se vraća na korak 2.<br>**3b — Unesena lokacija nije valjana ili ne postoji:** Sustav zadržava ostale unesene podatke, odbija pohranu i traži ponovni odabir lokacije; tijek se vraća na korak 2.<br>**4a — Pohrana nije uspjela:** Sustav obavještava korisnika o pogrešci pri spremanju, ne pohranjuje objavu i ne prikazuje potvrdu o uspjehu. |
+| **Posljedice (ishod)** | Nova objava putovanja trajno je pohranjena u sustavu i evidentirana pod korisničkim računom (ili ostaje nepromijenjena u slučaju neuspjeha). |
 
 ### UC-014: Uređivanje vlastite objave
 
-| Element specifikacije             | Opis                                                                                                                                           |
-| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Autor objave / vlasnik                                                                                                                         |
-| **Povezani zahtjevi**             | F-004                                                                                                                                          |
-| **Preduvjeti**                    | Korisnik je prijavljen i autor je postojeće objave.                                                                                            |
-| **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i odabire uređivanje<br>2. mijenja dopuštene podatke<br>3. sustav provjerava ovlasti i unos te sprema izmjene. |
-| **Alternativni tokovi / Iznimke** | **1a - objava ne postoji ili korisnik nije autor** - sustav odbija pristup<br> **2a - promijenjeni podaci su neispravni ili nema podataka u obaveznim poljima** - Sustav javlja grešku i traži od korisnika da unese ispravne podatke i upiše podatke u polja koja su označena kao obavezna.<br> **3a - pohranjene promjene nisu unesene u sutav** - Sustav kaže kako izmjene nisu pohranjene                                        |
-| **Posljedice (ishod)**            | Podaci objave ažurirani su.                                                                                                                    |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Autor objave / vlasnik |
+| **Povezani zahtjevi** | F-004 |
+| **Preduvjeti** | Korisnik je prijavljen i autor je postojeće objave. |
+| **Glavni uspješni tok** | 1. Autor otvara vlastitu objavu i odabire mogućnost uređivanja.<br>2. Autor mijenja dopuštene podatke i potvrđuje spremanje izmjena.<br>3. Sustav provjerava ovlasti i valjanost unosa, pohranjuje izmjene te prikazuje potvrdu o ažuriranju. |
+| **Alternativni tokovi / Iznimke** | **1a — Objava ne postoji ili korisnik nije autor:** Sustav odbija pristup uređivanju i objava ostaje nepromijenjena.<br>**2a — Autor odustaje od uređivanja:** Autor prekida uređivanje prije potvrde; sustav ne sprema promjene i objava ostaje nepromijenjena.<br>**3a — Nisu uneseni obavezni podaci ili su podaci neispravni:** Sustav zadržava unesene izmjene, odbija pohranu i traži unos ispravnih podataka u sva obavezna polja; tijek se vraća na korak 2.<br>**3b — Ovlasti nisu valjane:** Sustav odbija promjenu i objava ostaje nepromijenjena.<br>**3c — Pohrana izmjena nije uspjela:** Sustav obavještava autora o pogrešci pri spremanju, ne prikazuje potvrdu o uspjehu i objava ostaje nepromijenjena. |
+| **Posljedice (ishod)** | Podaci objave ažurirani su ako je radnja uspješno provedena; inače objava ostaje nepromijenjena. |                                                                                                                   |
 ### UC-015: Pregled spremljenih objava
 
-| Element specifikacije             | Opis                                                                                                                                       |
-| :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                                      |
-| **Povezani zahtjevi**             | F-007                                                                                                                                      |
-| **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                                    |
-| **Glavni uspješni tok**           | 1. Korisnik otvara popis spremljenih objava<br>2. sustav dohvaća objave koje je korisnik spremio<br>3. korisnik odabire objavu za pregled. |
-| **Alternativni tokovi / Iznimke** | **1a - Korisnik nema spremljenih objava - ** Korisniku se ispisuje kako nema spremljenih objava<br> **2a - Sustav neuspješno dohvaća spremljene korisnikove objave** - SUstav javlja grešku prilikom dohvata podataka<br> **3a - Prilikom odabira pojedine objave, objava se ne učitava** - Sustav javlja kako ne može dohvatiti odabranu objavu<br> **3b - Objavu je autor objave u međuvremenu obrisao** - Sustav nije registrirao da je autor neke objave nju obrisao prilikom dohvata podataka iz baze, stoga se ona ionako prikazuje na korisnikovom sučelju, međutim prilikom klika na tu objavu, o toj objavi se ne prikazuju informacije i sustav dojavljuuje kako ne može pronaći objavu                                      |
-| **Posljedice (ishod)**            | Korisnik vidi spremljene objave; samo pregledavanje ne mijenja podatke.                                                                    |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-007 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav. |
+| **Glavni uspješni tok** | 1. Korisnik otvara popis spremljenih objava.<br>2. Sustav dohvaća i prikazuje popis objava koje je korisnik spremio.<br>3. Korisnik odabire pojedinu objavu s popisa.<br>4. Sustav dohvaća i prikazuje detalje odabrane objave. |
+| **Alternativni tokovi / Iznimke** | **2a — Korisnik nema spremljenih objava:** Sustav prikazuje obavijest da popis spremljenih objava trenutačno prazan; obrazac uporabe završava bez pogreške.<br>**2b — Dohvat popisa nije uspio:** Sustav prikazuje poruku o pogrešci pri dohvaćanju podataka i ne prikazuje neispravan popis.<br>**4a — Dohvat detalja odabrane objave nije uspio:** Sustav obavještava korisnika da ne može učitati odabranu objavu i ostavlja korisnika na popisu spremljenih objava.<br>**4b — Objavu je autor u međuvremenu obrisao:** Sustav utvrđuje da odabrana objava više ne postoji, obavještava korisnika da objava nije pronađena (ili je uklonjena) te ne prikazuje njezine detalje. |
+| **Posljedice (ishod)** | Korisnik vidi popis i detalje spremljenih objava; samo pregledavanje ne mijenja podatke u sustavu. |                                                                 |
 
 ### UC-016: Pregled vlastitih zahtjeva za pridruživanje
 
-| Element specifikacije             | Opis                                                                                                                         |
-| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                        |
-| **Povezani zahtjevi**             | F-008, F-025                                                                                                                 |
-| **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                      |
-| **Glavni uspješni tok**           | 1. Korisnik otvara pregled svojih zahtjeva<br>2. sustav prikazuje putovanja na koja se prijavio i aktualne statuse zahtjeva. |
-| **Alternativni tokovi / Iznimke** | **1a - Nema zahtjeva** - nema zahtjeva; korisniku se pretinac sa zahtjevima prikazuje prazan<br>**1b - Zahtjevi nisu učitani** - Sustav javlja kako nije uspio učitati zahtjeve<br>**2a - Sustav nije dohvatio putovanja i  statuse zahtjeva na koja se korisnik prijavio** - Sustav dojavljuje grešku prilikom učitavanja putovanja i statusa zahtjeva                                               |
-| **Posljedice (ishod)**            | Korisnik vidi stanje svojih prijava.                                                                                         |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-008, F-025 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav. |
+| **Glavni uspješni tok** | 1. Korisnik otvara pregled svojih zahtjeva za pridruživanje.<br>2. Sustav dohvaća i prikazuje putovanja na koja se korisnik prijavio te aktualne statuse zahtjeva. |
+| **Alternativni tokovi / Iznimke** | **2a — Korisnik nema poslanih zahtjeva:** Sustav prikazuje obavijest da nema aktivnih zahtjeva, a popis ostaje prazan.<br>**2b — Dohvat zahtjeva nije uspio:** Sustav prikazuje poruku o pogrešci pri učitavanju podataka i ne prikazuje neispravan sadržaj. |
+| **Posljedice (ishod)** | Korisnik vidi stanje svojih prijava i status zahtjeva; samo pregledavanje ne mijenja podatke u sustavu. |
 
 ### UC-017: Povlačenje zahtjeva ili sudjelovanja
 
-| Element specifikacije             | Opis                                                                                                                                                        |
-| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                                                       |
-| **Povezani zahtjevi**             | F-025, F-010                                                                                                                                                |
-| **Preduvjeti**                    | Korisnik je prijavljen i ima zahtjev ili sudjelovanje koje je dopušteno povući.                                                                             |
-| **Glavni uspješni tok**           | 1. Korisnik otvara vlastiti zahtjev ili sudjelovanje<br>2. odabire povlačenje i potvrđuje ga<br>3. sustav provjerava pravila i evidentira promjenu statusa. |
-| **Alternativni tokovi / Iznimke** | **1a - Sustav nije uspješno dohvatio korisnikov zahtjev za sudjelovanje** - Sustav dojavljuje pogrešku prilikom učitavanja<br>**1b - Putovanje je u međuvremenu izbrisano** -Sustav to putovanje neče prikazati na korisničkom sučelju<br>**2a - Pohrana povlačenja nije uspjela** - Sustav dojavljuje grešku kako pohrana povlačenja nije uspjela                           |
-| **Posljedice (ishod)**            | Zahtjev ili sudjelovanje više nije aktivno u prethodnom statusu.                                                                                            |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-025, F-010 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i ima aktivan zahtjev ili sudjelovanje koje je dopušteno povući. |
+| **Glavni uspješni tok** | 1. Korisnik otvara vlastiti zahtjev ili sudjelovanje.<br>2. Korisnik odabir mogućnost povlačenja i potvrđuje svoju odluku.<br>3. Sustav provjerava poslovna pravila, ažurira i evidentira promjenu statusa te prikazuje potvrdu o uspješnom povlačenju. |
+| **Alternativni tokovi / Iznimke** | **1a — Dohvat zahtjeva ili sudjelovanja nije uspio:** Sustav prikazuje poruku o pogrešci pri učitavanju i zadržava korisnika na prethodnom zaslonu.<br>**1b — Putovanje je u međuvremenu izbrisano:** Sustav utvrđuje da putovanje više ne postoji, obavještava korisnika da stavka nije pronađena i ne prikazuje njezine detalje.<br>**2a — Korisnik odustaje od povlačenja:** Korisnik prekida radnju prije potvrde; sustav ne mijenja status i zahtjev/sudjelovanje ostaje aktivno.<br>**3a — Pohrana povlačenja nije uspjela:** Sustav obavještava korisnika o pogrešci pri spremanju promjene, ne mijenja status zahtjeva/sudjelovanja i ne prikazuje potvrdu. |
+| **Posljedice (ishod)** | Zahtjev ili sudjelovanje više nije aktivno u prethodnom statusu (uspješno povučeno) ili ostaje nepromijenjeno u slučaju neuspjeha. |                                                                                            |
 ### UC-018: Pregled pristiglih zahtjeva
 
-| Element specifikacije             | Opis                                                                                                           |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Autor objave / vlasnik                                                                                         |
-| **Povezani zahtjevi**             | F-009, F-026                                                                                                   |
-| **Preduvjeti**                    | Korisnik je prijavljen i autor je objave.                                                                      |
-| **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i pregled prijava<br>2. sustav prikazuje pristigle zahtjeve i njihove statuse. |
-| **Alternativni tokovi / Iznimke** | **2a - Nije pristigla nijedna prijava** - Korisniku se prikazuje prazno sučelje<br> **2b - Pristigle prijave nisu učitane iz sustava** - Sustav dojavljuje pogrešku prilikom učitavanja                              |
-| **Posljedice (ishod)**            | Autor dobiva uvid u zahtjeve za svoje putovanje.                                                               |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Autor objave / vlasnik |
+| **Povezani zahtjevi** | F-009, F-026 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i autor je predmetne objave. |
+| **Glavni uspješni tok** | 1. Autor otvara vlastitu objavu i odabire pregled pristiglih zahtjeva.<br>2. Sustav dohvaća i prikazuje listu pristiglih zahtjeva za pridruživanje te njihove aktualne statuse. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik nije autor objave:** Sustav odbija pristup pregledu zahtjeva i vraća korisnika na prethodni zaslon.<br>**2a — Nema pristiglih zahtjeva:** Sustav prikazuje obavijest da nema pristiglih zahtjeva, a popis ostaje prazan.<br>**2b — Dohvat zahtjeva nije uspio:** Sustav prikazuje poruku o pogrešci pri učitavanju podataka i ne prikazuje neispravan sadržaj. |
+| **Posljedice (ishod)** | Autor dobiva uvid u zahtjeve za svoje putovanje; samo pregledavanje ne mijenja podatke u sustavu. |                                                               |
 
 ### UC-019: Prihvaćanje ili odbijanje zahtjeva
 
-| Element specifikacije             | Opis                                                                                                                                            |
-| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Autor objave / vlasnik                                                                                                                          |
-| **Povezani zahtjevi**             | F-009, F-010                                                                                                                                    |
-| **Preduvjeti**                    | Autor je prijavljen; postoji zahtjev na čekanju za njegovu objavu.                                                                              |
-| **Glavni uspješni tok**           | 1. Autor otvara zahtjeve, bira prijavu i prihvaća je ili odbija<br>2. sustav provjerava ovlasti, stanje putovanja i kapacitet te sprema odluku. |
-| **Alternativni tokovi / Iznimke** | **1a - Zahtjev je već obrađen, kapacitet je popunjen ili spremanje nije uspjelo** - Sustav dojavljuje pogrešku<br> **2a - Neuspješno spremanje prihvaćanja ili odbijanja zahtjeva** -  Sustav odbija promjenu i obavještava autora.                          |
-| **Posljedice (ishod)**            | Zahtjev ima novi status; prihvaćeni sudionici uračunavaju se u kapacitet prema pravilima sustava.                                               |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Autor objave / vlasnik |
+| **Povezani zahtjevi** | F-009, F-010 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav kao autor objave i postoji zahtjev na čekanju. |
+| **Glavni uspješni tok** | 1. Autor otvara listu pristiglih zahtjeva, odabira pojedinu prijavu te bira opciju prihvaćanja ili odbijanja.<br>2. Sustav provjerava ovlasti, stanje putovanja i raspoloživi kapacitet, sprema odluku te ažurira status zahtjeva i prikazuje potvrdu. |
+| **Alternativni tokovi / Iznimke** | **1a — Autor odustaje od obrade:** Autor prekida akciju prije potvrde; status zahtjeva ostaje nepromijenjen.<br>**2a — Zahtjev je već u međuvremenu obrađen:** Sustav obavještava autora da je zahtjev već prihvaćen ili odbijen te osvježava prikaz.<br>**2b — Kapacitet putovanja je popunjen:** Sustav odbija prihvaćanje novog sudionika, obavještava autora da je dosegnut maksimalan broj sudionika i ne mijenja status zahtjeva.<br>**2c — Pohrana odluke nije uspjela:** Sustav obavještava autora o pogrešci pri spremanju, ne mijenja status zahtjeva i ne prikazuje potvrdu. |
+| **Posljedice (ishod)** | Zahtjev ima novi status (prihvaćen ili odbijen); prihvaćeni sudionici uračunavaju se u kapacitet putovanja prema pravilima sustava (ili status ostaje nepromijenjen u slučaju pogreške). |                                               |
 
 ### UC-020: Pregled prijavljenih osoba
 
-| Element specifikacije             | Opis                                                                                                              |
-| :-------------------------------- | :---------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Autor objave / vlasnik                                                                                            |
-| **Povezani zahtjevi**             | F-026                                                                                                             |
-| **Preduvjeti**                    | Autor je prijavljen i ima vlastitu objavu.                                                                        |
-| **Glavni uspješni tok**           | 1. Autor otvara popis osoba prijavljenih na putovanje<br>2. sustav prikazuje informacije o prijavama i statusima. |
-| **Alternativni tokovi / Iznimke** | **1a - Nema prijavljenih osoba** - Sustav prikazuje prazno stanje; **1b - Sustav ne uspijeva učitati informacije o prijavama i statusima** - Sustav dojavljuje pogrešku prilikom učitavanja                        |
-| **Posljedice (ishod)**            | Autor vidi pregled osoba povezanih s njegovim putovanjem.                                                         |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Autor objave / vlasnik |
+| **Povezani zahtjevi** | F-026 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i ima vlastitu objavu putovanja. |
+| **Glavni uspješni tok** | 1. Autor otvara popis osoba prijavljenih na vlastito putovanje.<br>2. Sustav dohvaća i prikazuje informacije o prijavljenim osobama i njihovim aktualnim statusima. |
+| **Alternativni tokovi / Iznimke** | **2a — Nema prijavljenih osoba:** Sustav prikazuje obavijest da nema prijavljenih osoba, a popis ostaje prazan.<br>**2b — Dohvat prijava nije uspio:** Sustav prikazuje poruku o pogrešci pri učitavanju podataka i ne prikazuje neispravan sadržaj. |
+| **Posljedice (ishod)** | Autor vidi pregled osoba povezanih s njegovim putovanjem; samo pregledavanje ne mijenja podatke u sustavu. |                                                         |
 
 ### UC-021: Odluka o putovanju s manjom grupom
 
-| Element specifikacije             | Opis                                                                                                                                                                                                 |
-| :-------------------------------- | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Autor objave / vlasnik                                                                                                                                                                               |
-| **Povezani zahtjevi**             | F-011, F-010, F-013                                                                                                                                                                                  |
-| **Preduvjeti**                    | Korisnik je autor putovanja kojem je istekao rok te su zadovoljeni uvjeti za odluku o manjoj grupi.                                                                                                  |
-| **Glavni uspješni tok**           | 1. Sustav prikazuje autoru stanje prijava i mogućnost odluke<br>2. autor bira nastavak putovanja s postojećim sudionicima ili odustajanje<br>3. sustav evidentira odluku i ažurira status putovanja. |
-| **Alternativni tokovi / Iznimke** | Odluka više nije dopuštena, podaci su se promijenili ili spremanje ne uspije: sustav ne potvrđuje završetak.                                                                                         |
-| **Posljedice (ishod)**            | Putovanje dobiva odgovarajući status; daljnji postupci ovise o donesenoj odluci.                                                                                                                     |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Autor objave / vlasnik |
+| **Povezani zahtjevi** | F-011, F-010, F-013 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav kao autor putovanja kojem je istekao rok te su zadovoljeni uvjeti za odluku o manjoj grupi. |
+| **Glavni uspješni tok** | 1. Sustav prikazuje autoru stanje prijava i mogućnost donošenja odluke o putovanju s manjom grupom.<br>2. Autor bira nastavak putovanja s postojećim sudionicima ili odustajanje od putovanja.<br>3. Sustav evidentira donesenu odluku, ažurira status putovanja i prikazuje potvrdu o uspješnoj obradi. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik nije autor putovanja:** Sustav odbija pristup donošenju odluke i vraća korisnika na prethodni zaslon.<br>**1b — Dohvat stanja prijava i mogućnosti nije uspio:** Sustav prikazuje poruku o pogrešci pri učitavanju i ne prikazuje opcije odluke.<br>**2a — Autor odustaje od odluke:** Autor zatvara prozor ili prekida radnju prije potvrde; status putovanja ostaje nepromijenjen.<br>**3a — Spremanje odluke nije uspjelo:** Sustav obavještava autora o pogrešci pri spremanju, ne mijenja status putovanja i ne prikazuje potvrdu. |
+| **Posljedice (ishod)** | Putovanje dobiva odgovarajući status ovisno o donesenoj odluci (nastavak s manjom grupom ili otkazivanje); daljnji postupci i obavijesti sudionicima pokreću se u skladu s pravilima sustava. |                                                                                                                     |
 
 ### UC-022: Pregled troškova putovanja
 
-| Element specifikacije             | Opis                                                                                                                                               |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik koji sudjeluje u putovanju                                                                                                   |
-| **Povezani zahtjevi**             | F-023                                                                                                                                              |
-| **Preduvjeti**                    | Korisnik smije pregledavati troškove odabranog dogovorenog putovanja.                                                                              |
-| **Glavni uspješni tok**           | 1. Korisnik otvara troškove putovanja<br>2. sustav dohvaća evidentirane stavke i pripadajuće iznose<br>3. prikazuje ukupne ili pojedinačne obveze. |
-| **Alternativni tokovi / Iznimke** | Nema evidentiranih troškova: prikazuje se prazno stanje; neovlašten pristup ili pogreška dohvata: pristup se odbija ili se prikazuje pogreška.     |
-| **Posljedice (ishod)**            | Korisnik dobiva pregled financijskih obveza bez izvršavanja plaćanja.                                                                              |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik koji sudjeluje u putovanju |
+| **Povezani zahtjevi** | F-023 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i ima ovlast pregledavanja troškova odabranog dogovorenog putovanja. |
+| **Glavni uspješni tok** | 1. Korisnik otvara prikaz troškova putovanja.<br>2. Sustav dohvaća evidentirane stavke i pripadajuće iznose.<br>3. Sustav prikazuje ukupne troškove te pojedinačne financijske obveze sudionika. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik nema ovlast pristupa:** Sustav odbija pristup pregledu troškova i vraća korisnika na prethodni zaslon.<br>**2a — Nema evidentiranih troškova:** Sustav obavještava korisnika da nema unesenih troškova, a sučelje ostaje prazno.<br>**2b — Dohvat troškova nije uspio:** Sustav prikazuje poruku o pogrešci pri dohvaćanju podataka i ne prikazuje neispravan sadržaj. |
+| **Posljedice (ishod)** | Korisnik dobiva uvid u financijske obveze i strukturu troškova putovanja; samo pregledavanje ne mijenja podatke niti uključuje izvršavanje plaćanja u sustavu. |                                                                              |
 ### UC-023: Simulacija plaćanja
 
-| Element specifikacije             | Opis                                                                                                                                         |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik s nepodmirenom obvezom                                                                                                 |
-| **Povezani zahtjevi**             | F-024                                                                                                                                        |
-| **Preduvjeti**                    | Korisnik ima pravo pristupa trošku i postoji nepodmireni iznos.                                                                              |
-| **Glavni uspješni tok**           | 1. Korisnik otvara obvezu, odabire simulaciju plaćanja i potvrđuje radnju<br>2. sustav provjerava stanje i evidentira simulirano podmirenje. |
-| **Alternativni tokovi / Iznimke** | Trošak je već podmiren, korisnik nema ovlast ili operacija ne uspije: sustav ne prikazuje uspješno podmirenje.                               |
-| **Posljedice (ishod)**            | Ažurira se evidencija simuliranog plaćanja; ne dolazi do stvarnog prijenosa novca.                                                           |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik s nepodmirenom obvezom |
+| **Povezani zahtjevi** | F-024 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav, ima pravo pristupa trošku i postoji nepodmireni iznos. |
+| **Glavni uspješni tok** | 1. Korisnik otvara detalje obveze, pokreće opciju simulacije plaćanja i potvrđuje radnju.<br>2. Sustav provjerava stanje obveze, evidentira simulirano podmirenje te prikazuje potvrdu o uspješnoj simulaciji. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik odustaje od simulacije:** Korisnik prekida radnju prije potvrde; status obveze ostaje nepromijenjen.<br>**2a — Trošak je već u međuvremenu podmiren:** Sustav obavještava korisnika da je obveza već podmirena i osvježava prikaz.<br>**2b — Simulirano podmirenje nije uspjelo:** Sustav obavještava korisnika o pogrešci, ne mijenja status obveze i nudi mogućnost ponovnog pokušaja. |
+| **Posljedice (ishod)** | Ažurira se evidencija simuliranog plaćanja (obveza prelazi u status podmirenog u simuliranom okruženju); ne dolazi do stvarnog financijskog prijenosa novca van sustava. |                                                           |
 ### UC-024: Ocjenjivanje sudionika
 
-| Element specifikacije             | Opis                                                                                                                                                                                   |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik koji je sudjelovao u putovanju                                                                                                                                   |
-| **Povezani zahtjevi**             | F-014, F-015                                                                                                                                                                           |
-| **Preduvjeti**                    | Putovanje je završeno i korisnik ima pravo ocijeniti drugog sudionika.                                                                                                                 |
-| **Glavni uspješni tok**           | 1. Korisnik odabire sudionika, unosi dopuštenu ocjenu i potvrđuje<br>2. sustav provjerava uvjete i pohranjuje ocjenu<br>3. prema pohranjenim ocjenama osvježava se prikaz opće ocjene. |
-| **Alternativni tokovi / Iznimke** | Nevaljana ocjena, pokušaj nedopuštenog ili ponovljenog ocjenjivanja ili greška spremanja: radnja se odbija.                                                                            |
-| **Posljedice (ishod)**            | Ocjena je evidentirana i može utjecati na prikaz korisnikove ukupne ocjene.                                                                                                            |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik koji je sudjelovao u putovanju |
+| **Povezani zahtjevi** | F-014, F-015 |
+| **Preduvjeti** | Putovanje je završeno i korisnik ima pravo ocijeniti drugog sudionika. |
+| **Glavni uspješni tok** | 1. Korisnik odabire sudionika, unosi dopuštenu ocjenu i potvrđuje radnju.<br>2. Sustav provjerava uvjete (valjanost ocjene, pravo sudjelovanja i jedinstvenost unosa) te pohranjuje ocjenu.<br>3. Sustav prema pohranjenim ocjenama osvježava i prikazuje ažuriranu opću ocjenu sudionika te prikazuje potvrdu o uspješnom ocjenjivanju. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik odustaje od ocjenjivanja:** Korisnik prekida radnju prije potvrde; ocjena nije spremljena.<br>**2a — Unesena ocjena nije valjana:** Sustav odbija unos, obavještava korisnika o dopuštenom rasponu ocjena i vraća tijek na korak 1.<br>**2b — Korisnik je već ocijenio tog sudionika:** Sustav obavještava korisnika da istog sudionika nije dopušteno ocijeniti više puta te odbija novu pohranu.<br>**2c — Osoba nije bila sudionik putovanja:** Sustav obavještava korisnika da se može ocjenjivati samo osobe koje su sudjelovale na istom putovanju.<br>**2d — Pohrana ocjene nije uspjela:** Sustav obavještava korisnika o pogrešci pri spremanju i ne mijenja podatke.<br>**3a — Osvježavanje prikaza nije uspjelo:** Sustav pohranjuje ocjenu, ali obavještava korisnika da se javni prikaz opće ocjene trenutačno nije uspio osvježiti. |
+| **Posljedice (ishod)** | Ocjena je evidentirana u sustavu i uključena u izračun korisnikove ukupne ocjene (ili ostaje nepromijenjena u slučaju pogreške pri pohrani). |
 
 ### UC-025: Prijavljivanje sadržaja ili korisnika
 
-| Element specifikacije             | Opis                                                                                                                                   |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                                  |
-| **Povezani zahtjevi**             | F-016                                                                                                                                  |
-| **Preduvjeti**                    | Korisnik je prijavljen i može otvoriti sadržaj ili profil koji želi prijaviti.                                                         |
-| **Glavni uspješni tok**           | 1. Korisnik odabire prijavu, navodi razlog i potvrđuje<br>2. sustav provjerava unos i evidentira prijavu za moderatorski pregled.      |
-| **Alternativni tokovi / Iznimke** | Nije naveden valjan razlog ili evidentiranje ne uspije: prikazuje se pogreška; duplicirana prijava može biti odbijena prema pravilima. |
-| **Posljedice (ishod)**            | Prijava je dostupna postupku moderiranja.                                                                                              |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-016 |
+| **Preduvjeti** | Korisnik je prijavljen u sustav i može otvoriti sadržaj ili profil koji želi prijaviti. |
+| **Glavni uspješni tok** | 1. Korisnik pokreće prijavu, navodi razlog i potvrđuje radnju.<br>2. Sustav provjerava valjanost unosa, evidentira prijavu za moderatorski pregled i prikazuje potvrdu o uspješnom podnošenju. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik odustaje od prijave:** Korisnik prekida radnju prije potvrde; prijava se ne sprema.<br>**2a — Nije naveden valjan razlog:** Sustav obavještava korisnika da je obavezno navesti razlog prijave, odbija pohranu i vraća tijek na korak 1.<br>**2b — Evidentiranje prijave nije uspjelo:** Sustav obavještava korisnika o pogrešci pri spremanju, ne pohranjuje prijavu i ne prikazuje potvrdu. |
+| **Posljedice (ishod)** | Prijava je uspješno evidentirana i stavljena na raspolaganje postupku moderiranja (ili ostaje nepodnesena u slučaju pogreške). |                                                                                              |
 ### UC-026: Moderiranje sadržaja i računa
 
-| Element specifikacije             | Opis                                                                                                                                                   |
-| :-------------------------------- | :----------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Administrator                                                                                                                                          |
-| **Povezani zahtjevi**             | F-017, F-018                                                                                                                                           |
-| **Preduvjeti**                    | Administrator je autentificiran i ima moderatorske ovlasti.                                                                                            |
-| **Glavni uspješni tok**           | 1. Administrator pregledava prijave i povezani sadržaj<br>2. odabire dopuštenu moderatorsku mjeru<br>3. sustav provjerava ovlasti i evidentira odluku. |
-| **Alternativni tokovi / Iznimke** | Nema otvorenih prijava, stanje je promijenjeno ili provjera ovlasti nije uspjela: mjera se ne izvršava.                                                |
-| **Posljedice (ishod)**            | Sadržaj ili račun ima ažuriran status, uz evidenciju odluke.                                                                                           |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Administrator / Moderator |
+| **Povezani zahtjevi** | F-017, F-018 |
+| **Preduvjeti** | Administrator je prijavljen u sustav i ima valjane moderatorske ovlasti. |
+| **Glavni uspješni tok** | 1. Administrator otvara sučelje za moderiranje i pregledava pristigle prijave te sporni sadržaj ili račun.<br>2. Administrator odabir odgovarajuću moderatorsku mjeru (npr. uklanjanje sadržaja, blokiranje računa ili odbacivanje prijave) i potvrđuje odluku.<br>3. Sustav provjerava ovlasti, evidentira odluku, ažurira status sadržaja/računa te prikazuje potvrdu o uspješnoj provedbi mjere. |
+| **Alternativni tokovi / Iznimke** | **1a — Nema otvorenih prijava:** Sustav prikazuje obavijest da nema prijava za pregled, a radna lista ostaje prazna.<br>**2a — Administrator odustaje od moderiranja:** Administrator prekida radnju prije potvrde; status sadržaja/računa ostaje nepromijenjen.<br>**3a — Ovlasti nisu valjane:** Sustav odbija provedbu mjere, obavještava administratora o nedostatku ovlasti i ne mijenja status.<br>**3b — Stanje je u međuvremenu promijenjeno:** Sustav obavještava administratora da je prijava već obrađena ili je sadržaj uklonjen te osvježava prikaz.<br>**3c — Pohrana odluke nije uspjela:** Sustav obavještava administratora o pogrešci pri spremanju, ne mijenja status i ne prikazuje potvrdu. |
+| **Posljedice (ishod)** | Sadržaj ili račun ima ažuriran status u skladu s provedenom moderatorskom mjerom, uz urednu evidenciju odluke u sustavu (ili ostaje nepromijenjen u slučaju pogreške). |                                                                                           |
 ### UC-027: Pregled statistike i izvoz podataka
 
-| Element specifikacije             | Opis                                                                                                                                               |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Administrator                                                                                                                                      |
-| **Povezani zahtjevi**             | F-019                                                                                                                                              |
-| **Preduvjeti**                    | Administrator je autentificiran i ima pravo pristupa izvještajima.                                                                                 |
-| **Glavni uspješni tok**           | 1. Administrator otvara statistiku<br>2. sustav izračunava i prikazuje dostupne pokazatelje<br>3. administrator po potrebi pokreće izvoz podataka. |
-| **Alternativni tokovi / Iznimke** | Nema podataka, izvoz nije dostupan ili zahtjev ne uspije: sustav prikazuje odgovarajuću poruku.                                                    |
-| **Posljedice (ishod)**            | Administrator ima uvid u statistiku ili dobiva izvezene podatke.                                                                                   |
-
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Administrator / Moderator |
+| **Povezani zahtjevi** | F-019 |
+| **Preduvjeti** | Administrator je prijavljen u sustav i ima valjane ovlasti pristupa statistici i izvještajima. |
+| **Glavni uspješni tok** | 1. Administrator otvara sučelje za pregled statistike.<br>2. Sustav izračunava, dohvaća i prikazuje dostupne pokazatelje i podatke.<br>3. Administrator po potrebi pokreće izvoz podataka, a sustav generira i preuzima datoteku s traženim izvještajem te prikazuje potvrdu. |
+| **Alternativni tokovi / Iznimke** | **1a — Ovlasti nisu valjane:** Sustav odbija pristup statistici i vraća administratora na prethodni zaslon.<br>**2a — Nema dostupnih podataka:** Sustav obavještava administratora da trenutačno nema podataka za prikaz, a sučelje ostaje prazno.<br>**2b — Izračun ili dohvat statistike nije uspio:** Sustav prikazuje poruku o pogrešci pri dohvaćanju podataka i ne prikazuje neispravan sadržaj.<br>**3a — Izvoz podataka nije uspio:** Sustav obavještava administratora o pogrešci pri generiranju datoteke, ne pokreće preuzimanje i zadržava prikaz statistike. |
+| **Posljedice (ishod)** | Administrator ima uvid u zbirnu statistiku i pokazatelje sustava te po potrebi dobiva izvezenu datoteku s podacima (ili ostaje na prikazu u slučaju pogreške). |                                                                                   |
 ### UC-028: Odabir lokacije
 
-| Element specifikacije             | Opis                                                                                                                                                                                          |
-| :-------------------------------- | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Primarni akter**                | Registrirani korisnik                                                                                                                                                                         |
-| **Povezani zahtjevi**             | F-021                                                                                                                                                                                         |
-| **Preduvjeti**                    | Korisnik uređuje ili stvara sadržaj za koji je potreban unos lokacije; vanjski servis za karte je dostupan.                                                                                   |
-| **Glavni uspješni tok**           | 1. Korisnik pokreće odabir lokacije<br>2. sustav nudi pretraživanje ili odabir uz pomoć servisa za karte<br>3. korisnik potvrđuje lokaciju<br>4. sustav sprema odabranu vrijednost u obrazac. |
-| **Alternativni tokovi / Iznimke** | Lokacija nije pronađena ili servis nije dostupan: sustav prikazuje pogrešku ili omogućuje ponovni pokušaj.                                                                                    |
-| **Posljedice (ishod)**            | Obrazac sadrži odabranu lokaciju za daljnju obradu.                                                                                                                                           |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Registrirani korisnik |
+| **Povezani zahtjevi** | F-021 |
+| **Preduvjeti** | Korisnik uređuje ili stvara sadržaj za koji je potreban unos lokacije; vanjski servis za karte je dostupan. |
+| **Glavni uspješni tok** | 1. Korisnik pokreće mogućnost odabira lokacije.<br>2. Sustav otvara sučelje karata i omogućuje pretraživanje ili označavanje lokacije uz pomoć vanjskog servisa.<br>3. Korisnik odabire željenu lokaciju i potvrđuje svoj izbor.<br>4. Sustav validira i sprema odabranu lokaciju u obrazac te prikazuje potvrdu. |
+| **Alternativni tokovi / Iznimke** | **2a — Vanjski servis za karte nije dostupan:** Sustav obavještava korisnika o nedostupnosti servisa i omogućuje ponovni pokušaj ili ručni unos.<br>**2b — Lokacija nije pronađena:** Sustav obavještava korisnika da pretraga nije dala rezultate i traži ponovni unos pojma.<br>**3a — Korisnik odustaje od odabira:** Korisnik prekida radnju prije potvrde; obrazac zadržava prethodnu vrijednost (ili ostaje prazan).<br>**4a — Spremanje lokacije nije uspjelo:** Sustav obavještava korisnika o pogrešci pri spremanju i ne unosi lokaciju u obrazac. |
+| **Posljedice (ishod)** | Obrazac sadrži ispravno unesenu i spremljenu lokaciju za daljnju obradu (ili ostaje nepromijenjen u slučaju pogreške). |
 
 ### UC-029: Slanje automatskih e-mail obavijesti
 
-| Element specifikacije             | Opis                                                                                                                                  |
-| :-------------------------------- | :------------------------------------------------------------------------------------------------------------------------------------ | --- |
-| **Primarni akter**                | Registrirani korisnik kao primatelj obavijesti; e-mail servis kao sekundarni akter                                                    |
-| **Povezani zahtjevi**             | F-020                                                                                                                                 |
-| **Preduvjeti**                    | Nastao je događaj za koji pravila sustava predviđaju obavještavanje.                                                                  |
-| **Glavni uspješni tok**           | 1. Sustav prepoznaje događaj i priprema poruku za primatelja<br>2. predaje je e-mail servisu<br>3. servis prihvaća zahtjev za slanje. |
-| **Alternativni tokovi / Iznimke** | Nedostaje valjana adresa ili e-mail servis nije dostupan: slanje se ne dovršava i treba obraditi neuspjeh.                            |
-| **Posljedice (ishod)**            | Obavijest je predana na slanje; to ne jamči dostavu u korisnikov sandučić.                                                            |     |
+| Element specifikacije | Opis |
+| :--- | :--- |
+| **Primarni akter** | Sustav (automatski proces) / Registrirani korisnik kao primatelj (sekundarni akter: vanjski e-mail servis) |
+| **Povezani zahtjevi** | F-020 |
+| **Preduvjeti** | U sustavu je nastao predviđeni događaj (okidač) za slanje obavijesti i primatelj ima valjanu e-mail adresu. |
+| **Glavni uspješni tok** | 1. Sustav prepoznaje događaj, dohvaća podatke primatelja i generira sadržaj poruke.<br>2. Sustav prosljeđuje pripremljenu poruku vanjskom e-mail servisu.<br>3. E-mail servis prihvaća zahtjev i otprema poruku. |
+| **Alternativni tokovi / Iznimke** | **1a — Korisnik nema valjanu ili aktivnu e-mail adresu:** Sustav bilježi pogrešku u zapisnik i prekida postupak slanja obavijesti.<br>**2a — Vanjski e-mail servis nije dostupan:** Sustav bilježi neuspjeh, privremeno sprema poruku u red čekanja (retry queue) za kasniji pokušaj ili zapisuje grešku u sustavski log. |
+| **Posljedice (ishod)** | E-mail obavijest je uspješno predana servisu na slanje (što ne jamči trenutnu dostavu u korisnikov privatni sandučić) ili je zabilježen neuspjeh otpreme. |
 
 ## 3.3 Provjera dosljednosti obrazaca uporabe
 
