@@ -190,9 +190,9 @@ Za složenu interakciju kratak scenarij _Given / When / Then_ može pojasniti kr
 
 | Kontrolna točka | Povratna informacija ili nalaz | Odluka o zahtjevu ili opsegu |
 | --------------- | ------------------------------ | ---------------------------- |
-| Iteracija 1     | [Povratna informacija]         | [Odluka; vidi odjeljak 2.5]  |
-| Demo 2          | [Povratna informacija]         | [Odluka; vidi odjeljak 2.5]  |
-| Završni pregled | [Povratna informacija]         | [Odluka; vidi odjeljak 2.5]  |
+| Iteracija 1     | Demonstracija pokazuje da osobe koje nemaju vanjski korisnički račun, ne mogu se registrirati.         | Dogovoriti mogućnost prijave i registracije e-mail adresom; ažurirati F-001 te razlog zabilježiti u odjeljku 2.5.  |
+| Demo 2          | Demonstracija pokazuje da prilikom ponovnog ulaska u aplikaciju, korisnik u sesiji ima zaštićene informacije iz prethodne sesije         | Dogovoriti mogućnost odjave iz trenutačne sesije; ažurirati F-027 te razlog zabilježiti u 2.5.  |
+| Završni pregled | Demonstracija pokazuje da ako osoba zaboravi lozinku, mora kontaktirati administratora da sazna lozinku ili postavi novu lozinku.         | Dogovoriti mogućnost opcije "Zaboravljena lozinka" koja će omogućiti korisniku samostalan oporavak pristupa; ažurirati F-028 te razlog zabilježiti u odjeljku 2.5. |
 
 <details>
 <summary><strong>Odluke o zahtjevima nakon pregleda</strong></summary>
