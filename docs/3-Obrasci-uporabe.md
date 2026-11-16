@@ -431,9 +431,9 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 
 | Provjera   | Pitanje za tim                                                                                                              |
 | ---------- | --------------------------------------------------------------------------------------------------------------------------- |
-| Zahtjev    | Je li svaki važan obrazac uporabe povezan s postojećim zahtjevom?                                                           |
-| Akter      | Odgovara li akter naveden ovdje prethodno utvrđenoj ulozi i dopuštenoj interakciji?                                         |
-| Aplikacija | Može li tim demonstrirati opisani glavni rezultat i važnu alternativu ili je opis jasno označen kao trenutačno oblikovanje? |
+| Zahtjev    | Svi definirani funkcionalni zahtjevi (F-01 do F-25) obuhvaćeni su i povezani s odgovarajućim obrascima uporabe u matrici sljedivosti zahtjeva. Nijedan obrazac uporabe nije izmišljen bez podloge u zahtjevu.                                                    |
+| Akter      | Akteri u obrascima uporabe (npr. Registrirani korisnik, Administrator) u potpunosti odgovaraju ulogama definiranima u poglavlju opis uloga. Za pozadinske funkcionalnosti (poput automatskog slanja e-mail obavijesti) nismo izmišljali umjetne aktere, već se one obrađuju pozadinskim servisom sustava.                                        |
+| Aplikacija | Trenutna verzija aplikacije u potpunosti demonstrira glavne tijekove za ključne obrasce uporabe. Alternativni tijekovi i napredne opcije trenutno su u fazi oblikovanja te će biti obuhvaćeni u konačnoj verziji. |
 
 ---
 
