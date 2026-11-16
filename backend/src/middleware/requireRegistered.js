@@ -1,4 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
+import { createUserClient } from "../config/supabase.js";
+import { birthDateStatus } from "../utils/birthDate.js";
 
 export async function requireRegistered(req, res, next) {
   if (!req.session.user?.id) {
@@ -16,22 +17,7 @@ export async function requireRegistered(req, res, next) {
   }
 
   try {
-    const korisnickiSupabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    );
+    const korisnickiSupabase = createUserClient(accessToken);
 
     // Provjeravamo vrijedi li prijava.
     const {
@@ -93,37 +79,15 @@ export async function requireRegistered(req, res, next) {
       korisnik.mjesto_stanovanja,
     ];
 
-    const birthday = korisnik.datum_rodenja;
-
-    if (typeof birthday !== "string" || !/^\d{4}-\d{2}-\d{2}$/.test(birthday)) {
+    const dobStatus = birthDateStatus(korisnik.datum_rodenja);
+    if (dobStatus === "invalid") {
       return res.status(403).send("Spremljeni datum rođenja nije valjan.");
-    }
-
-    const datum = new Date(`${birthday}T00:00:00Z`);
-    const danas = new Date();
-
-    if (
-      Number.isNaN(datum.getTime()) ||
-      datum.toISOString().slice(0, 10) !== birthday ||
-      birthday > danas.toISOString().slice(0, 10)
-    ) {
-      return res.status(403).send("Spremljeni datum rođenja nije valjan.");
-    }
-
-    let dob = danas.getUTCFullYear() - datum.getUTCFullYear();
-
-    if (
-      danas.getUTCMonth() < datum.getUTCMonth() ||
-      (danas.getUTCMonth() === datum.getUTCMonth() &&
-        danas.getUTCDate() < datum.getUTCDate())
-    ) {
-      dob--;
     }
 
     if (
       !obavezniTekstovi.every(tekstPopunjen) ||
       !["muški", "ženski", "ostalo"].includes(korisnik.spol) ||
-      dob < 18
+      dobStatus !== "adult"
     ) {
       return res
         .status(403)
