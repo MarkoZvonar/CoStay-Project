@@ -1,15 +1,17 @@
 import express from "express";
-import { createClient } from "@supabase/supabase-js";
 import { requireRegistered } from "../middleware/requireRegistered.js";
-import { createUserClient } from "../config/supabase.js";
+import { createAuthClient, createUserClient } from "../config/supabase.js";
+import { birthDateStatus } from "../utils/birthDate.js";
+
 const router = express.Router();
+
 function requireIdentity(req, res, next) {
   if (!req.session.user?.id) {
     return res.redirect("/login");
   }
-
   next();
 }
+
 // Početna stranica
 router.get(
   "/",
@@ -18,7 +20,6 @@ router.get(
     if (!req.session.user?.id) {
       return res.redirect("/start");
     }
-
     next();
   },
   requireRegistered,
@@ -41,8 +42,8 @@ router.get(
     });
   },
 );
-// Start stranica
 
+// Create stranica
 router.get("/create", requireRegistered, (req, res) => {
   res.render("create", {
     ime: req.korisnik.ime,
@@ -76,15 +77,14 @@ router.get("/signup1", (req, res) => {
   }
   res.render("signup1");
 });
+
 router.post("/signup1", async (req, res, next) => {
   if (req.session.user) {
     return res.redirect("/");
   }
 
   const email = typeof req.body.email === "string" ? req.body.email.trim() : "";
-
   const password = req.body.password;
-
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
     return res.status(400).send("Unesi ispravnu email adresu.");
   }
@@ -101,17 +101,7 @@ router.post("/signup1", async (req, res, next) => {
   delete req.session.password;
 
   try {
-    const authClient = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-      },
-    );
+    const authClient = createAuthClient();
 
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
 
@@ -159,6 +149,7 @@ router.post("/signup1", async (req, res, next) => {
     next(error);
   }
 });
+
 router.get("/signup2", requireIdentity, async (req, res, next) => {
   try {
     const accessToken = req.session.accessToken;
@@ -171,22 +162,7 @@ router.get("/signup2", requireIdentity, async (req, res, next) => {
         );
     }
 
-    const korisnickiSupabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    );
+    const korisnickiSupabase = createUserClient(accessToken);
 
     const { data: profil, error } = await korisnickiSupabase
       .from("KORISNIK")
@@ -207,56 +183,48 @@ router.get("/signup2", requireIdentity, async (req, res, next) => {
     next(error);
   }
 });
+
 router.post("/signup2", requireIdentity, async (req, res, next) => {
   const tekst = (vrijednost) =>
     typeof vrijednost === "string" ? vrijednost.trim() : "";
+
   const ime = tekst(req.body.ime);
   const prezime = tekst(req.body.prezime);
   const birthday = tekst(req.body.birthday);
   const spol = tekst(req.body.spol);
   const mjestoStanovanja = tekst(req.body.mjesto_stanovanja);
+
   if (!ime || !prezime || !mjestoStanovanja) {
     return res
       .status(400)
       .send("Ime, prezime i mjesto stanovanja su obavezni.");
   }
+
   if (!["muški", "ženski", "ostalo"].includes(spol)) {
     return res.status(400).send("Odaberi valjanu vrijednost za spol.");
   }
-  // Provjeravamo format i postoji li taj datum.
+
   if (!/^\d{4}-\d{2}-\d{2}$/.test(birthday)) {
     return res.status(400).send("Unesi valjan datum rođenja.");
   }
-  const datum = new Date(`${birthday}T00:00:00Z`);
-  const danas = new Date().toISOString().slice(0, 10);
-  if (
-    Number.isNaN(datum.getTime()) ||
-    datum.toISOString().slice(0, 10) !== birthday ||
-    birthday > danas
-  ) {
+
+  const dobStatus = birthDateStatus(birthday);
+
+  if (dobStatus === "invalid") {
     return res
       .status(400)
       .send("Datum rođenja mora biti valjan i ne smije biti u budućnosti.");
   }
-  // Provjera ima li osoba najmanje 18 godina.
-  const danasDatum = new Date();
-  let dob = danasDatum.getUTCFullYear() - datum.getUTCFullYear();
-  const mjesecRazlika = danasDatum.getUTCMonth() - datum.getUTCMonth();
 
-  if (
-    mjesecRazlika < 0 ||
-    (mjesecRazlika === 0 && danasDatum.getUTCDate() < datum.getUTCDate())
-  ) {
-    dob--;
-  }
-
-  if (dob < 18) {
+  if (dobStatus === "underage") {
     return res
       .status(400)
       .send("Za registraciju moraš imati najmanje 18 godina.");
   }
+
   try {
     const accessToken = req.session.accessToken;
+
     if (!accessToken) {
       return res
         .status(401)
@@ -264,35 +232,24 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
           'Sesija nema pristupni token. <a href="/logout">Odjavi se</a> pa se ponovno prijavi.',
         );
     }
+
     // Zaseban klijent koji šalje token ovog korisnika.
     // Tako Supabase primjenjuje njegova RLS pravila.
-    const korisnickiSupabase = createClient(
-      process.env.SUPABASE_URL,
-      process.env.SUPABASE_ANON_KEY,
-      {
-        auth: {
-          persistSession: false,
-          autoRefreshToken: false,
-          detectSessionInUrl: false,
-        },
-        global: {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        },
-      },
-    );
+    const korisnickiSupabase = createUserClient(accessToken);
+
     // Prije upisa ponovno provjeravamo identitet.
     const {
       data: { user },
       error: authError,
     } = await korisnickiSupabase.auth.getUser(accessToken);
+
     if (authError) {
       if (![400, 401, 403, 404].includes(authError.status)) {
         return res
           .status(503)
           .send("Provjera prijave trenutačno nije dostupna. Pokušaj ponovno.");
       }
+
       return res
         .status(401)
         .send(
@@ -303,11 +260,13 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
     if (!user || user.id !== req.session.user.id) {
       return res.status(401).send("Identitet korisnika nije potvrđen.");
     }
+
     if (!user.email || !user.email_confirmed_at) {
       return res
         .status(403)
         .send("Za registraciju je potrebna potvrđena email adresa.");
     }
+
     // Korisnik je možda već dovršio registraciju,
     // npr. u drugoj kartici ili prije ponovnog slanja obrasca.
     const { data: postojeciProfil, error: profileError } =
@@ -325,6 +284,7 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
       // Početna ruta ponovno provjerava status i potpunost profila.
       return res.redirect(303, "/");
     }
+
     const { error: insertError } = await korisnickiSupabase
       .from("KORISNIK")
       .insert({
@@ -338,9 +298,11 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
         uloga: "registrirani_korisnik",
         status_korisnickog_racuna: "aktivan",
       });
+
     if (insertError) {
       // Ispisujemo samo kod greške, ne tokene ili osobne podatke.
       console.error("Spremanje profila — kod:", insertError.code);
+
       if (insertError.code === "23505") {
         return res
           .status(409)
@@ -348,6 +310,7 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
             "Profil s ovim identitetom ili emailom već postoji. Novi profil nije spremljen.",
           );
       }
+
       if (insertError.code === "42501") {
         return res
           .status(403)
@@ -355,12 +318,14 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
             "Baza nije dopustila spremanje profila. Potrebno je provjeriti RLS pravilo i unesene podatke.",
           );
       }
+
       return res
         .status(500)
         .send(
           "Spremanje profila nije uspjelo. Provjeri kod greške u terminalu.",
         );
     }
+
     // Tek nakon uspješnog upisa osvježavamo podatke u sesiji.
     req.session.ime = ime;
     req.session.prezime = prezime;
@@ -368,6 +333,7 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
     req.session.birthday = birthday;
     req.session.spol = spol;
     req.session.mjesto_stanovanja = mjestoStanovanja;
+
     return req.session.save((saveError) => {
       if (saveError) return next(saveError);
       res.redirect("/signup3");
@@ -376,6 +342,7 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
     next(error);
   }
 });
+
 router.get("/signup3", requireRegistered, async (req, res, next) => {
   try {
     const korisnickiSupabase = createUserClient(req.session.accessToken);
@@ -416,6 +383,7 @@ router.get("/signup3", requireRegistered, async (req, res, next) => {
     next(error);
   }
 });
+
 router.post("/signup3", requireRegistered, async (req, res, next) => {
   let opisSpremljen = false;
 
@@ -559,7 +527,9 @@ router.post("/logout", (req, res, next) => {
     return res.redirect(303, "/start");
   });
 });
+
 router.get("/forgot-password", (req, res) => {
   res.render("forgot-password");
 });
+
 export default router;
