@@ -246,7 +246,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-003, F-021                                                                                                                                                                       |
 | **Preduvjeti**                    | Korisnik je prijavljen i smije izrađivati objave.                                                                                                                                  |
 | **Glavni uspješni tok**           | 1. Korisnik odabire izradu objave<br>2. unosi potrebne podatke o putovanju i lokaciji<br>3. sustav provjerava unos<br>4. korisnik potvrđuje izradu<br>5. sustav pohranjuje objavu. |
-| **Alternativni tokovi / Iznimke** | Nedostaju obavezni podaci, lokacija nije valjana ili pohrana nije uspjela: sustav prikazuje pogrešku bez potvrde uspjeha.                                                          |
+| **Alternativni tokovi / Iznimke** | **2a - nisu uneseni obavezni podaci** - Sustav odbija zahtjev i traži da se  unesu podaci u sva polja koja su označena kao obavezna.<br> **2b - unesena je lokacija koja ne postoji**- Sustav odbija zahtjev i traži se ponovni unos lokacije.<br> **5a - pohrana nije uspjela** - Sustav javlja kako pohrana objave nije uspjela.                                                      |
 | **Posljedice (ishod)**            | Objava je evidentirana i dostupna u skladu sa svojim statusom.                                                                                                                     |
 
 ### UC-014: Uređivanje vlastite objave
@@ -257,7 +257,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-004                                                                                                                                          |
 | **Preduvjeti**                    | Korisnik je prijavljen i autor je postojeće objave.                                                                                            |
 | **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i odabire uređivanje<br>2. mijenja dopuštene podatke<br>3. sustav provjerava ovlasti i unos te sprema izmjene. |
-| **Alternativni tokovi / Iznimke** | Objava ne postoji ili korisnik nije autor: pristup se odbija; neispravni podaci: promjena se ne sprema.                                        |
+| **Alternativni tokovi / Iznimke** | **1a - objava ne postoji ili korisnik nije autor** - sustav odbija pristup<br> **2a - promijenjeni podaci su neispravni ili nema podataka u obaveznim poljima** - Sustav javlja grešku i traži od korisnika da unese ispravne podatke i upiše podatke u polja koja su označena kao obavezna.<br> **3a - pohranjene promjene nisu unesene u sutav** - Sustav kaže kako izmjene nisu pohranjene                                        |
 | **Posljedice (ishod)**            | Podaci objave ažurirani su.                                                                                                                    |
 
 ### UC-015: Pregled spremljenih objava
@@ -268,7 +268,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-007                                                                                                                                      |
 | **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                                    |
 | **Glavni uspješni tok**           | 1. Korisnik otvara popis spremljenih objava<br>2. sustav dohvaća objave koje je korisnik spremio<br>3. korisnik odabire objavu za pregled. |
-| **Alternativni tokovi / Iznimke** | Nema spremljenih objava: sustav prikazuje odgovarajuću poruku; dohvat ne uspije: prikazuje pogrešku.                                       |
+| **Alternativni tokovi / Iznimke** | **1a - Korisnik nema spremljenih objava - ** Korisniku se ispisuje kako nema spremljenih objava<br> **2a - Sustav neuspješno dohvaća spremljene korisnikove objave** - SUstav javlja grešku prilikom dohvata podataka<br> **3a - Prilikom odabira pojedine objave, objava se ne učitava** - Sustav javlja kako ne može dohvatiti odabranu objavu<br> **3b - Objavu je autor objave u međuvremenu obrisao** - Sustav nije registrirao da je autor neke objave nju obrisao prilikom dohvata podataka iz baze, stoga se ona ionako prikazuje na korisnikovom sučelju, međutim prilikom klika na tu objavu, o toj objavi se ne prikazuju informacije i sustav dojavljuuje kako ne može pronaći objavu                                      |
 | **Posljedice (ishod)**            | Korisnik vidi spremljene objave; samo pregledavanje ne mijenja podatke.                                                                    |
 
 ### UC-016: Pregled vlastitih zahtjeva za pridruživanje
@@ -279,7 +279,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-008, F-025                                                                                                                 |
 | **Preduvjeti**                    | Korisnik je prijavljen.                                                                                                      |
 | **Glavni uspješni tok**           | 1. Korisnik otvara pregled svojih zahtjeva<br>2. sustav prikazuje putovanja na koja se prijavio i aktualne statuse zahtjeva. |
-| **Alternativni tokovi / Iznimke** | Nema zahtjeva ili dohvat nije uspio: sustav prikazuje odgovarajuću informaciju.                                              |
+| **Alternativni tokovi / Iznimke** | **1a - Nema zahtjeva** - nema zahtjeva; korisniku se pretinac sa zahtjevima prikazuje prazan<br>**1b - Zahtjevi nisu učitani** - Sustav javlja kako nije uspio učitati zahtjeve<br>**2a - Sustav nije dohvatio putovanja i  statuse zahtjeva na koja se korisnik prijavio** - Sustav dojavljuje grešku prilikom učitavanja putovanja i statusa zahtjeva                                               |
 | **Posljedice (ishod)**            | Korisnik vidi stanje svojih prijava.                                                                                         |
 
 ### UC-017: Povlačenje zahtjeva ili sudjelovanja
@@ -290,7 +290,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-025, F-010                                                                                                                                                |
 | **Preduvjeti**                    | Korisnik je prijavljen i ima zahtjev ili sudjelovanje koje je dopušteno povući.                                                                             |
 | **Glavni uspješni tok**           | 1. Korisnik otvara vlastiti zahtjev ili sudjelovanje<br>2. odabire povlačenje i potvrđuje ga<br>3. sustav provjerava pravila i evidentira promjenu statusa. |
-| **Alternativni tokovi / Iznimke** | Povlačenje nije dopušteno ili je stanje u međuvremenu promijenjeno: sustav odbija zahtjev; pohrana ne uspije: prikazuje pogrešku.                           |
+| **Alternativni tokovi / Iznimke** | **1a - Sustav nije uspješno dohvatio korisnikov zahtjev za sudjelovanje** - Sustav dojavljuje pogrešku prilikom učitavanja<br>**1b - Putovanje je u međuvremenu izbrisano** -Sustav to putovanje neče prikazati na korisničkom sučelju<br>**2a - Pohrana povlačenja nije uspjela** - Sustav dojavljuje grešku kako pohrana povlačenja nije uspjela                           |
 | **Posljedice (ishod)**            | Zahtjev ili sudjelovanje više nije aktivno u prethodnom statusu.                                                                                            |
 
 ### UC-018: Pregled pristiglih zahtjeva
@@ -301,7 +301,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-009, F-026                                                                                                   |
 | **Preduvjeti**                    | Korisnik je prijavljen i autor je objave.                                                                      |
 | **Glavni uspješni tok**           | 1. Autor otvara vlastitu objavu i pregled prijava<br>2. sustav prikazuje pristigle zahtjeve i njihove statuse. |
-| **Alternativni tokovi / Iznimke** | Nema prijava: prikazuje se prazan popis; korisnik nije autor: pristup se odbija.                               |
+| **Alternativni tokovi / Iznimke** | **2a - Nije pristigla nijedna prijava** - Korisniku se prikazuje prazno sučelje<br> **2b - Pristigle prijave nisu učitane iz sustava** - Sustav dojavljuje pogrešku prilikom učitavanja                              |
 | **Posljedice (ishod)**            | Autor dobiva uvid u zahtjeve za svoje putovanje.                                                               |
 
 ### UC-019: Prihvaćanje ili odbijanje zahtjeva
@@ -312,7 +312,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-009, F-010                                                                                                                                    |
 | **Preduvjeti**                    | Autor je prijavljen; postoji zahtjev na čekanju za njegovu objavu.                                                                              |
 | **Glavni uspješni tok**           | 1. Autor otvara zahtjeve, bira prijavu i prihvaća je ili odbija<br>2. sustav provjerava ovlasti, stanje putovanja i kapacitet te sprema odluku. |
-| **Alternativni tokovi / Iznimke** | Zahtjev je već obrađen, kapacitet je popunjen ili spremanje nije uspjelo: sustav odbija promjenu i obavještava autora.                          |
+| **Alternativni tokovi / Iznimke** | **1a - Zahtjev je već obrađen, kapacitet je popunjen ili spremanje nije uspjelo** - Sustav dojavljuje pogrešku<br> **2a - Neuspješno spremanje prihvaćanja ili odbijanja zahtjeva** -  Sustav odbija promjenu i obavještava autora.                          |
 | **Posljedice (ishod)**            | Zahtjev ima novi status; prihvaćeni sudionici uračunavaju se u kapacitet prema pravilima sustava.                                               |
 
 ### UC-020: Pregled prijavljenih osoba
@@ -323,7 +323,7 @@ Specifikacije UC-001 do UC-010 opisuju postojeće razrađene scenarije. Specifik
 | **Povezani zahtjevi**             | F-026                                                                                                             |
 | **Preduvjeti**                    | Autor je prijavljen i ima vlastitu objavu.                                                                        |
 | **Glavni uspješni tok**           | 1. Autor otvara popis osoba prijavljenih na putovanje<br>2. sustav prikazuje informacije o prijavama i statusima. |
-| **Alternativni tokovi / Iznimke** | Nema prijavljenih osoba: sustav prikazuje prazno stanje; pristup tuđoj objavi: odbija se.                         |
+| **Alternativni tokovi / Iznimke** | **1a - Nema prijavljenih osoba** - Sustav prikazuje prazno stanje; **1b - Sustav ne uspijeva učitati informacije o prijavama i statusima** - Sustav dojavljuje pogrešku prilikom učitavanja                        |
 | **Posljedice (ishod)**            | Autor vidi pregled osoba povezanih s njegovim putovanjem.                                                         |
 
 ### UC-021: Odluka o putovanju s manjom grupom
