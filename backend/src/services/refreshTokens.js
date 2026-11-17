@@ -1,22 +1,11 @@
-import { createClient } from "@supabase/supabase-js";
-
+import { createAuthClient } from "../config/supabase.js";
 export async function refreshTokens(refreshToken, expectedUserId) {
   if (typeof refreshToken !== "string" || !refreshToken || !expectedUserId) {
     return { status: "invalid" };
   }
 
   // Zaseban klijent za ovaj zahtjev.
-  const authClient = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY,
-    {
-      auth: {
-        persistSession: false,
-        autoRefreshToken: false,
-        detectSessionInUrl: false,
-      },
-    },
-  );
+  const authClient = createAuthClient();
 
   const { data, error } = await authClient.auth.refreshSession({
     refresh_token: refreshToken,

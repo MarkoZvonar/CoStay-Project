@@ -82,13 +82,11 @@ router.post("/signup1", async (req, res, next) => {
   if (req.session.user) {
     return res.redirect("/");
   }
-
   const email = typeof req.body.email === "string" ? req.body.email.trim() : "";
   const password = req.body.password;
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email) || email.length > 320) {
     return res.status(400).send("Unesi ispravnu email adresu.");
   }
-
   if (
     typeof password !== "string" ||
     password.length < 12 ||
@@ -96,15 +94,11 @@ router.post("/signup1", async (req, res, next) => {
   ) {
     return res.status(400).send("Lozinka mora imati između 12 i 128 znakova.");
   }
-
   // Uklanjamo eventualnu lozinku iz starog toka registracije.
   delete req.session.password;
-
   try {
     const authClient = createAuthClient();
-
     const baseUrl = process.env.BASE_URL || "http://localhost:3000";
-
     const { error } = await authClient.auth.signUp({
       email,
       password,
@@ -112,10 +106,8 @@ router.post("/signup1", async (req, res, next) => {
         emailRedirectTo: new URL("/login", baseUrl).href,
       },
     });
-
     if (error) {
       console.error("Email registracija — kod:", error.code || "UNKNOWN");
-
       if (error.status === 429) {
         return res
           .status(429)
@@ -123,16 +115,12 @@ router.post("/signup1", async (req, res, next) => {
             "Previše pokušaja ili slanja emailova. Pričekaj prije ponovnog pokušaja.",
           );
       }
-
       return res
         .status(400)
         .send(
           "Registracija nije uspjela. Provjeri podatke i postavke slanja emaila.",
         );
     }
-
-    // Ne spremamo lozinku, ne prijavljujemo korisnika
-    // i ne upisujemo ništa u KORISNIK.
     return res.send(`
       <h2>Provjeri email</h2>
       <p>
@@ -153,7 +141,6 @@ router.post("/signup1", async (req, res, next) => {
 router.get("/signup2", requireIdentity, async (req, res, next) => {
   try {
     const accessToken = req.session.accessToken;
-
     if (!accessToken) {
       return res
         .status(401)
@@ -161,23 +148,17 @@ router.get("/signup2", requireIdentity, async (req, res, next) => {
           'Potrebna je nova prijava. <a href="/logout">Odjavi se</a> pa se ponovno prijavi.',
         );
     }
-
     const korisnickiSupabase = createUserClient(accessToken);
-
     const { data: profil, error } = await korisnickiSupabase
       .from("KORISNIK")
       .select("id_korisnik")
       .eq("id_korisnik", req.session.user.id)
-      .maybeSingle();
-
+      .maybeSingle(); //Očekuje najviše jedan redak; ako ga nema, vraća null umjesto pogreške
     if (error) return next(error);
-
     if (profil) {
-      // Početna ruta preko requireRegistered provjerava
-      // identitet, potpunost profila, ulogu i status.
+      // Početna ruta preko requireRegistered provjerava identitet, potpunost profila, ulogu i status.
       return res.redirect("/");
     }
-
     return res.render("signup2");
   } catch (error) {
     next(error);
@@ -232,41 +213,31 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
           'Sesija nema pristupni token. <a href="/logout">Odjavi se</a> pa se ponovno prijavi.',
         );
     }
-
-    // Zaseban klijent koji šalje token ovog korisnika.
-    // Tako Supabase primjenjuje njegova RLS pravila.
     const korisnickiSupabase = createUserClient(accessToken);
-
-    // Prije upisa ponovno provjeravamo identitet.
     const {
       data: { user },
       error: authError,
     } = await korisnickiSupabase.auth.getUser(accessToken);
-
     if (authError) {
       if (![400, 401, 403, 404].includes(authError.status)) {
         return res
           .status(503)
           .send("Provjera prijave trenutačno nije dostupna. Pokušaj ponovno.");
       }
-
       return res
         .status(401)
         .send(
           'Prijava više nije valjana. <a href="/logout">Odjavi se</a> pa se ponovno prijavi.',
         );
     }
-
     if (!user || user.id !== req.session.user.id) {
       return res.status(401).send("Identitet korisnika nije potvrđen.");
     }
-
     if (!user.email || !user.email_confirmed_at) {
       return res
         .status(403)
         .send("Za registraciju je potrebna potvrđena email adresa.");
     }
-
     // Korisnik je možda već dovršio registraciju,
     // npr. u drugoj kartici ili prije ponovnog slanja obrasca.
     const { data: postojeciProfil, error: profileError } =
@@ -300,7 +271,6 @@ router.post("/signup2", requireIdentity, async (req, res, next) => {
       });
 
     if (insertError) {
-      // Ispisujemo samo kod greške, ne tokene ili osobne podatke.
       console.error("Spremanje profila — kod:", insertError.code);
 
       if (insertError.code === "23505") {
@@ -352,21 +322,16 @@ router.get("/signup3", requireRegistered, async (req, res, next) => {
         .from("TAG")
         .select("id_tag, ime_tag")
         .order("ime_tag");
-
     if (tagoviError) return next(tagoviError);
-
     const { data: profil, error: profilError } = await korisnickiSupabase
       .from("KORISNIK")
       .select("opis")
       .eq("id_korisnik", req.korisnik.id_korisnik)
       .maybeSingle();
-
     if (profilError) return next(profilError);
-
     if (!profil) {
       return res.status(404).send("Profil nije pronađen.");
     }
-
     const { data: veze, error: vezeError } = await korisnickiSupabase
       .from("KORISNIK_TAGOVI")
       .select("id_tag")
@@ -478,6 +443,7 @@ router.post("/signup3", requireRegistered, async (req, res, next) => {
       const { error: tagoviError } = await korisnickiSupabase
         .from("KORISNIK_TAGOVI")
         .upsert(veze, {
+          //kombinira ideju umetanja (INSERT) i obrade sukoba s već postojećim retkom
           onConflict: "id_tag,id_korisnik",
           ignoreDuplicates: true,
         });
