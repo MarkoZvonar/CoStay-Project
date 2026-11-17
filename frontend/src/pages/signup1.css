@@ -16,157 +16,192 @@
 }
 
 body {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 
-    min-height: 100vh;
-    gap: 30px;
-    background-color: rgb(240, 237, 237);
+  min-height: 100vh;
+  padding: 1rem;
+  gap: 30px;
+
+  background-color: rgb(240, 237, 237);
 }
 
 #reg-box {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 
-    max-height: 90vh;
-    min-width: 50vw;
-    margin: 0;
-    padding: 4rem;
+  width: min(100%, 48rem);
+  min-width: 0;
+  margin: 0;
+  padding: clamp(1.25rem, 4vw, 4rem);
 
-    background-color: white;
-    border-radius: 16px;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
+  background-color: white;
+  border-radius: 16px;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.06);
 }
 
 .naslov {
-    font-size: 3rem;
-    color: #344e41;
+  font-size: clamp(1.5rem, 4.5vw, 3rem);
+  color: #344e41;
+  text-align: center;
+  line-height: 1.2;
+  margin-bottom: 1rem;
+}
 
-    margin-bottom: 1rem;
+.opis {
+  font-size: clamp(1rem, 2.6vw, 1.5rem);
+  text-align: center;
+  margin-bottom: 1rem;
 }
 
 .container {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    flex-wrap: wrap;
-    
-    gap: 2rem;
-    
-    height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  width: 100%;
+  height: auto;
+  margin-top: 1.25rem;
+  gap: 1rem;
 }
 
-button {
-    display: block;
-    padding: 0.8rem 1.5rem;
-
-    background-color: rgb(183, 182, 182);
-    color: #344e41;
-    text-decoration: none;
-    text-align: center;
-
-    border-radius: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-
-    transition: background-color 0.2s ease;
+.container .link {
+  flex: 1 1 12rem;
+  min-width: 0;
+  max-width: 100%;
 }
 
-button:hover {
-    background-color: #444;
-    color: white;
+.container .link p,
+.container .link a {
+  width: 100%;
+}
+
+button,
+.link a {
+  display: block;
+  padding: 0.8rem 1.5rem;
+
+  background-color: rgb(183, 182, 182);
+  color: #344e41;
+  text-decoration: none;
+  text-align: center;
+
+  border-radius: 0.75rem;
+  font-size: 1.5rem;
+  font-weight: 600;
+
+  transition: background-color 0.2s ease;
 }
 
 .link a {
-    display: block;
-    padding: 0.8rem 1.5rem;
-
-    background-color: rgb(183, 182, 182);
-    color: #344e41;
-    text-decoration: none;
-    text-align: center;
-
-    border-radius: 0.75rem;
-    font-size: 1.5rem;
-    font-weight: 600;
-
-    transition: background-color 0.2s ease;
+  font-size: clamp(1rem, 2vw, 1.5rem);
+  overflow-wrap: break-word;
 }
 
+button:hover,
 .link a:hover {
-    background-color: #444;
-    color: white;
+  background-color: #444;
+  color: white;
 }
 
 #form {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+
+  width: min(100%, 24rem);
+  gap: 1rem;
 }
 
-.opis{
-    font-size: 1.5rem;
-
-    margin-bottom: 1rem;
+#form button {
+  font-family: inherit;
+  align-self: center;
+  max-width: 100%;
 }
 
 #progress {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
 
-    font-weight:900;
-
-    margin-bottom: 2rem;
+  gap: clamp(0.25rem, 1.5vw, 1rem);
+  font-size: clamp(0.65rem, 2vw, 1rem);
+  font-weight: 900;
+  margin-bottom: 2rem;
 }
 
 #prog1 {
-    color: green;
+  color: green;
 }
 
 #prog2,
 #prog3 {
-    color: grey;
+  color: grey;
 }
 
 #form input[type="text"],
 #form input[type="password"] {
-    width: 100%;
-    min-width: 0;
-    padding: 0.75rem;
+  width: 100%;
+  min-width: 0;
+  padding: 0.75rem;
 
-    border: 1px solid rgb(148, 137, 137);
-    border-radius: 9px;
+  border: 1px solid rgb(148, 137, 137);
+  border-radius: 9px;
 
-    font-family: inherit;
-    font-size: 1rem;
-    color: #1e293b;
+  font-family: inherit;
+  font-size: 1rem;
+  color: #1e293b;
 
-    transition: border-color 0.2s, box-shadow 0.2s;
+  transition:
+    border-color 0.2s,
+    box-shadow 0.2s;
 }
 
-#form > label{
-    font-size: 1rem;
-    font-weight: 600;
-    color: black;
+#form > label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: black;
 }
 
 #form input[type="text"]:focus,
-#form input[type="password"]:focus{
-    outline: none;
-    border-color: #3478f6;
-    box-shadow: 0 0 0 3px rgba(52, 120, 246, 0.13);
+#form input[type="password"]:focus {
+  outline: none;
+  border-color: #3478f6;
+  box-shadow: 0 0 0 3px rgba(52, 120, 246, 0.13);
 }
 
-#form button {
-    font-family: inherit;
+/* Prilagodba za mobilne uređaje */
+@media (max-width: 600px) {
+  .container {
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+
+  .container .link {
+    flex: none;
+    width: 100%;
+  }
+
+  #form {
+    width: 100%;
+  }
+
+  #form button {
+    width: 100%;
+    font-size: 1.15rem;
+  }
+
+  .container .link a {
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+  }
 }
