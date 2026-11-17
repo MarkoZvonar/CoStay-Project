@@ -1,1 +1,5 @@
+Middleware requireRegistered štiti rute koje zahtijevaju potpuno registriranog korisnika. Provjerava Express sesiju, validira Supabase access token i potvrđuje identitet korisnika. Zatim dohvaća njegov profil iz tablice KORISNIK te provjerava status računa, ulogu, potpunost podataka i punoljetnost. Ako su svi uvjeti zadovoljeni, sprema profil u req.korisnik i poziva next(), čime dopušta daljnje izvršavanje zahtjeva.
 
+refreshSession:
+trackSessionResponseEnd i sessionQueues zajedno služe za serijalizaciju zahtjeva iste sesije i smanjenje problema pri istodobnoj obnovi tokena.
+Middleware refreshSession izvršava se prije zaštićenih ruta i provjerava koliko još vrijedi access token. Ako token istječe za manje od minute ili vrijeme isteka nije valjano, poziva servis refreshTokens, koji koristi refresh token za dobivanje novih tokena od Supabasea. Nakon uspješne obnove ažuriramo Express sesiju. Budući da frontend može slati više istodobnih zahtjeva, koristimo red zahtjeva po sesiji kako bismo izbjegli istodobnu obnovu istim refresh tokenom i međusobno prepisivanje sesijskih podataka.

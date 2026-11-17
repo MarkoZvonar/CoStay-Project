@@ -24,38 +24,27 @@ export async function refreshSession(req, res, next) {
   if (!req.session.user?.id) {
     return next();
   }
-
   const sessionId = req.sessionID;
   const previous = sessionQueues.get(sessionId) || Promise.resolve();
-
   let release;
   const current = new Promise((resolve) => {
     release = resolve;
   });
-
   sessionQueues.set(sessionId, current);
-
   // Čekamo da prethodni zahtjev iste sesije završi.
   await previous;
-
   let released = false;
-
   function finish() {
     if (released) return;
     released = true;
-
     if (sessionQueues.get(sessionId) === current) {
       sessionQueues.delete(sessionId);
     }
-
     release();
   }
-
   // Funkcija finish već ima zaštitu od višestrukog pozivanja.
   req.releaseSessionQueue = finish;
-
   res.once("finish", finish);
-
   // Zahtjev je prekinut dok je čekao svoj red.
   // Još nismo pokrenuli obradu niti promijenili sesiju.
   if (res.destroyed) {
@@ -63,7 +52,6 @@ export async function refreshSession(req, res, next) {
     finish();
     return;
   }
-
   // Ponovno čitamo sesiju jer je prethodni zahtjev
   // možda spremio nove tokene ili odjavio korisnika.
   req.sessionStore.get(sessionId, async (storeError, storedSession) => {
