@@ -89,3 +89,43 @@ body {
   background-color: #444;
   color: white;
 }
+
+/* Responzivnost start stranice na mobitelima */
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  #login-box {
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    max-height: none;
+    padding: 2rem 1.25rem;
+  }
+
+  .naslov {
+    width: 100%;
+    margin: 0 auto;
+    font-size: clamp(1.4rem, 5vw, 2rem);
+    text-align: center;
+    line-height: 1.2;
+  }
+
+  #login-container {
+    width: 100%;
+    height: auto;
+    margin-top: 2rem;
+  }
+
+  #login-row {
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .link a {
+    font-size: 1.1rem;
+    padding: 0.8rem 1rem;
+  }
+}
