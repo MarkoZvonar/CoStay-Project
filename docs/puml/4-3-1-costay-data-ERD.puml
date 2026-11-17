@@ -144,7 +144,7 @@ entity "PORUKA" as PORUKA {
   id_razgovor : uuid <<FK>>
   id_posiljatelj : uuid <<FK>>
   poruka : text
-  vrijeme_slanja : timestamp
+  vrijeme_slanja : timestamptz
 }
 
 entity "SUGOVORNIK" as SUGOVORNIK {

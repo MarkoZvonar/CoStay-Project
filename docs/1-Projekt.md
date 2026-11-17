@@ -21,9 +21,10 @@ Osobe kojima će koristiti naš projekt možemo podijeliti na dvije skupine, a t
 
 **Cilj:** Jasno definirati granice sustava — što je obuhvaćeno odobrenim zadatkom, što je svjesno izostavljeno ili odgođeno te o kojim vanjskim uslugama sustav izravno ovisi.
 
-**Uključeno:** Objavljivanje smještaja, pretraživanje smještaja (Search), preporuke smještaja (Discover), prijava za smještaj.
+**Uključeno:** Objavljivanje smještaja, pretraživanje smještaja (Search), preporuke smještaja (Discover), prijava za smještaj te razmjena poruka u izravnim i grupnim razgovorima putem kartice Inbox.
 **Izvan opsega ili odgođeno:** Automatsko "scrapeanje" objava sa drugih sličnih stranica.
-**Vanjske ovisnosti:** Vanjski pružatelj identiteta (OAuth), API za karte (Leaflet i Openstreetmap), API za slanje mailova (Resend), naša baza podataka za korisnike i objave.
+**Vanjske ovisnosti:** Supabase za pohranu podataka, autentifikaciju i Realtime obavijesti o novim porukama, Google i GitHub kao OAuth pružatelji identiteta te kartografske usluge OpenStreetMapa uz biblioteku Leaflet. Integracija Resenda za slanje obavijesti e-poštom je planirana.
+
 Sustav obuhvaća registraciju i prijavu korisnika, dovršavanje korisničkog profila te ograničavanje pristupa zaštićenim funkcionalnostima. Za autentifikaciju koristi Supabase Auth, uz podršku prijavi putem Googlea i GitHuba te emaila i lozinke.
 
 CoStay pohranjuje podatke korisničkog profila u vlastitoj bazi i na poslužitelju provjerava ispunjava li korisnik uvjete za pristup. Uspješna autentifikacija bez dovršenog obaveznog profila nije dovoljna za korištenje funkcionalnosti namijenjenih registriranim korisnicima. Upravljanje identitetom i vjerodajnicama povjereno je Supabase Authu. CoStay ne upravlja lozinkama Googleovih ili GitHubovih računa.

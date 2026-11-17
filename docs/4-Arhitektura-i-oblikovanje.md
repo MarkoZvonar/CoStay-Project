@@ -32,6 +32,7 @@ Za svaki UML dijagram čuvajte čitljivu sliku i PlantUML izvor, kako je opisano
 | Prikaz preporučenih objava na temelju zajedničkih ključnih riječi korisnika i objava.                       | Prikazivati sve dostupne objave bez prilagodbe interesima korisnika.                                           | CoStay povezuje korisnike koji imaju slične interese za putovanja. Sustav uspoređuje ključne riječi spremljene uz korisnički profil s ključnim riječima objava i prikazuje odgovarajuće otvorene objave. Ostale objave dostupne su zasebno, uz dohvat u manjim skupinama. Kompromis je potreba za dodatnim upitima i mogućnost da korisnik bez odabranih interesa ne dobije personalizirane preporuke.              |
 | Kombiniranje pretraživanja prema lokaciji i filtriranja rezultata na poslužitelju.                          | Izvršavati sve kriterije pretraživanja izravno u bazi podataka.                                                | CoStay omogućuje pretraživanje smještaja prema lokaciji, udaljenosti, datumima, cijeni, kapacitetu i ključnim riječima. Trenutačna implementacija dohvaća podatke iz Supabasea i primjenjuje kombinirane kriterije u Node.js aplikaciji, uključujući izračun geografske udaljenosti. Takvo rješenje pojednostavljuje razvoj različitih filtara, ali zahtijeva prijenos i obradu većeg broja zapisa na poslužitelju. |
 | Odvajanje razgovora, poruka i članstva u razgovoru u relacijskom modelu podataka.                           | Pohranjivati poruke i popis sudionika unutar jednog zapisa razgovora.                                          | CoStay podržava komunikaciju između korisnika kroz izravne i grupne razgovore. Zasebne tablice `RAZGOVOR`, `PORUKA` i `SUGOVORNIK` omogućuju povezivanje više sudionika s razgovorom i neovisan dohvat poruka. Prije pristupa porukama provjerava se članstvo korisnika u razgovoru. Kompromis je veći broj povezanih upita i složenije definiranje RLS pravila.                                                    |
+| Korištenje Supabase Realtimea za obavijesti o novim porukama. | Periodički dohvat poruka iz preglednika. | Preglednik preko WebSocketa prima `INSERT` događaje za tablicu `PORUKA`, uz primjenu postojećih RLS pravila. Nakon događaja HTTP zahtjevima dohvaća popis razgovora i poruke odabranog razgovora. Nova poruka šalje se HTTP zahtjevom Express poslužitelju. Kompromis je održavanje Realtime veze, korištenje valjanog pristupnog tokena i ponovni dohvat podataka nakon uspostave veze. |
 
 ## 4.2 Gradivni blokovi i UML dijagram komponenata
 
@@ -91,7 +92,7 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 **Pregled entiteta CoStay baze podataka:**
 Središnji entitet OBJAVA povezuje autora (KORISNIK) i lokaciju putovanja (LOKACIJA). Uz njega su vezani zahtjevi za pridruživanje,
-fotografije, tagovi, recenzije, troškovi i razgovori. Posredne tablice KORISNIK_TAGOVI, OBJAVE_TAG, SPREMLJENA_OBJAVA i SUGOVORNIKA
+fotografije, tagovi, recenzije, troškovi i razgovori. Posredne tablice KORISNIK_TAGOVI, OBJAVA_TAG, SPREMLJENA_OBJAVA i SUGOVORNIK
 modeliraju veze više-na-više.
 
 | Element               | Opis                                                                                                         |
@@ -100,10 +101,9 @@ modeliraju veze više-na-više.
 | Objave i lokacije     | OBJAVA, LOKACIJA, OBJAVA_SLIKA, OBJAVA_TAG, SPREMLJENA_OBJAVA; detalji puta, fotografije i spremljene objave |
 | Dogovaranje           | ZAHTJEV_ZA_PRIDRUZIVANJE; podnositelj, objava, status                                                        |
 | Komunikacija          | RAZGOVOR, PORUKA, SUGOVORNIK; izravni/grupni razgovori i članstvo                                            |
-| Povjerenje i troškovi | RECENZIJA, PRIJAVA_NEPRIMJERENOG SADRZAJA, TROSKOVI                                                          |
+| Povjerenje i troškovi | RECENZIJA, PRIJAVA_NEPRIMJERENOG_SADRZAJA, TROSKOVI                                                          |
 
-**Primjer podataka i veza:** Ana kreira objavu na lokaciji `Opatija`; OBJAVA.id*autor upućuje na Anin korisnički id, a OBJAVA.id_lokacija na
-id Anine odabrane lokacije. Ana u svojoj objavi navodi s koliko drugih ljudi želi putovati i objava je `aktivna`. Bob se želi pridružiti Ani na putovanju te šalje ZAHTJEV_ZA_PRIDRUŽIVANJE (Bob je podnositelj zahtjeva). Njegov zahtjev za pridruživanje je u stanju `na*čekanju`dok ga Ana ne prihvati. Tek prihvaćeni zahtjevi, zajedno s autorom, čine potvrđene sudionike. U ovom slučaju to su Bob i Ana. Ako se putovanju pridruži još i Charlie, kada objava pređe u stanje`dogovorena`. Bob i Ana mogu voditi pojedinačni razgovor, dok svi u dogovorenom putovanju prelaze i u grupni razgovor. Ovisno o broju suputnika, određuje se trošak po osobi i dodaje se na račun svakog od suputnika.
+**Primjer podataka i veza:** Ana kreira objavu na lokaciji `Opatija`. `OBJAVA.id_autor` upućuje na Anin korisnički identifikator, a `OBJAVA.id_lokacije` na odabranu lokaciju. Objava je u stanju `otvorena`. Bob šalje zahtjev u tablicu `ZAHTJEV_ZA_PRIDRUZIVANJE`, koji dobiva status `na_cekanju`. Potvrđene sudionike čine autor i korisnici s prihvaćenim zahtjevima. Nakon prihvaćanja Bobova zahtjeva to su Ana i Bob. Ako Ana prihvati i Charlieja, konačni popis uključuje sve troje. Model predviđa da se nakon prelaska objave u stanje `dogovorena` stvori grupni razgovor za autora i konačno potvrđene sudionike. Automatsko stvaranje grupe je planirano, a postojeći Inbox omogućuje razmjenu poruka u već formiranim izravnim i grupnim razgovorima. Model troškova predviđa raspodjelu ukupne cijene smještaja među konačno potvrđenim sudionicima.
 
 **Povezanost autentifikacijskog identiteta i korisničkog profila**
 Supabase Auth upravlja autentifikacijskim identitetom, dok tablica `KORISNIK` sadrži aplikacijski profil. Backend pri stvaranju profila postavlja `id_korisnik` na identifikator potvrđenog Auth korisnika. Time aplikacija povezuje identitet i pripadajuće podatke profila.
@@ -143,12 +143,13 @@ Lozinka se ne pohranjuje u tablicu `KORISNIK` niti u Express sesiju. Obradu vjer
 
 **Slika 4.3.2. Dijagram razreda za Inbox sustava CoStay**
 
-**PlantUML izvor:** [izvor](./puml/4-3-2-inbox-class-diagram.puml)
+**PlantUML izvor:** [Izvor dijagrama Inboxa](./puml/4-3-2-inbox-class-diagram.puml)
 
 **Referenca na postojeću implementaciju:**
 
-- [Backend rute Inboxa – inbox.js](../backend/src/routes/inbox.js)
-- [Predložak stranice Inbox – inbox.ejs](../backend/src/views/inbox.ejs)
+- [Express rute Inboxa](../backend/src/routes/inbox.js)
+- [EJS predložak Inboxa](../frontend/src/pages/inbox.ejs)
+- [Skripta Inboxa i Realtime pretplata](../frontend/src/services/inbox.js)
 
 **Analiza oblikovanja:**
 
@@ -156,11 +157,11 @@ Dijagram prikazuje postojeću implementaciju Inbox funkcionalnosti i predloženo
 
 U trenutačnoj implementaciji obrada zahtjeva i komunikacija s bazom nalaze se unutar istog modula. Predloženo oblikovanje zato uvodi `ConversationService` i `MessageService`, kojima se odvajaju poslovna logika razgovora i obrada poruka. Sučelja `ConversationRepository` i `MessageRepository` definiraju operacije potrebne za dohvat razgovora, sudionika i poruka te pohranu novih poruka.
 
-Za podršku komunikaciji u stvarnom vremenu predložen je `RealtimeService`, koji upravlja pretplatama na promjene u odabranom razgovoru. Sučelje `RealtimeGateway` definira operacije potrebne za pretplatu na nove poruke i odjavu s pretplate. Time se odgovornost primanja novih poruka odvaja od odgovornosti njihova slanja i pohrane.
+Skripta Inboxa u pregledniku dohvaća korisnikov pristupni token preko zaštićene rute `/inbox/realtime-session` i otvara jednu Supabase Realtime pretplatu dok je Inbox otvoren. Pretplata sluša `INSERT` događaje na tablici `PORUKA`. Nakon događaja preglednik ponovno dohvaća popis razgovora i poruke odabranog razgovora. Korisnik novu poruku šalje HTTP zahtjevom Express poslužitelju, koji provjerava članstvo i sprema poruku u Supabase.
 
-Razredi `Conversation`, `Message` i `Participant` predstavljaju konceptualne modele podataka. Jedan razgovor sadrži sudionike i poruke, a svaka poruka ima jednog pošiljatelja.
+Model pohranjenih podataka prikazuje tablice `RAZGOVOR`, `SUGOVORNIK` i `PORUKA`. Jedan razgovor može imati više zapisa članstva i više poruka. Svaka poruka pripada jednom razgovoru i povezana je s pošiljateljem preko korisničkog identifikatora.
 
-**Razlika između oblikovanja i implementacije:** `InboxRouter`, `InboxView` i korištenje `SupabaseClient` potvrđeni su u trenutačnom kodu. `ConversationService`, `MessageService`, `RealtimeService`, navedena sučelja i konceptualni modeli predstavljaju predloženo oblikovanje odgovornosti, a ne postojeće JavaScript klase. Dijagram će se ažurirati ako se tijekom dovršetka Inbox funkcionalnosti promijeni raspodjela odgovornosti ili način implementacije Realtime komunikacije.
+**Razlika između oblikovanja i implementacije:** Postojeća implementacija prikazana je kroz Express modul `InboxRouter`, EJS predložak `InboxView`, preglednički modul `InboxScript` i korištenje Supabase biblioteke. Nazivi na dijagramu označavaju odgovornosti tih modula. `ConversationService`, `MessageService`, `RealtimeService` i pripadajuća sučelja predstavljaju prijedlog budućeg izdvajanja odgovornosti. Realtime komunikacija već je implementirana unutar pregledničke skripte Inboxa. Automatsko stvaranje razgovora ostaje planirana nadogradnja.
 
 ## 4.4 Ponašanje tijekom izvođenja
 
