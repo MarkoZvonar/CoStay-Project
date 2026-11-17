@@ -1,0 +1,155 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+skinparam packageStyle rectangle
+skinparam shadowing false
+
+left to right direction
+
+title CoStay - oblikovanje Inboxa
+
+package "Postojeca implementacija" {
+
+    class InboxRouter <<Express modul>> {
+        +GET /inbox
+        +GET /inbox/supabase.js
+        +GET /inbox/realtime-session
+        +GET /inbox/razgovori
+        +GET /inbox/razgovori/:id/poruke
+        +POST /inbox/razgovori/:id/poruke
+    }
+
+    class InboxView <<EJS predlozak>> {
+        +popis razgovora
+        +prikaz sudionika
+        +prikaz poruka
+        +obrazac za slanje
+    }
+
+    class InboxScript <<JavaScript u pregledniku>> {
+        +prikaziRazgovore(razgovori)
+        +ucitajPoruke()
+        +osvjezi()
+        +pokreniRealtime()
+        +osvjeziInbox()
+    }
+
+    class SupabaseClient <<posluziteljska biblioteka>>
+
+    class SupabaseRealtime <<biblioteka u pregledniku>> {
+        +setAuth()
+        +channel(naziv)
+        +subscribe(callback)
+    }
+
+    InboxRouter ..> InboxView : prikazuje predlozak
+    InboxView ..> InboxScript : ucitava skriptu
+
+    InboxScript ..> InboxRouter : HTTP dohvat i slanje
+    InboxRouter ..> SupabaseClient : korisnicki token i upiti
+
+    InboxScript ..> SupabaseRealtime : pretplata na PORUKA
+    SupabaseRealtime ..> InboxScript : INSERT dogadjaj
+}
+
+package "Pohranjeni podaci" {
+
+    class RAZGOVOR <<tablica>> {
+        +id_razgovor : UUID
+        +razgovor_tip : enum
+        +id_objava : UUID
+    }
+
+    class SUGOVORNIK <<tablica>> {
+        +id_razgovor : UUID
+        +id_sugovornik : UUID
+    }
+
+    class PORUKA <<tablica>> {
+        +id_poruka : UUID
+        +id_razgovor : UUID
+        +id_posiljatelj : UUID
+        +poruka : TEXT
+        +vrijeme_slanja : TIMESTAMPTZ
+    }
+
+    RAZGOVOR "1" -- "0..*" SUGOVORNIK : clanovi
+    RAZGOVOR "1" -- "0..*" PORUKA : poruke
+}
+
+SupabaseClient ..> RAZGOVOR : cita
+SupabaseClient ..> SUGOVORNIK : provjerava clanstvo
+SupabaseClient ..> PORUKA : cita i upisuje
+
+note bottom of InboxScript
+    Jedna Realtime pretplata po otvorenom Inboxu.
+    Nakon INSERT dogadjaja ili ponovne pretplate
+    skripta HTTP zahtjevima dohvaca aktualne podatke.
+end note
+
+note bottom of InboxRouter
+    Zasticene rute koriste requireRegistered.
+    Posiljatelj se odreduje prema prijavljenom korisniku.
+    Prije citanja i slanja provjerava se clanstvo.
+    Supabase dodatno primjenjuje RLS pravila.
+end note
+
+package "Predlozeno izdvajanje odgovornosti" {
+
+    class ConversationService <<predlozeno>> {
+        +getConversations(userId)
+        +getConversation(id)
+        +createDirectConversation(postId, user1, user2)
+        +createGroupConversation(postId, participants)
+    }
+
+    class MessageService <<predlozeno>> {
+        +getMessages(conversationId)
+        +sendMessage(conversationId, senderId, content)
+    }
+
+    class RealtimeService <<predlozeno>> {
+        +startSubscription()
+        +handleNewMessage()
+        +stopSubscription()
+    }
+
+    interface ConversationRepository {
+        +findByUser(userId)
+        +findById(id)
+        +create(conversation)
+        +addParticipant(conversationId, userId)
+    }
+
+    interface MessageRepository {
+        +findByConversation(conversationId)
+        +save(message)
+    }
+
+    interface RealtimeGateway {
+        +subscribeToMessages(callback)
+        +unsubscribe()
+    }
+
+    ConversationService --> ConversationRepository
+    MessageService --> MessageRepository
+    RealtimeService --> RealtimeGateway
+}
+
+InboxRouter ..> ConversationService : predlozeno izdvajanje
+InboxRouter ..> MessageService : predlozeno izdvajanje
+InboxScript ..> RealtimeService : predlozeno izdvajanje
+
+note bottom of ConversationService
+    Stvaranje novih razgovora i automatsko
+    dodavanje clanova grupe predstavljaju
+    planiranu nadogradnju postojeceg Inboxa.
+end note
+
+note bottom of RealtimeService
+    Realtime vec radi u InboxScript modulu.
+    Ovdje je prikazan prijedlog izdvajanja
+    postojece logike u zaseban servis i sucelje.
+end note
+
+@enduml

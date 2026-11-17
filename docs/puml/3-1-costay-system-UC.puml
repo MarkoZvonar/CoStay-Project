@@ -18,6 +18,8 @@ rectangle "CoStay" {
 
   package "Korisnički račun" {
     usecase "Registracija i prijava" as UC_Login
+    usecase "Odjava iz aplikacije" as UC_Logout
+    usecase "Ponovno postavljanje lozinke" as UC_Recovery
     usecase "Upravljanje profilom" as UC_Profile
   }
 
@@ -42,6 +44,7 @@ rectangle "CoStay" {
 
   package "Komunikacija i putovanja" {
     usecase "Izravna komunikacija" as UC_Messages
+    usecase "Grupni razgovor" as UC_GroupMessages
     usecase "Pregled troškova putovanja" as UC_Costs
     usecase "Simulacija plaćanja" as UC_Payment
     usecase "Ocjenjivanje sudionika" as UC_Reviews
@@ -59,8 +62,11 @@ rectangle "CoStay" {
 
 Guest -- UC_Discover
 Guest -- UC_Search
+Guest -- UC_Login
+Guest -- UC_Recovery
 
 User -- UC_Login
+User -- UC_Logout
 User -- UC_Profile
 User -- UC_Discover
 User -- UC_Search
@@ -72,6 +78,7 @@ User -- UC_Join
 User -- UC_MyRequests
 User -- UC_Withdraw
 User -- UC_Messages
+User -- UC_GroupMessages
 User -- UC_Costs
 User -- UC_Payment
 User -- UC_Reviews
@@ -88,6 +95,7 @@ Admin -- UC_Statistics
 OAuth -- UC_Login
 Maps -- UC_Location
 Email -- UC_Notifications
+Email -- UC_Recovery
 
 UC_Create ..> UC_Location : <<include>>
 
