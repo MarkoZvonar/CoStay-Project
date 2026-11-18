@@ -30,7 +30,7 @@
       <div class="karticaSlika">
         <img src="<%= slikaUrl %>" alt="Slika smještaja" />
 
-        <% if (spremljene) { %>
+        <% if (oznaka === "2") { %>
           <button
             type="button"
             class="spremiGumb spremljen"
@@ -104,10 +104,12 @@
           </span>
         </div>
 
-        <% if (!spremljene) { %>
+        <% if (oznaka === "0") { %>
           <a href="/edit/<%= smjestaj.id_objava %>" class="messageGumb">Edit</a>
-        <% } else { %>
+        <% } else if(oznaka === "1") { %>
           <a href="#" class="messageGumb">Message</a>
+        <% } else if(oznaka === "2") { %>
+          <a href="#" class="messageGumb">Pošalji zahtjev</a>
         <% } %>
       </div>
     </div>

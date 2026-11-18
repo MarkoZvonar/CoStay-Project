@@ -64,6 +64,57 @@
   font-weight: bold;
 }
 
+/* Gumb za spremanje objave */
+.spremiGumb {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 2;
+
+  width: 38px;
+  height: 38px;
+  padding: 0;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-color: white;
+  color: #344e41;
+
+  border-radius: 50%;
+  font-size: 25px;
+  font-weight: bold;
+  line-height: 1;
+
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+/* Povećava se samo znak, ne cijeli krug */
+.spremiGumb:hover {
+  background-color: #f2f5f1;
+  transform: none;
+}
+
+.spremiGumb:not(.spremljen):hover {
+  font-size: 30px;
+}
+
+.spremiGumb.spremljen {
+  color: #e63946;
+  font-size: 22px;
+}
+
+.spremiGumb.spremljen:hover {
+  font-size: 27px;
+}
+
+.spremiGumb:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+
 .slikaDno {
   position: absolute;
   bottom: 0;

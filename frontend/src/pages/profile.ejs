@@ -91,21 +91,21 @@
       <div id="mojeObjave" class="postovi">
         <%- include('../components/profileposts', {
           objave: mojeObjave,
-          spremljene: false,
+          oznaka: "0",
           praznaPoruka: "You haven't posted anything yet."
         }) %>
       </div>
       <div id="mojiZahtjevi" class="postovi" hidden>
         <%- include('../components/profileposts', {
           objave: mojiZahtjevi,
-          spremljene: true,
+          oznaka: "1",
           praznaPoruka: "You haven't made any requests yet."
         }) %>
       </div>
       <div id="spremljeneObjave" class="postovi" hidden>
         <%- include('../components/profileposts', {
           objave: spremljeneObjave,
-          spremljene: true,
+          oznaka: "2",
           praznaPoruka: "You haven't saved any posts yet."
         }) %>
       </div>
