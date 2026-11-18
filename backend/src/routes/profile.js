@@ -18,7 +18,7 @@ const upload = multer({
   
       cb(null, true);
     },
-  });
+});
 
 
 function kreirajSupabase(req) {

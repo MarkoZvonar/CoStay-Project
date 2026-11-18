@@ -139,7 +139,7 @@ listaTagova.addEventListener("click", async(event) => {
     }
 });
 
-//promjena foldera my postef requests/saved posts
+//promjena foldera my posts/my requests/saved posts
 tabMojeObjave.addEventListener("click", () => {
     mojeObjave.hidden = false;
     mojiZahtjevi.hidden = true;
