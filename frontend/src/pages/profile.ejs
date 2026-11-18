@@ -34,16 +34,16 @@
           <span class="recenzijeBroj">
               (<%= brojRecenzija %>)
           </span>
-      </a>
+        </a>
         <div class="profilOpis">
           <%= opis %>
         </div>
-      <form action="/logout" method="POST">
-        <button type="submit" class="addGumb">Log out</button>
-      </form>
+        <form action="/logout" method="POST">
+          <button type="submit" class="addGumb">Log out</button>
+        </form>
 
-      <a href="/profile/edit" class="editGumb">Edit profile</a>
-            </div>
+        <a href="/profile/edit" class="editGumb">Edit profile</a>
+      </div>
 
       <div class="tagovi">
         <div class="tagoviNaslov">Travel Keywords</div>
@@ -78,9 +78,11 @@
     <div class="postoviSekcija">
       <div class="postoviTabs">
         <div id="tabMojeObjave" class="postoviTabAktivan">
-          <h2 class="postoviNaslov">My Posted Requests</h2>
+          <h2 class="postoviNaslov">My Posts</h2>
         </div>
-
+        <div id="tabZahtjeviObjave" class="postoviTab">
+          <h2 class="postoviNaslov">My requests</h2>
+        </div>
         <div id="tabSpremljeneObjave" class="postoviTab">
           <h2 class="postoviNaslov">Saved Posts</h2>
         </div>
@@ -90,10 +92,16 @@
         <%- include('../components/profileposts', {
           objave: mojeObjave,
           spremljene: false,
-          praznaPoruka: "You haven't posted any requests yet."
+          praznaPoruka: "You haven't posted anything yet."
         }) %>
       </div>
-
+      <div id="mojiZahtjevi" class="postovi" hidden>
+        <%- include('../components/profileposts', {
+          objave: mojiZahtjevi,
+          spremljene: true,
+          praznaPoruka: "You haven't made any requests yet."
+        }) %>
+      </div>
       <div id="spremljeneObjave" class="postovi" hidden>
         <%- include('../components/profileposts', {
           objave: spremljeneObjave,
