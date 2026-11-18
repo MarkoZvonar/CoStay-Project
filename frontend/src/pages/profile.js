@@ -6,7 +6,9 @@ const listaTagova = document.getElementById("listaTagova");
 
 const tabMojeObjave = document.getElementById("tabMojeObjave");
 const tabSpremljeneObjave = document.getElementById("tabSpremljeneObjave");
+const tabMojiZahtjevi = document.getElementById("tabZahtjeviObjave");
 const mojeObjave = document.getElementById("mojeObjave");
+const mojiZahtjevi = document.getElementById("mojiZahtjevi");
 const spremljeneObjave = document.getElementById("spremljeneObjave");
 
 let sviTagovi = [];
@@ -140,18 +142,30 @@ listaTagova.addEventListener("click", async(event) => {
 //promjena foldera my postef requests/saved posts
 tabMojeObjave.addEventListener("click", () => {
     mojeObjave.hidden = false;
+    mojiZahtjevi.hidden = true;
     spremljeneObjave.hidden = true;
 
     tabMojeObjave.className = "postoviTabAktivan";
+    tabMojiZahtjevi.className = "postoviTab";
     tabSpremljeneObjave.className = "postoviTab";
 });
-
-tabSpremljeneObjave.addEventListener("click", () => {
+tabMojiZahtjevi.addEventListener("click", () => {
+    mojiZahtjevi.hidden = false;
     mojeObjave.hidden = true;
-    spremljeneObjave.hidden = false;
+    spremljeneObjave.hidden = true;
 
+    tabMojiZahtjevi.className = "postoviTabAktivan";
     tabMojeObjave.className = "postoviTab";
+    tabSpremljeneObjave.className = "postoviTab";
+});
+tabSpremljeneObjave.addEventListener("click", () => {
+    spremljeneObjave.hidden = false;
+    mojeObjave.hidden = true;
+    mojiZahtjevi.hidden = true;
+
     tabSpremljeneObjave.className = "postoviTabAktivan";
+    tabMojeObjave.className = "postoviTab";
+    tabMojiZahtjevi.className = "postoviTab";
 });
 
 spremljeneObjave.addEventListener("click", async (event) => {
