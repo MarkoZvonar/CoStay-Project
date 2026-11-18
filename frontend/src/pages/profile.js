@@ -112,6 +112,13 @@ dodajTag.addEventListener("click", async () => {
         dodajTag.disabled = false;
     }
 });
+//pritiskom na enter se isto moze dodati tag
+unosTaga.addEventListener("keydown", (event) => {
+    if (event.key === "Enter") {
+        event.preventDefault();
+        dodajTag.click();
+    }
+});
 
 listaTagova.addEventListener("click", async(event) => {
     const gumb = event.target.closest(".ukloniTag");
