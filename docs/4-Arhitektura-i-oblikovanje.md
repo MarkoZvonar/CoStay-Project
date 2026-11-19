@@ -174,7 +174,8 @@ Model pohranjenih podataka prikazuje tablice `RAZGOVOR`, `SUGOVORNIK` i `PORUKA`
 **Scenarij:** Uređivanje korisničkog profila (UC-011). Prijavljeni korisnik već je na svom profilu i odabire uređivanje. Može se vratiti bez spremanja ili poslati promjene. 
 
 **Sekvencijski dijagram:** 
-![Sekvencijski dijagram uređivanja korisničkog profila](./assets/diagrams/4-4-costay-edit-profile-SD.svg) 
+![Sekvencijski dijagram uređivanja korisničkog profila](./assets/diagrams/4-4-costay-edit-profile-SD.svg)
+
 **Slika 4.4.1. Sekvencijski dijagram uređivanja korisničkog profila**
 
 **PlantUML izvor:** [Izvor sekvencijskog dijagrama](./puml/4-4-costay-edit-profile-SD.puml)
