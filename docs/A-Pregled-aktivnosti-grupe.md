@@ -8,9 +8,8 @@
 
 >Kratice članova tima: DA = Dora Arnold, LK = Lovro Krčmarić, LM = Leon Marković, SP = Sven Prelogović, IT = Iva Tomić, NU = Nika Ugarković-Štimac, MZ = Marko Zvonar.																														
 
-| Datum i sudionici | Glavna tema | Donesena odluka ili zadatak  | Poveznica na zadatak ili  rezultat, ako postoji |
-| --- | --- | --- | --- |
-|  |  |  |  |
+U razdoblju od 16.10. do 19.11.2026. tim se sastajao svakog četvrtka radi pregleda napretka, razjašnjavanja pitanja i dogovora o daljnjem radu. Prema potrebi tražena su i pojašnjenja asistenta. Marko je koordinirao podjelu poslova i organizaciju rada na GitHubu. Pregled potvrđenih dogovora i odgovornosti po razvojnim fazama nalazi se u [pregledu rada prvog ciklusa](./meeting-notes/sprint-01.md).
+
 
 Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet redak. Dodijeljeni zadatak treba imati odgovornu osobu; za neriješeno pitanje treba navesti tko će ga dalje obraditi. Sam naslov sastanka ne pokazuje što se promijenilo. U ovu evidenciju nemojte kopirati cijeli popis issuea ni prijepis razgovora.
 
@@ -34,11 +33,12 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 
 **Cilj:** Prikazati planirani redoslijed rada i odgovornosti u timu. Prikažite projektne tjedne ili druga kratka razdoblja koja tim koristi, uključujući pripremu za formalne provjere.
 
-**Trenutačni plan:** [Poveznica na GitHub Projects ploču, Gantogram ili održavanu tablicu u nastavku. Navesti osobu zaduženu za ažurnost plana. Odaberite jedan glavni prikaz i navedite tko ga održava ažurnim.]
+**Praćenje zadataka:** [GitHub Projects — PlanBoard](https://github.com/users/MarkoZvonar/projects/1/views/1).
 
-| Razdoblje/Tjedan | Glavni planirani rad | Odgovorni članovi | Poveznica na zadatke |
-| --- | --- | --- | --- |
-|  |  |  |  |
+**Koordinacija podjele poslova:** MZ.
+
+**Pregled dosadašnjeg rada:** [Prvi ciklus, 16.10.–19.11.2026.](./meeting-notes/sprint-01.md). Tablica sažima dogovoreni redoslijed rada i naknadno evidentirane rezultate; razdoblja označavaju glavni fokus, uz preklapanje pojedinih aktivnosti.
+
 
 Ako koristite tablicu, plan vodite na korisnoj tjednoj razini i ažurirajte ga kada se prioriteti promijene. Kratice članova tima definirajte  u A.1 i ovdje ih primjenjujte dosljedno; ako dva člana imaju iste inicijale, proširite kraticu. Plan nije dokaz da je planirani rad dovršen (to dokazuje kod i dokumentacija).
 
@@ -62,7 +62,6 @@ Ako koristite tablicu, plan vodite na korisnoj tjednoj razini i ažurirajte ga k
 
 | Aktivnost ili rezultat | Član | Prijavljeni sati | Reprezentativni rezultat ili poveznica |
 | --- | --- | --- | --- |
-|  |  |  |  |
 
 Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako poglavlje dokumentacije ili svaki UML dijagram. Tim treba dosljedno bilježiti sate i izbjegavati dvostruko brojanje zajedničkog rada; reprezentativni rezultat objašnjava što je prijavljeni trud proizveo. Sati su samoprijavljena procjena uloženog rada, a ne mjera kvalitete niti zamjena za pregled koda i artefakata.
 
@@ -112,5 +111,3 @@ Graf može pokazati kada su zapisi promjena napravljeni i tko ih je napravio, al
 </details>
 
 ---
-
->**Završna provjera:** Sastanci navode smislene ishode i odgovorne osobe; plan odražava namjeravani rad; tablica uloženog rada i generirani prikaz repozitorija odnose na ovaj vidljivi projekt; konkretni izazovi povezani su s radnjama i njihovim rezultatima. 
