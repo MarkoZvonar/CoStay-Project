@@ -180,20 +180,6 @@ Model pohranjenih podataka prikazuje tablice `RAZGOVOR`, `SUGOVORNIK` i `PORUKA`
 
 **PlantUML izvor:** [Izvor sekvencijskog dijagrama](./puml/4-4-costay-edit-profile-SD.puml)
 
-<details>
-<summary><strong>Odabir lokacije, provjera valjanosti i podnošenje prijave</strong></summary>
-
-**Primjer — CrisisMap:** Građanin podnosi prijavu kriznog događaja nakon što ručno odabere lokaciju ili zatraži položaj uređaja. Interakcija prikazuje i što se događa kada je pristup lokaciji odbijen, podaci prijave nisu valjani ili pohrana ne uspije.
-
-![Sekvencijski dijagram podnošenja prijave kriznog događaja](./assets/diagrams/4-4-crisismap-report-submission-SD.svg)
-
-**Slika 4.4. Sekvencijski dijagram podnošenja prijave kriznog događaja**
-
-**PlantUML izvor:** [izvor](./puml/4-4-crisismap-report-submission-SD.puml)
-
-**Analiza primjera:** Dva načina odabira lokacije te alternative provjere i pohrane imaju različite posljedice za korisnika; usporedite ih s odgovarajućim obrascem uporabe i njegovim alternativnim tijekovima. API preglednika za lokaciju mogućnost je preglednika; web-klijent, API, usluga i pohrana odgovaraju prikazu komponenata. Odaberite grane koje pomažu objasniti scenarij vašeg projekta i završni dijagram uskladite s implementiranom interakcijom.
-
-</details>
 
 ### 4.4.2 Reprezentativni UML dijagram stanja
 
