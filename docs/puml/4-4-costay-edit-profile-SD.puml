@@ -1,0 +1,79 @@
+' ==============================================================================
+' 4-4-costay-edit-profile-SD.puml
+'
+' Svrha:    Prikazuje dohvat obrasca za uređivanje profila te slanje,
+'           provjeru i pohranu promjena, uključujući važne neuspješne putove.
+' ==============================================================================
+
+@startuml
+title Uređivanje korisničkog profila (UC-011)
+
+skinparam maxMessageSize 150
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam sequenceMessageAlign center
+skinparam ArrowColor #212529
+
+skinparam sequence {
+    ParticipantBackgroundColor #E7F1FF
+    ParticipantBorderColor #0D6EFD
+    ActorBackgroundColor #F8F9FA
+    ActorBorderColor #212529
+    LifeLineBorderColor #212529
+}
+
+autonumber
+
+actor "Registrirani korisnik" as User
+participant "Web-sučelje" as Web <<UI>>
+participant "Express: profile router" as Router <<API>>
+database "Supabase PostgreSQL\n(tablica KORISNIK)" as DB <<Persistence>>
+participant "Supabase Storage" as Storage
+
+User -> Web: Otvori uređivanje profila
+Web -> Router: GET /profile/edit
+Router -> Router: requireRegistered(req, res, next)
+Router -> DB: Dohvati podatke profila
+DB --> Router: Podaci profila
+Router --> Web: Prikaži obrazac s podacima
+
+alt Korisnik odabere "Back to Profile"
+    User -> Web: Klikne "Back to Profile"
+    Web -> Router: GET /profile
+    Router -> DB: Dohvati podatke profila
+    DB --> Router: Podaci profila
+    Router --> Web: Prikaži postojeći profil
+    Web --> User: Prikaže profil bez promjena
+else Korisnik šalje promjene
+    User -> Web: Uredi podatke i pošalje obrazac
+    Web -> Router: POST /profile/edit
+    Router -> Router: requireRegistered(req, res, next)
+    Router -> Router: Očisti i provjeri obavezna polja
+
+    alt Nedostaje ime, prezime ili lokacija
+        Router --> Web: Odgovor 400
+        Web --> User: Prikaži poruku o obaveznim poljima
+    else Podaci su valjani
+        opt Korisnik je priložio profilnu sliku
+            Router -> Storage: Prenesi sliku (upsert: true)
+            Storage --> Router: Javni URL slike
+        end
+
+        Router -> DB: Ažuriraj podatke u KORISNIK
+        alt Ažuriranje nije uspjelo
+            DB --> Router: Pogreška ili nema ažuriranog retka
+            Router --> Web: Proslijedi pogrešku ili vrati 403
+            Web --> User: Prikaži poruku o pogrešci
+        else Ažuriranje je uspjelo
+            DB --> Router: Potvrda ažuriranja
+            Router --> Web: Preusmjeri na /profile
+            Web -> Router: GET /profile
+            Router -> DB: Dohvati podatke profila
+            DB --> Router: Podaci profila
+            Router --> Web: Prikaži ažurirani profil
+            Web --> User: Prikaže ažurirani profil
+        end
+    end
+end
+
+@enduml
