@@ -81,7 +81,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA | 2 | Zadatak #55; |
 | OAuth 2.1: Inicijalizacija Backend okruženja i Supabase Klijenta | DA | 3 | Zadatak #56; |
 | OAuth 2.1: Implementacija Auth Ruta i Callback Logike na Backendu | DA | 6 | Zadatak #57; |
-| OAuth 2.1: Upravljanje Sesijama i Zaštita Ruta (Middleware) | DA | 7 | Zadatak #58; |
+| OAuth 2.1: Upravljanje Sesijama i Zaštita Ruta (Middleware) | DA | 6 | Zadatak #58; |
 | OAuth 2.1: Frontend UI Integracija i Stanje Korisnika | DA | 4 | Zadatak #59; |
 | Oporavak - zaboravljena lozinka | DA | 6 | Zadatak #139; |
 | Prijava/registracija email-om i lozinkom | DA | 6 | Zadatak #141; |
@@ -90,7 +90,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | 3.3. + Create u 3.2. | SP |  | Dokumentacija pod 3.3. i 3.2. |
 | 2.5., 2.7. + Profile u 3.2. | IT |  | Dokumentacija pod 2.5., 2.7. i 3.2. |
 | 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
-| 4.1., 2.6. + prijava i registracija u 3.2. | LK |  | Dokumentacija pod 4.1., 2.6. i 3.2. |
+| 4.1., 2.6. + prijava i registracija u 3.2. | DA | 2 | Dokumentacija pod 4.1., 2.6. i 3.2. |
 | 4.3.1. | NU |  | Dokumentacija pod 4.3.1. |
 
 Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako poglavlje dokumentacije ili svaki UML dijagram. Tim treba dosljedno bilježiti sate i izbjegavati dvostruko brojanje zajedničkog rada; reprezentativni rezultat objašnjava što je prijavljeni trud proizveo. Sati su samoprijavljena procjena uloženog rada, a ne mjera kvalitete niti zamjena za pregled koda i artefakata.
