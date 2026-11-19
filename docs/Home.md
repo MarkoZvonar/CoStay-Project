@@ -62,7 +62,7 @@ Kratak sažetak nalazi se u [README-u — Uporaba umjetne inteligencije](../READ
 | Alat | Inačica ili model | Koristio/la | Glavna svrha |
 | --- | --- | --- | --- |
 | Gemini | Nije evidentirano | Sven Prelogović | Pomoć pri pisanju koda i dokumentacije |
-| ChatGPT | Nije evidentirano | Leon Marković | Pomoć pri pisanju koda i dokumentacije |
+| ChatGPT | Nije evidentirano | Leon Marković | Pomoć pri pisanju koda |
 | ChatGPT | Nije evidentirano | Nika Ugarković Štimac | Pomoć pri izradi baze podataka, RLS politika i dokumentacije |
 | ChatGPT | Nije evidentirano | Dora Arnold | Pomoć pri pisanju, analizi i refaktoriranju koda te dokumentacije |
 | ChatGPT | Nije evidentirano | Marko Zvonar | Pomoć pri pisanju koda, dokumentacije i javnom postavljanju aplikacije |
@@ -85,6 +85,8 @@ Prema podacima tima korišten je i **Claude**, no u ovom zapisu nije navedeno ko
 |  Profilna slika          | Pomoć pri učitavanju i spremanju profilne slike |Alat je generirao funkciju koja koristi Node.js paket Multer za primanje profilne slike i predložio kod za njezino spremanje u Supabase Storage  |  Generirana funkcija uklopljena je u kod za uređivanje profila | `backend/src/routes/profile.js`, `frontend/src/pages/edit-profile.ejs` |
 |  Obrazac za uređivanje profila          | Pomoć pri izradi obrasca za uređivanje podataka profila |Alat je generirao EJS kod obrasca za uređivanje profilne slike, imena, prezimena, mjesta stanovanja i opisa korisnika.  |  Generirani obrazac je prilagođen profilu tako da se polja ispravno dinamički popunjavaju postojećim podacima korisnika.    | `frontend/src/pages/edit-profile.ejs` |
 |  edit-profile.css          | Pomoć pri stiliziranju stranice za uređivanje profila | Alat je predložio CSS izmjene za oblikovanje obrasca | Alatu je dostavljen postojeći edit-profile.css i zatražene su dorade izgleda obrasca.     | `frontend/src/pages/edit-profile.css` |
+| map.js | Pomoć pri pisanju koda za stvaranje i korištenje karte u Searchu | Alat je predložio i objasnio funkcije i podatake koji se koriste u stvaranju karte uz Google maps API | Tim je odabrao koje funkcije i podatci su potrebni za aplikaciju | `frontend/src/components/map.js` |
+| start.css | Pomoć pri oblikovanju izgleda stranica za prijavu | Alat je nadopnuio css kod kako bi stranica bolje izgledala | Tim je imao ideju za dizajn i napisao osnovni kod | `frontend/src/pages/start.css` |
 
 Tablica prikazuje evidentirane primjere uporabe generativne umjetne inteligencije tijekom razvoja. Ne predstavlja tvrdnju da AI nije korišten u drugim dijelovima projekta. Članovi tima odgovorni su za razumijevanje i provjeru sadržaja koji uključuju u aplikaciju i dokumentaciju.
 

@@ -4,7 +4,7 @@
 
 **Tim:** L-A-10.1, Palačinke
 
-**Razdoblje:** 16. 10. – 19. 11. 2026.
+**Razdoblje:** 15. 10. – 19. 11. 2026.
 
 **Datum pregleda:** 19. 11. 2026.
 
@@ -12,15 +12,15 @@
 
 Rad je organiziran početnom podjelom pripreme sučelja, baze podataka i autentifikacije, a zatim podjelom odgovornosti za pojedine kartice aplikacije. Završni dio razdoblja bio je usmjeren na dokumentaciju i postavljanje aplikacije na Render.
 
-Ovo je naknadno sastavljen pregled stvarnog rada i dogovorene podjele odgovornosti. Razdoblja u nastavku predstavljaju razvojne faze. Aktivnosti su se djelomično preklapale: dokumentacija se pripremala i tijekom razvoja, a dorade koda nastavile su se i nakon prelaska glavnog fokusa na dokumentaciju.
+Razdoblja u nastavku predstavljaju razvojne faze. Aktivnosti su se djelomično preklapale: dokumentacija se pripremala i tijekom razvoja, a dorade koda nastavile su se i nakon prelaska glavnog fokusa na dokumentaciju.
 
-Tim se sastajao svakog četvrtka radi pregleda napretka, razjašnjavanja pitanja i dogovora o daljnjem radu. Kada pojedina pitanja nisu bila jasna, članovi su tražili pojašnjenje asistenta. Marko je koordinirao podjelu poslova i organizaciju rada na GitHubu. Za praćenje zadataka koristili su se GitHub Issues i Projects ploča PlanBoard.
+Tim je organizirao 3 sastanka radi pregleda napretka, razjašnjavanja pitanja i dogovora o daljnjem radu. Kada pojedina pitanja nisu bila jasna, članovi su tražili pojašnjenje asistenta. Marko je koordinirao podjelu poslova i organizaciju rada na GitHubu. Za praćenje zadataka koristili su se GitHub Issues i Projects ploča PlanBoard.
 
 Početak promatranog razdoblja je 16. listopada. Detaljnija podjela aktivnosti u ovom pregledu zabilježena je od 22. listopada; za ranije dane nisu dodani pojedinačni zadaci ili sastanci koji nisu potvrđeni.
 
 ## Faza 1 — početno postavljanje i priprema aplikacije
 
-**Razdoblje:** 22. 10. – 29. 10. 2026.
+**Razdoblje:** 15. 10. – 22. 10. 2026.
 
 **Cilj:** Pripremiti početnu strukturu projekta, korisničko sučelje, bazu i autentifikaciju kako bi se razvoj mogao nastaviti po funkcionalnostima.
 
@@ -36,7 +36,7 @@ Početak promatranog razdoblja je 16. listopada. Detaljnija podjela aktivnosti u
 
 ## Faza 2 — razvoj i povezivanje funkcionalnosti
 
-**Razdoblje glavnog fokusa:** od 29. 10. do 10. 11. 2026.
+**Razdoblje glavnog fokusa:** od 22. 10. do 10. 11. 2026.
 
 **Cilj:** Povezati pojedine kartice s backendom i bazom te ostvariti početne korisničke tijekove.
 

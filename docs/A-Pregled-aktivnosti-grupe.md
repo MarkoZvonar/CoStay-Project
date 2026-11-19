@@ -115,8 +115,10 @@ Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako pog
 
 **Cilj:** Prikazati kada su promjene napravljene u repozitoriju i tko ih je napravio, uz napomenu da sam broj zapisa promjena ne mjeri kvalitetu doprinosa.
 
-**Prikaz aktivnosti repozitorija:** [Ugradite ili povežite GitHubov prikaz `Contributors` i generirani graf za projektni repozitorij; navedite razdoblje koje obuhvaća.]
+**Prikaz aktivnosti repozitorija:**
+
 [Contributors](https://github.com/MarkoZvonar/CoStay-Project/graphs/contributors) - pokazuje podatke od stvaranja GitHub projekta
+
 [Generirani graf za projektni repozitorij](https://github.com/MarkoZvonar/CoStay-Project/graphs/commit-activity) - obuhvaća commitove kroz prošlu godinu
 
 
