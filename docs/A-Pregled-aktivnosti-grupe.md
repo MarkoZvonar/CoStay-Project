@@ -10,37 +10,23 @@
 
 | Datum i sudionici | Glavna tema | Donesena odluka ili zadatak  | Poveznica na zadatak ili  rezultat, ako postoji |
 | --- | --- | --- | --- |
-|  |  |  |  |
+| 6. 10. 2026.; DA, LK, LM, NU, MZ  | Odabir teme za projekt | Odabrana tema i ime projekta, izglasano da je MZ voditelj te su odabrani alati | Zadatak #14 |
+| 15. 10. 2026.; DA, LK, LM, SP, IT, NU, MZ  | Inicijalna podjela zadataka | Stvaranje GitHub grupe i logoa: MZ; Baza podataka: NU; Stvaranje inicijalnog frontenda: LK, LM; Početna dokumentacija: SP, IT; Stvaranje početnih ruta: DA | Zadatci: #25, #64, #70 |
+| 29. 10. 2026.; DA, LK, LM, SP, IT, NU, MZ  | Podjela funkcionalnosti na članove ekipe | DA: Login i Signup; LK: Discover; LM: Search; SP: Create; IT: Profile; NU: Baza podataka; MZ: Inbox | Zadatci #12, #142, #80, #82, #95, #133, #140 |
 
 Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet redak. Dodijeljeni zadatak treba imati odgovornu osobu; za neriješeno pitanje treba navesti tko će ga dalje obraditi. Sam naslov sastanka ne pokazuje što se promijenilo. U ovu evidenciju nemojte kopirati cijeli popis issuea ni prijepis razgovora.
 
-<details>
-<summary><strong>Primjer evidencije sastanaka (CrisisMap)</strong></summary>
-
-**Primjer — CrisisMap:**
-
-**Kratice članova tima:** AK = Ana Kovač; LM = Luka Marić; EP = Ema Petrović; NK = Nika Kralj.
-
-| Datum i sudionici | Glavna tema | Odluka, radnja ili otvoreno pitanje | Poveznica na zadatak ili nastali rezultat, ako postoji |
-| --- | --- | --- | --- |
-| 15. 11. 2025.; AK, LM, EP | Lokacija kada je pristup preglednika odbijen | Dodati ručni odabir položaja na karti u obrazac za prijavu. AK obrađuje obrazac; LM provjerava valjanost lokacije. | Zadataka #21 i #23. |
-| 22. 11. 2025.; AK, EP | Usklađivanje formata lokacijskih podataka | klijentski dio i poslužiteljski API koriste neusklađene formate koordinata. EP će uskladiti format zahtjeva i demonstrira spremanje na sljedećem pregledu. | Zadatak #25. |
-
-**Ishod i odgovornost:** Zapisi jasno definiraju tko je odgovoran za koji dio posla i koji je provjerljivi rezultat dogovoren. npr Rečenica „Raspravljali smo o obradi lokacije” prikrila bi je li se itko obvezao na promjenu. Ovi redci navode odluku ili otvorenu radnju, odgovornu osobu i rezultat koji se može pregledati.
-
-</details>
 
 ## A.2 Plan rada
 
 **Cilj:** Prikazati planirani redoslijed rada i odgovornosti u timu. Prikažite projektne tjedne ili druga kratka razdoblja koja tim koristi, uključujući pripremu za formalne provjere.
 
-**Trenutačni plan:** [Poveznica na GitHub Projects ploču, Gantogram ili održavanu tablicu u nastavku. Navesti osobu zaduženu za ažurnost plana. Odaberite jedan glavni prikaz i navedite tko ga održava ažurnim.]
+**Praćenje zadataka:** [GitHub Projects — PlanBoard](https://github.com/users/MarkoZvonar/projects/1/views/1).
 
-| Razdoblje/Tjedan | Glavni planirani rad | Odgovorni članovi | Poveznica na zadatke |
-| --- | --- | --- | --- |
-|  |  |  |  |
+**Koordinacija podjele poslova:** MZ.
 
-Ako koristite tablicu, plan vodite na korisnoj tjednoj razini i ažurirajte ga kada se prioriteti promijene. Kratice članova tima definirajte  u A.1 i ovdje ih primjenjujte dosljedno; ako dva člana imaju iste inicijale, proširite kraticu. Plan nije dokaz da je planirani rad dovršen (to dokazuje kod i dokumentacija).
+**Pregled dosadašnjeg rada:** [Prvi ciklus, 16.10.–19.11.2026.](./meeting-notes/sprint-01.md). Tablica sažima dogovoreni redoslijed rada i naknadno evidentirane rezultate; razdoblja označavaju glavni fokus, uz preklapanje pojedinih aktivnosti.
+
 
 <details>
 <summary><strong>Primjer plana rada</strong></summary>
@@ -62,7 +48,50 @@ Ako koristite tablicu, plan vodite na korisnoj tjednoj razini i ažurirajte ga k
 
 | Aktivnost ili rezultat | Član | Prijavljeni sati | Reprezentativni rezultat ili poveznica |
 | --- | --- | --- | --- |
-|  |  |  |  |
+| Izrada izgleda osnovne stranice | LK |  | Zadatak #26; |
+| Izrada izgleda stranica za prijavu | LM | 3 | Zadatak #63; izgled stranica start.ejs, login.ejs, signup.ejs |
+| Dopuna dokumenta 1-Projekt.md | LM | 2 | 1-Projekt.md |
+| Dovršavanje dokumenta 1-Projekt.md | IT |  | 1-projekt.md |
+| Izrada relacijske sheme baze podataka | NU |  | Zadatak #17; |
+| Nomralozacija sheme i definiranje ključeva | NU |  | Zadatak #18; |
+| Kreiranje tablica u SQL-u | NU |  | Zadatak #19; |
+| Definiranje ograničenja baze podataka | NU |  | Zadatak #20; |
+| Stavarnje uloga u bazi podataka | NU |  | Zadatak #21; |
+| Izrada ER dijagrama | NU |  | Zadatak #43; |
+| Izrada logoa | MZ |  | Zadatak #64; |
+| Povezivanje ruta | DA |  | Zadatak #50; |
+| Podjela signupa na 3 dijela | LM | 2 | signup.ejs je zamjenjen sa signup1.ejs, signup2.ejs i signup3.ejs za lakšu autentifikaciju korisnika |
+| Ispis objava | LK |  | Zadatak #98; |
+| Posebni Discover za prijavljenog korisnika i za gosta | LK |  | Zadatak #99; |
+| Infinite scroll | LK |  | Zadatak #100; |
+| Spremanje objava | LK |  | Zadatak #107; |
+| Slanje i povlačenje zahtjeva za pridruživanje | NU |  | Zadatak #129; |
+| Izrada funkcionalnosti za Search | LM | 4 | Zadaci #134, #136 i #137; Funkcionalnost pretraživanja u /search i testiranje te funkcionalnosti |
+| Dodavanje karte u Search | LM | 4 | Zadatak #138; Funkcionalnost otvaranja karte u search/map i testiranje pretrage s kartom |
+| Izrada Createa | SP |  | Zadatak #140; |
+| Izrada direktnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #91; |
+| Izrada grupnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #92; |
+| Zamjena GET i POST metoda s WEBSOCKETom i implementacija WEBSOCKETA | MZ |  | Zadatak #93; |
+| Dohvat i prikaz podataka prijavljenog korisnika | IT |  | Zadatak #83; |
+| Dodavanje profilne slike | IT |  | Zadatak #96; |
+| Dodavanje i uklanjanje ključnih riječi | IT |  | Zadatak #84; |
+| Dohvat i prikaz objavljenih i spremljenih objava korisnika | IT |  | Zadaci #85 i #88; |
+| Omogućiti pregled vlastitih recenzija | NU |  | Zadatak #130; |
+| OAuth 2.0: autorizacija za Google i Github | DA |  | Zadatak #34; |
+| OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA |  | Zadatak #55; |
+| OAuth 2.1: Inicijalizacija Backend okruženja i Supabase Klijenta | DA |  | Zadatak #56; |
+| OAuth 2.1: Implementacija Auth Ruta i Callback Logike na Backendu | DA |  | Zadatak #57; |
+| OAuth 2.1: Upravljanje Sesijama i Zaštita Ruta (Middleware) | DA |  | Zadatak #58; |
+| OAuth 2.1: Frontend UI Integracija i Stanje Korisnika | DA |  | Zadatak #59; |
+| Oporavak - zaboravljena lozinka | DA |  | Zadatak #139; |
+| Prijava/registracija email-om i lozinkom | DA |  | Zadatak #141; |
+| 3.1. + Discover u 3.2. | LK |  | Dokumentacija pod 3.1. i 3.2. |
+| A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
+| 3.3. + Create u 3.2. | SP |  | Dokumentacija pod 3.3. i 3.2. |
+| 2.5., 2.7. + Profile u 3.2. | IT |  | Dokumentacija pod 2.5., 2.7. i 3.2. |
+| 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
+| 4.1., 2.6. + prijava i registracija u 3.2. | LK |  | Dokumentacija pod 4.1., 2.6. i 3.2. |
+| 4.3.1. | NU |  | Dokumentacija pod 4.3.1. |
 
 Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako poglavlje dokumentacije ili svaki UML dijagram. Tim treba dosljedno bilježiti sate i izbjegavati dvostruko brojanje zajedničkog rada; reprezentativni rezultat objašnjava što je prijavljeni trud proizveo. Sati su samoprijavljena procjena uloženog rada, a ne mjera kvalitete niti zamjena za pregled koda i artefakata.
 
@@ -87,8 +116,9 @@ Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako pog
 **Cilj:** Prikazati kada su promjene napravljene u repozitoriju i tko ih je napravio, uz napomenu da sam broj zapisa promjena ne mjeri kvalitetu doprinosa.
 
 **Prikaz aktivnosti repozitorija:** [Ugradite ili povežite GitHubov prikaz `Contributors` i generirani graf za projektni repozitorij; navedite razdoblje koje obuhvaća.]
+[Contributors](https://github.com/MarkoZvonar/CoStay-Project/graphs/contributors) - pokazuje podatke od stvaranja GitHub projekta
+[Generirani graf za projektni repozitorij](https://github.com/MarkoZvonar/CoStay-Project/graphs/commit-activity) - obuhvaća commitove kroz prošlu godinu
 
-Graf može pokazati kada su zapisi promjena napravljeni i tko ih je napravio, ali ne prikazuje sav rad na oblikovanju, ispitivanju, integraciji, pregledu ili dokumentaciji. Ako postoji uočljiv nesklad s tablicom aktivnosti, kratko ga objasnite; nemojte iz grafa izvoditi broj sati. Generirani prikaz neka bude vezan uz stvarni repozitorij umjesto da se ručno crta drugi graf.
 
 ## A.5 Ključni inženjerski izazovi i rješenja
 
@@ -96,7 +126,7 @@ Graf može pokazati kada su zapisi promjena napravljeni i tko ih je napravio, al
 
 | Izazov | Poduzeta radnja | Ishod ili preostalo ograničenje |
 | --- | --- | --- |
-|  |  |  |
+| Problem pri registracji korisnika | LM je stranicu za signup podjelio na 3 dijela |  |
 
 <details>
 <summary><strong>Rješavanje nesklada formata lokacije</strong></summary>

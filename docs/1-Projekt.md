@@ -16,6 +16,7 @@ Osobe kojima će koristiti naš projekt možemo podijeliti na dvije skupine, a t
 | ----------------------------- | -------------------------------------------------------- |
 | Putnici                       | Traže suputnike kako bi jeftinije unajmili neki smještaj |
 | Iznajmljivači                 | Traže goste koji bi unajmili njihov smještaj             |
+| Admin                         | Upravljanje stranicom                                    |
 
 ## 1.3 Granice projekta
 
@@ -23,7 +24,7 @@ Osobe kojima će koristiti naš projekt možemo podijeliti na dvije skupine, a t
 
 **Uključeno:** Objavljivanje smještaja, pretraživanje smještaja (Search), preporuke smještaja (Discover), prijava za smještaj te razmjena poruka u izravnim i grupnim razgovorima putem kartice Inbox.
 **Izvan opsega ili odgođeno:** Automatsko "scrapeanje" objava sa drugih sličnih stranica.
-**Vanjske ovisnosti:** Supabase za pohranu podataka, autentifikaciju i Realtime obavijesti o novim porukama, Google i GitHub kao OAuth pružatelji identiteta te kartografske usluge OpenStreetMapa uz biblioteku Leaflet. Integracija Resenda za slanje obavijesti e-poštom je planirana.
+**Vanjske ovisnosti:** Supabase za pohranu podataka, autentifikaciju i Realtime obavijesti o novim porukama, Google i GitHub kao OAuth pružatelji identiteta te kartografske usluge Google Mapsa. Integracija Resenda za slanje obavijesti e-poštom je planirana.
 
 Sustav obuhvaća registraciju i prijavu korisnika, dovršavanje korisničkog profila te ograničavanje pristupa zaštićenim funkcionalnostima. Za autentifikaciju koristi Supabase Auth, uz podršku prijavi putem Googlea i GitHuba te emaila i lozinke.
 

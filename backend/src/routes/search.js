@@ -1,8 +1,5 @@
 import express from "express";
-import { createClient } from "@supabase/supabase-js";
-import dotenv from "dotenv";
-
-dotenv.config();
+import {supabase} from "../config/supabase.js";
 
 const router = express.Router();
 
@@ -41,11 +38,6 @@ router.get("/map", async (req, res) => {
 });
 
 router.post("/", async (req, res) => {
-
-  const supabase = createClient(
-    process.env.SUPABASE_URL,
-    process.env.SUPABASE_ANON_KEY
-  );
 
   let { data, error } = await supabase
     .from('OBJAVA')
