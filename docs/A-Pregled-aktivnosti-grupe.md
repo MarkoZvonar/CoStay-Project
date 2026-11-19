@@ -48,7 +48,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 
 | Aktivnost ili rezultat | Član | Prijavljeni sati | Reprezentativni rezultat ili poveznica |
 | --- | --- | --- | --- |
-| Izrada izgleda osnovne stranice | LK |  | Zadatak #26; |
+| Izrada izgleda osnovne stranice | LK | 6 | Zadatak #26; |
 | Izrada izgleda stranica za prijavu | LM | 3 | Zadatak #63; izgled stranica start.ejs, login.ejs, signup.ejs |
 | Dopuna dokumenta 1-Projekt.md | LM | 2 | 1-Projekt.md |
 | Dovršavanje dokumenta 1-Projekt.md | IT | 2 | 1-projekt.md |
@@ -61,10 +61,10 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Izrada logoa | MZ |  | Zadatak #64; |
 | Povezivanje ruta | DA | 2 | Zadatak #50; |
 | Podjela signupa na 3 dijela | LM | 2 | signup.ejs je zamjenjen sa signup1.ejs, signup2.ejs i signup3.ejs za lakšu autentifikaciju korisnika |
-| Ispis objava | LK |  | Zadatak #98; |
-| Posebni Discover za prijavljenog korisnika i za gosta | LK |  | Zadatak #99; |
-| Infinite scroll | LK |  | Zadatak #100; |
-| Spremanje objava | LK |  | Zadatak #107; |
+| Ispis objava | LK | 4 | Zadatak #98; |
+| Posebni Discover za prijavljenog korisnika i za gosta | LK | 3 | Zadatak #99; |
+| Infinite scroll | LK | 2 | Zadatak #100; |
+| Spremanje objava | LK | 2 | Zadatak #107; |
 | Slanje i povlačenje zahtjeva za pridruživanje | NU |  | Zadatak #129; |
 | Izrada funkcionalnosti za Search | LM | 4 | Zadaci #134, #136 i #137; Funkcionalnost pretraživanja u /search i testiranje te funkcionalnosti |
 | Dodavanje karte u Search | LM | 4 | Zadatak #138; Funkcionalnost otvaranja karte u search/map i testiranje pretrage s kartom |
@@ -85,7 +85,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | OAuth 2.1: Frontend UI Integracija i Stanje Korisnika | DA | 4 | Zadatak #59; |
 | Oporavak - zaboravljena lozinka | DA | 6 | Zadatak #139; |
 | Prijava/registracija email-om i lozinkom | DA | 6 | Zadatak #141; |
-| 3.1. + Discover u 3.2. | LK |  | Dokumentacija pod 3.1. i 3.2. |
+| 3.1. + Discover u 3.2. | LK | 2 | Dokumentacija pod 3.1. i 3.2. |
 | A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
 | 3.3. + Create u 3.2. | SP |  | Dokumentacija pod 3.3. i 3.2. |
 | 2.5., 2.7. + Profile u 3.2. | IT | 1 | Dokumentacija pod 2.5., 2.7. i 3.2. |
