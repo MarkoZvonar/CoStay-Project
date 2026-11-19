@@ -35,4 +35,3 @@ Predstavljeni problem već dugo postoji. Ljudi bi često odustali od tih smješt
 
 ---
 
-> **Završna provjera:** Opis problema, cilj projekta, korisnici i dionici, granice opsega te postojeći pristupi međusobno su usklađeni. Navedene koristi ne predstavljaju neprovjerene tvrdnje, a uključene i izostavljene funkcionalnosti odgovaraju odobrenom projektnom zadatku.
