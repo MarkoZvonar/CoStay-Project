@@ -160,19 +160,4 @@
 | Iteracija 3 | Demonstracija pokazuje da ako osoba zaboravi lozinku, mora kontaktirati administratora da sazna lozinku ili postavi novu lozinku.         | Dogovoriti mogućnost opcije "Zaboravljena lozinka" koja će omogućiti korisniku samostalan oporavak pristupa; ažurirati F-028 te razlog zabilježiti u odjeljku 2.5. |
 |Završni pregled  |                                 |                            |
 
-<details>
-<summary><strong>Odluke o zahtjevima nakon pregleda</strong></summary>
 
-**Primjer scenarija — pregled zahtjeva CrisisMapa:**
-
-| Kontrolna točka | Povratna informacija ili nalaz                                                                    | Odluka o zahtjevu ili opsegu                                                                            |
-| --------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
-| Iteracija 1     | Demonstracija pokazuje da odbijanje pristupa lokaciji preglednika onemogućuje podnošenje prijave. | Dogovoriti ručni odabir lokacije; ažurirati F-004 i primjer NF-01 te razlog zabilježiti u odjeljku 2.5. |
-
-**Odluka povezana s povratnom informacijom:** Zapis povezuje opaženo ponašanje s konkretnom promjenom zahtjeva i izbjegava zapisnik cijelog sastanka. Zapišite samo stvarne povratne informacije i odluke za kontrolne točke. Konzultacije u nekom drugom tjednu ne stvaraju dodatnu obaveznu predaju.
-
-</details>
-
----
-
-> **Završna provjera:** Zahtjevi su aktualni, provjerljivi i povezani. Svaki važan zahtjev moguće je pratiti od njegova opisa i ponašanja preko mjesta realizacije u sustavu do odgovarajućeg ispitivanja ili druge provjere. Poveznice koriste stvarne identifikatore i nazive iz projektne dokumentacije.
