@@ -89,9 +89,7 @@ Tablica prikazuje evidentirane primjere uporabe generativne umjetne inteligencij
 | Provjera | Način provjere | Relevantni izvor |
 | --- | --- | --- |
 | Činjenična točnost | Usporedba opisa funkcionalnosti s izvornim kodom i ponašanjem aplikacije. | [`backend/src/`](../backend/src/), [javna aplikacija](https://costayx.onrender.com/) |
-| Ostvarene i planirane funkcionalnosti | Razdvajanje implementiranih funkcionalnosti od ograničenja i budućeg rada. | [5. Ispitivanje](5-Ispitivanje.md), [7. Zaključak i budući rad](7-Zakljucak-i-buduci-rad.md) |
 | Dosljednost dokumentacije | Usklađivanje naziva i opisa s analizom zahtjeva, obrascima uporabe i arhitekturom. | [2. Analiza zahtjeva](2-Analiza-zahtjeva.md), [3. Obrasci uporabe](3-Obrasci-uporabe.md), [4. Arhitektura i oblikovanje](4-Arhitektura-i-oblikovanje.md) |
-| Izvori dijagrama | Usporedba PlantUML izvora s odgovarajućim prikazima dijagrama. | [`docs/puml/`](puml/), [`docs/assets/diagrams/`](assets/diagrams/) |
 | Povjerljivi sadržaj | Provjera da dokumentacija ne sadrži stvarne tajne ključeve, lozinke ili tokene. | [README — konfiguracija](../README.md#brzi-početak--instalacija) |
 
 Navedeni izvori omogućuju provjeru; zasebni zapis o tome tko je pregledao svaki pojedini AI-generirani dio nije priložen u ovoj evidenciji.
