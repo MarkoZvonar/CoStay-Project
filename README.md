@@ -136,11 +136,12 @@ Projekt razvija tim **Palačinke**, grupa **L-A-10.1**.
 
 | **Član** | **Glavna uloga ili doprinos** |
 | --- | --- |
-| Dora Arnold | Autentifikacija, postupak registracije i prijave. |
+| Dora Arnold | Autentifikacija, registracija i prijava. |
+| Lovro Krčmarić | Discover i pregledavanje objava. |
+| Leon Marković | Filtiranje i pretraga objava, interaktivna karta |
+| Sven Prelogović | Kreiranje objava. |
 | Marko Zvonar | Inbox i dopisivanje korisnika. |
 | Iva Tomić | Korisnički profil i uređivanje profila. |
-| Sven Prelogović | Kreiranje objava. |
-| Lovro Krčmarić | Discover i pregledavanje objava. |
 | Nika Ugarković Štimac | Baza podataka. |
 
 Repozitorij, commitovi, Pull Requestovi i evidencija zadataka pružaju dodatni uvid u timski rad.
