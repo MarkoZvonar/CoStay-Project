@@ -89,7 +89,6 @@ Kratak sažetak: [README – Uporaba umjetne inteligencije](../README_PREDLOZAK.
 
 | Alat          | Inačica ili model                  | Koristio/la         | Glavna svrha                                                     |
 | ------------- | ---------------------------------- | ------------------- | ---------------------------------------------------------------- |
-| [Naziv alata] | [Inačica ili model, ako je poznat] | [Član/članovi tima] | [npr. izrada nacrta dokumentacije, generiranje izvora dijagrama] |
 | Gemini        | Nema informacija                   | Sven Prelogović     | Pomoć pri pisanju koda i pri pisanju dokumentacije               |
 | ChatGPT       | Nema informacija                   | Leon Marković       | Pomoć pri pisanju koda i pri pisanju dokumentacije               |
 | ChatGPT       | Nema informacija                   | Nika Ugarković Štimac      | Pomoć pri izradi baze podataka i postavljanja politika u bazi podataka te pri pisanju dokumentacije               |
@@ -105,7 +104,7 @@ Kratak sažetak: [README – Uporaba umjetne inteligencije](../README_PREDLOZAK.
 | [npr. 3. Obrasci uporabe, UC-002] | [Izrada nacrta / preoblikovanje / prijevod / izvor dijagrama / sažimanje] | [Kratak opis]        | [Ulaz zadan alatu; dodane, ispravljene ili uklonjene činjenice] | [Stranica dokumentacije, `.puml` datoteka, PR] |
 |   3. Obrasci uporabe, UC - 013                     |  Pomoć pri stavljanju podataka koje je korisnik unio u bazu podataka (frontend i backend)     | Alat je generirao kod koji pomoću ugrađenih metoda u JavaScript-u (npr. .select() ili .insert()) ubacuje podatke u bazu podataka. Također kod mi je pomogao da s preglednika šaljem formatirane podatke na poslužitelj. Također, napisao je i error handling.  | Tim nije ništa promijenio  | api.js
 |  create.css                        | Stilska dosljednost; Htjeli smo da svi css file-ovi imaju isti stil (font, boje, margine, veličine objekata...)  | Alat je generirao CSS kod na temelju .html (.ejs) file-ova  | Ništa | create.css
-|  create.ejs, create.css, create.js            | Pomoć pri stvaranju nevidljivog objekta koji iskače kada korisnik unese datum odlaska koji je prije datuma dolaska | Alat je prozveo dijelić ejs koda koji stvara nevidljivi objekt, također u css-u mu je dao i stil, a u JavaScript-u mi je generirao blok koji ako je navedeni uvjet istinit pokazuje taj objekt |
+|  3. Obrasci uporabe, UC - 013           | Pomoć pri stvaranju nevidljivog objekta koji iskače kada korisnik unese datum odlaska koji je prije datuma dolaska | Alat je prozveo dijelić ejs koda koji stvara nevidljivi objekt, također u css-u mu je dao i stil, a u JavaScript-u mi je generirao blok koji ako je navedeni uvjet istinit pokazuje taj objekt |  Ništa  | create.ejs, create.css, create.js
 
 Stranice i artefakti koji nisu navedeni iznad izrađeni su bez pomoći generativne umjetne inteligencije. [Po želji: kao dodatne retke navedite kod ili ispitivanja izrađena uz pomoć umjetne inteligencije.]
 
