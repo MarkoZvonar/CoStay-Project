@@ -90,12 +90,21 @@ Kratak sažetak: [README – Uporaba umjetne inteligencije](../README_PREDLOZAK.
 | Alat          | Inačica ili model                  | Koristio/la         | Glavna svrha                                                     |
 | ------------- | ---------------------------------- | ------------------- | ---------------------------------------------------------------- |
 | [Naziv alata] | [Inačica ili model, ako je poznat] | [Član/članovi tima] | [npr. izrada nacrta dokumentacije, generiranje izvora dijagrama] |
+| Gemini        | Nema informacija                   | Sven Prelogović     | Pomoć pri pisanju koda i pri pisanju dokumentacije               |
+| ChatGPT       | Nema informacija                   | Leon Marković       | Pomoć pri pisanju koda i pri pisanju dokumentacije               |
+| ChatGPT       | Nema informacija                   | Nika Ugarković Štimac      | Pomoć pri izradi baze podataka i postavljanja politika u bazi podataka te pri pisanju dokumentacije               |
+| ChatGPT       | Nema informacija                   | Dora Arnold       | Pomoć pri pisanju koda i pri pisanju dokumentacije               |
+| ChatGPT       | Nema informacija                   | Marko Zvonar       | Pomoć pri pisanju koda i pri pisanju dokumentacije te oko deploy-a               |
+| ChatGPT       | Nema informacija                   | Iva Tomić      | Pomoć pri pisanju koda i pri pisanju dokumentacije te oko deploy-a               |
+| ChatGPT       | Nema informacija                   | Lovro Krčmarić       | Pomoć pri pisanju koda, pri pisanju dokumentacije           |
 
 ### Opseg doprinosa umjetne inteligencije
 
 | Stranica, datoteka ili artefakt   | Vrsta pomoći                                                              | Što je alat proizveo | Što je tim zadao i promijenio                                   | Lokacija                                       |
 | --------------------------------- | ------------------------------------------------------------------------- | -------------------- | --------------------------------------------------------------- | ---------------------------------------------- |
 | [npr. 3. Obrasci uporabe, UC-002] | [Izrada nacrta / preoblikovanje / prijevod / izvor dijagrama / sažimanje] | [Kratak opis]        | [Ulaz zadan alatu; dodane, ispravljene ili uklonjene činjenice] | [Stranica dokumentacije, `.puml` datoteka, PR] |
+|   3. Obrasci uporabe, UC - 013                     |  Pomoć pri stavljanju podataka koje je korisnik unio u bazu podataka (frontend i backend)     | Alat je generirao kod koji pomoću ugrađenih metoda u JavaScript-u (npr. .select() ili .insert()) ubacuje podatke u bazu podataka. Također kod mi je pomogao da s preglednika šaljem formatirane podatke na poslužitelj. Također, napisao je i error handling.  | Tim nije ništa promijenio  | api.js
+|  create.js                        | Stilska dosljednost; Htjeli smo da svi css file-ovi imaju isti stil (font, boje, margine, veličine objekata...)  | Alat je generirao CSS kod na temelju .html (.ejs) file-ova  | Ništa | create.js
 
 Stranice i artefakti koji nisu navedeni iznad izrađeni su bez pomoći generativne umjetne inteligencije. [Po želji: kao dodatne retke navedite kod ili ispitivanja izrađena uz pomoć umjetne inteligencije.]
 
@@ -114,6 +123,7 @@ Stranice i artefakti koji nisu navedeni iznad izrađeni su bez pomoći generativ
 | Problem                                                 | Kako je pronađen                                   | Rješenje                |
 | ------------------------------------------------------- | -------------------------------------------------- | ----------------------- |
 | [Netočna, izmišljena ili iz predloška preuzeta tvrdnja] | [Pregled, ispitivanje ili usporedba s aplikacijom] | [Ispravak s poveznicom] |
+| Prilikom ubacivanja podataka u bazu podataka, nismo mogli ubacivati podatke zbog politika baze podataka (RLS politike). AI alat je rekao da te politike maknemo jer nisu potrebne, iako jesu. | Problem je pronađen prilikom chat-a s AI alatom. | Rješenje kojeg smo se dosjetili nije da maknemo RLS politike koje su ključne, već da u metode stavimo RequireRegistered parametar koji provjeri sesiju, token i identitet
 
 <!-- UPUTA: Zabilježite stvarne ispravke ili napišite „Nisu utvrđene”. Općenita tvrdnja poput „sav tekst je pregledan” nije dokaz; dokaz su prethodne tablice. Tim mora moći objasniti svaku rečenicu koju objavi. -->
 
