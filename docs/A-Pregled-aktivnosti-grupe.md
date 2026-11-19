@@ -59,7 +59,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Stavarnje uloga u bazi podataka | NU |  | Zadatak #21; |
 | Izrada ER dijagrama | NU |  | Zadatak #43; |
 | Izrada logoa | MZ |  | Zadatak #64; |
-| Povezivanje ruta | DA |  | Zadatak #50; |
+| Povezivanje ruta | DA | 2 | Zadatak #50; |
 | Podjela signupa na 3 dijela | LM | 2 | signup.ejs je zamjenjen sa signup1.ejs, signup2.ejs i signup3.ejs za lakšu autentifikaciju korisnika |
 | Ispis objava | LK |  | Zadatak #98; |
 | Posebni Discover za prijavljenog korisnika i za gosta | LK |  | Zadatak #99; |
@@ -77,14 +77,14 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Dodavanje i uklanjanje ključnih riječi | IT |  | Zadatak #84; |
 | Dohvat i prikaz objavljenih i spremljenih objava korisnika | IT |  | Zadaci #85 i #88; |
 | Omogućiti pregled vlastitih recenzija | NU |  | Zadatak #130; |
-| OAuth 2.0: autorizacija za Google i Github | DA |  | Zadatak #34; |
-| OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA |  | Zadatak #55; |
-| OAuth 2.1: Inicijalizacija Backend okruženja i Supabase Klijenta | DA |  | Zadatak #56; |
-| OAuth 2.1: Implementacija Auth Ruta i Callback Logike na Backendu | DA |  | Zadatak #57; |
-| OAuth 2.1: Upravljanje Sesijama i Zaštita Ruta (Middleware) | DA |  | Zadatak #58; |
-| OAuth 2.1: Frontend UI Integracija i Stanje Korisnika | DA |  | Zadatak #59; |
-| Oporavak - zaboravljena lozinka | DA |  | Zadatak #139; |
-| Prijava/registracija email-om i lozinkom | DA |  | Zadatak #141; |
+| OAuth 2.0: autorizacija za Google i Github | DA | 3 | Zadatak #34; |
+| OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA | 2 | Zadatak #55; |
+| OAuth 2.1: Inicijalizacija Backend okruženja i Supabase Klijenta | DA | 3 | Zadatak #56; |
+| OAuth 2.1: Implementacija Auth Ruta i Callback Logike na Backendu | DA | 6 | Zadatak #57; |
+| OAuth 2.1: Upravljanje Sesijama i Zaštita Ruta (Middleware) | DA | 7 | Zadatak #58; |
+| OAuth 2.1: Frontend UI Integracija i Stanje Korisnika | DA | 4 | Zadatak #59; |
+| Oporavak - zaboravljena lozinka | DA | 6 | Zadatak #139; |
+| Prijava/registracija email-om i lozinkom | DA | 6 | Zadatak #141; |
 | 3.1. + Discover u 3.2. | LK |  | Dokumentacija pod 3.1. i 3.2. |
 | A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
 | 3.3. + Create u 3.2. | SP |  | Dokumentacija pod 3.3. i 3.2. |
@@ -126,9 +126,14 @@ Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako pog
 
 **Cilj:** Dokumentirati stvarne tehničke i organizacijske prepreke s kojima se tim suočio, poduzete korektivne inženjerske korake te konačni ishod. Odaberite konkretne izazove umjesto općenite pohvale timskog rada.
 
+
 | Izazov | Poduzeta radnja | Ishod ili preostalo ograničenje |
 | --- | --- | --- |
-| Problem pri registracji korisnika | LM je stranicu za signup podjelio na 3 dijela |  |
+| Registracija je zahtijevala više koraka i provjeru različitih podataka. | LM je registraciju podijelio na korake, DA je dodala poslužiteljsku validaciju obaveznih podataka i provjeru punoljetnosti. | Identitet i korisnički profil obrađuju se odvojeno, a nevaljani podaci ne prihvaćaju se kao dovršena registracija. |
+| Upiti nad bazom nisu prolazili zbog RLS pravila. | NU je podesila postojeća i dodala nova RLS pravila te je DA uvela Supabase klijent koji koristi pristupni token prijavljenog korisnika. | Pristup korisničkim podacima provodi se u kontekstu potvrđenog identiteta, bez isključivanja RLS zaštite. |
+| Istek pristupnog tokena mogao je prekinuti korisničku sesiju. | DA je implementirala middleware `refreshSession` i servis `refreshTokens` za obnovu tokena. | Valjana prijava može se nastaviti bez ponovnog unosa vjerodajnica. |
+| Postupci potvrde e-pošte i oporavka lozinke ovise o PKCE kontekstu. | DA je podatke potrebne za dovršavanje postupka povezala sa sesijom preglednika. | Postupak funkcionira u istom pregledniku, dok otvaranje poveznice u drugom pregledniku ostaje ograničenje. |
+
 
 <details>
 <summary><strong>Rješavanje nesklada formata lokacije</strong></summary>
