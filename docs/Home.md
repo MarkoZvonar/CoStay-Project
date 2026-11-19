@@ -43,7 +43,7 @@ Ažurirani popis članova, njihovih GitHub profila i glavnih uloga ili doprinosa
 
 | Kontrolna točka | Demonstracija                                     | Video                                                       |
 | --------------- | ------------------------------------------------- | ----------------------------------------------------------- |
-| Iteracija 1     | [Poveznica na demonstraciju ili inačicu projekta] | [Poveznica na video Demo 1, ako je snimljen]                |
+| Iteracija 1     | https://costayx.onrender.com |                 |
 | Završni pregled | [Poveznica na završnu inačicu projekta]           | [Poveznica na video završne demonstracije, ako je snimljen] |
 
 Dokumentacija se kontinuirano ažurira kako se aplikacija razvija.
