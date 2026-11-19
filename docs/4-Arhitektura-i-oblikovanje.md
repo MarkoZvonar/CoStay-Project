@@ -80,7 +80,7 @@ Započnite crtanjem granice oko predloženog sustava. Unutar nje prepoznajte dij
 
 **ER dijagram:** [ER dijagram](./assets/diagrams/4-3-1-costay-data-ERD.svg)
 **Izvor dijagrama:** [puml](./puml/4-3-1-costay-data-ERD.puml)  
-**Implementacija:** [sql](../supabase/migrations/20261109185243_create_costay_database.sql)
+**Implementacija:** [sql](../supabase/migrations/db.sql)
 
 <summary><strong>Stvaranje objave te podaci i veze </strong></summary>
 
@@ -171,24 +171,15 @@ Model pohranjenih podataka prikazuje tablice `RAZGOVOR`, `SUGOVORNIK` i `PORUKA`
 
 **Cilj:** Prikazati redoslijed poruka za jedan reprezentativni scenarij i odgovore na važnu alternativu.
 
-**Scenarij:** [Naziv interakcije; dodajte UC ID ako postoji.]  
-**sekvencijski dijagram:** [Ugradite čitljiv UML sekvencijski dijagram.]  
-**PlantUML izvor:** [Poveznica na odgovarajuću `.puml` datoteku.]
+**Scenarij:** Uređivanje korisničkog profila (UC-011). Prijavljeni korisnik već je na svom profilu i odabire uređivanje. Može se vratiti bez spremanja ili poslati promjene. 
 
-<details>
-<summary><strong>Odabir lokacije, provjera valjanosti i podnošenje prijave</strong></summary>
+**Sekvencijski dijagram:** 
+![Sekvencijski dijagram uređivanja korisničkog profila](./assets/diagrams/4-4-costay-edit-profile-SD.svg)
 
-**Primjer — CrisisMap:** Građanin podnosi prijavu kriznog događaja nakon što ručno odabere lokaciju ili zatraži položaj uređaja. Interakcija prikazuje i što se događa kada je pristup lokaciji odbijen, podaci prijave nisu valjani ili pohrana ne uspije.
+**Slika 4.4.1. Sekvencijski dijagram uređivanja korisničkog profila**
 
-![Sekvencijski dijagram podnošenja prijave kriznog događaja](./assets/diagrams/4-4-crisismap-report-submission-SD.svg)
+**PlantUML izvor:** [Izvor sekvencijskog dijagrama](./puml/4-4-costay-edit-profile-SD.puml)
 
-**Slika 4.4. Sekvencijski dijagram podnošenja prijave kriznog događaja**
-
-**PlantUML izvor:** [izvor](./puml/4-4-crisismap-report-submission-SD.puml)
-
-**Analiza primjera:** Dva načina odabira lokacije te alternative provjere i pohrane imaju različite posljedice za korisnika; usporedite ih s odgovarajućim obrascem uporabe i njegovim alternativnim tijekovima. API preglednika za lokaciju mogućnost je preglednika; web-klijent, API, usluga i pohrana odgovaraju prikazu komponenata. Odaberite grane koje pomažu objasniti scenarij vašeg projekta i završni dijagram uskladite s implementiranom interakcijom.
-
-</details>
 
 ### 4.4.2 Reprezentativni UML dijagram stanja
 

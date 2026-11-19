@@ -18,7 +18,7 @@ const upload = multer({
   
       cb(null, true);
     },
-  });
+});
 
 
 function kreirajSupabase(req) {
@@ -90,6 +90,27 @@ router.get("/", requireRegistered, async(req, res, next) => {
 
     if(mojeObjaveError) return next(mojeObjaveError);
 
+    const { data: zahtjeviKorisnika, error: zahtjeviError} = await korisnickiSupabase
+        .from("ZAHTJEV_ZA_PRIDRUZIVANJE")
+        .select("id_objava")
+        .eq("id_podnositelja", req.korisnik.id_korisnik);
+
+    if(zahtjeviError) return next(zahtjeviError);
+    const zahtjevaniIds = (zahtjeviKorisnika || []).map((zapis) => zapis.id_objava);
+    //dohvat podataka za zahtjeve preko njihovih id-a
+    let mojiZahtjevi = [];
+    if(zahtjevaniIds.length > 0) {
+        const {data, error: mojiZahtjeviError} = await korisnickiSupabase
+            .from("OBJAVA")
+            .select(`*,id_lokacije (ime_lokacije,ime_drzave),id_autor (ime,prezime),
+            OBJAVA_SLIKA (id_slika,url_slika),
+            OBJAVA_TAG (TAG (ime_tag))`)
+            .in("id_objava", zahtjevaniIds);
+
+        if(mojiZahtjeviError) return next(mojiZahtjeviError);
+        mojiZahtjevi = data || []; 
+    }
+
     //dohvat id-eva korisnikovih spremljenih objava
     const {data:spremljeniZapisi, error: spremljeniError} = await korisnickiSupabase
         .from("SPREMLJENA_OBJAVA")
@@ -115,23 +136,19 @@ router.get("/", requireRegistered, async(req, res, next) => {
     }
 
     // Dohvacamo ocjene koje je korisnik primio
-const { data: recenzijeZaProsjek, error: recenzijeError } =
-await korisnickiSupabase
-    .from("RECENZIJA")
-    .select("ocjena")
-    .eq("id_primatelj", req.korisnik.id_korisnik);
+    const { data: recenzijeZaProsjek, error: recenzijeError } =
+    await korisnickiSupabase
+        .from("RECENZIJA")
+        .select("ocjena")
+        .eq("id_primatelj", req.korisnik.id_korisnik);
 
-if (recenzijeError) return next(recenzijeError);
+    if (recenzijeError) return next(recenzijeError);
 
-// Racunamo prosjecnu ocjenu
-const prosjecnaOcjena = recenzijeZaProsjek.length > 0
-? (
-    recenzijeZaProsjek.reduce(
-        (zbroj, recenzija) => zbroj + Number(recenzija.ocjena),
-        0
-    ) / recenzijeZaProsjek.length
-).toFixed(2)
-: "0.00";
+    // Racunamo prosjecnu ocjenu
+    const prosjecnaOcjena = recenzijeZaProsjek.length > 0
+    ? (recenzijeZaProsjek.reduce(
+        (zbroj, recenzija) => zbroj + Number(recenzija.ocjena),0) / recenzijeZaProsjek.length)
+        .toFixed(2): "0.00";
 
     return res.render("profile", {
       ime: korisnik.ime || "",
@@ -141,12 +158,13 @@ const prosjecnaOcjena = recenzijeZaProsjek.length > 0
       opis: korisnik.opis || "",
       tagovi: tagovi,
       mojeObjave: mojeObjave || [],
+      mojiZahtjevi: mojiZahtjevi,
       spremljeneObjave: spremljeneObjave,
       prosjecnaOcjena: prosjecnaOcjena,
-brojRecenzija: recenzijeZaProsjek.length
+      brojRecenzija: recenzijeZaProsjek.length
     });
   } catch (error) {
-    next(error);
+    next(error);    
   }
 });
 
