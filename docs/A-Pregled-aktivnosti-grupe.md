@@ -51,7 +51,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Izrada izgleda osnovne stranice | LK |  | Zadatak #26; |
 | Izrada izgleda stranica za prijavu | LM | 3 | Zadatak #63; izgled stranica start.ejs, login.ejs, signup.ejs |
 | Dopuna dokumenta 1-Projekt.md | LM | 2 | 1-Projekt.md |
-| Dovršavanje dokumenta 1-Projekt.md | IT |  | 1-projekt.md |
+| Dovršavanje dokumenta 1-Projekt.md | IT | 2 | 1-projekt.md |
 | Izrada relacijske sheme baze podataka | NU |  | Zadatak #17; |
 | Nomralozacija sheme i definiranje ključeva | NU |  | Zadatak #18; |
 | Kreiranje tablica u SQL-u | NU |  | Zadatak #19; |
@@ -72,10 +72,10 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Izrada direktnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #91; |
 | Izrada grupnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #92; |
 | Zamjena GET i POST metoda s WEBSOCKETom i implementacija WEBSOCKETA | MZ |  | Zadatak #93; |
-| Dohvat i prikaz podataka prijavljenog korisnika | IT |  | Zadatak #83; |
-| Dodavanje profilne slike | IT |  | Zadatak #96; |
-| Dodavanje i uklanjanje ključnih riječi | IT |  | Zadatak #84; |
-| Dohvat i prikaz objavljenih i spremljenih objava korisnika | IT |  | Zadaci #85 i #88; |
+| Dohvat i prikaz podataka prijavljenog korisnika | IT | 5 | Zadatak #83; |
+| Dodavanje profilne slike | IT | 3 | Zadatak #96; |
+| Dodavanje i uklanjanje ključnih riječi | IT | 5 | Zadatak #84; |
+| Dohvat i prikaz objavljenih i spremljenih objava korisnika | IT | 4 | Zadaci #85 i #88; |
 | Omogućiti pregled vlastitih recenzija | NU |  | Zadatak #130; |
 | OAuth 2.0: autorizacija za Google i Github | DA | 3 | Zadatak #34; |
 | OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA | 2 | Zadatak #55; |
@@ -88,7 +88,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | 3.1. + Discover u 3.2. | LK |  | Dokumentacija pod 3.1. i 3.2. |
 | A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
 | 3.3. + Create u 3.2. | SP |  | Dokumentacija pod 3.3. i 3.2. |
-| 2.5., 2.7. + Profile u 3.2. | IT |  | Dokumentacija pod 2.5., 2.7. i 3.2. |
+| 2.5., 2.7. + Profile u 3.2. | IT | 1 | Dokumentacija pod 2.5., 2.7. i 3.2. |
 | 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
 | 4.1., 2.6. + prijava i registracija u 3.2. | DA | 2 | Dokumentacija pod 4.1., 2.6. i 3.2. |
 | 4.3.1. | NU |  | Dokumentacija pod 4.3.1. |
