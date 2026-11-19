@@ -42,78 +42,226 @@ Predloženi klijentski dio gradi se kao statičko web-mjesto. Poslužiteljska we
 
 ## 6.2 Lokalna instalacija i konfiguracija
 
-**Cilj:** Omogućiti novom članu tima ili ocjenjivaču da iz čiste radne kopije repozitorija instalira i lokalno pokrene cijeli programski sustav, uključujući bazu podataka i početne podatke.
+**Cilj:** Omogućiti novom članu tima ili ocjenjivaču da preuzme izvorni kod aplikacije CoStay, instalira potrebne ovisnosti, konfigurira pristup bazi podataka i lokalno pokrene aplikaciju te provjeri ispravnost komunikacije između korisničkog sučelja, poslužitelja i baze podataka.
 
-1. **Preduvjeti i preuzimanje izvornog koda:**
-   * Navedite podržane verzije izvršnog okruženja, upravitelja paketa, baze podataka i CLI alata.
-   * Navedite točne naredbe za kloniranje repozitorija i radni direktorij; naznačite koje se naredbe pokreću iz korijena repozitorija, a koje iz poddirektorija.
-2. **Ovisnosti i konfiguracijske varijable:**
-   * Navedite točne naredbe za instalaciju ovisnosti za klijentski i poslužiteljski dio.
-   * Povežite predložak `.env.example`, opišite ulogu svake varijable, koje vrijednosti smiju biti javne i kako ovlašteni korisnik dobiva tajne vrijednosti.
-   * *Upozorenje:* Nikada ne objavljujte stvarne pristupne podatke i tajne ključeve.
-3. **Inicijalizacija baze podataka i migracije:**
-   * Navedite redoslijed naredbi za stvaranje lokalne baze, dodjelu korisničkih prava i izvođenje migracija sheme; navedite izvode li se migracije ručno ili pri pokretanju te stvarne putanje verzioniranih skripti.
-   * Objasnite kako se učitavaju nužni početni podaci (samo oni nužni) i kako spriječiti višestruko izvođenje početnih skripti.
-4. **Pokretanje i verifikacija:**
-   * Prikažite točan redoslijed pokretanja procesa i lokalne mrežne adrese na kojima su dostupni.
-   * Navedite točan korak provjere (npr. slanje probnog zahtjeva ili pregled u pregledniku) koji dokazuje da klijentski dio uspješno komunicira s poslužiteljskim API-jem i bazom te da se važni podaci trajno pohranjuju.
-   * Navedite gdje čitatelj može provjeriti pogreške ako neki korak ne uspije.
+### 1. Preduvjeti i preuzimanje izvornog koda
 
-Uključite samo korake koje aplikacija stvarno zahtijeva. Ako README već sadrži potpun i ponovljiv postupak, povežite ga i ovdje dodajte samo ono što nedostaje umjesto održavanja dviju potpunih kopija istih uputa.
+CoStay je web-aplikacija razvijena pomoću Node.js okruženja i radnog okvira Express. Korisničko sučelje izrađeno je tehnologijama HTML, CSS, JavaScript i EJS. Za pohranu podataka, autentifikaciju i komunikaciju u stvarnom vremenu koristi se Supabase, koji se temelji na PostgreSQL bazi podataka.
 
-<details>
-<summary><strong>Primjer: Instalacija programa s lokalnom PostgreSQL bazom (CrisisMap)</strong></summary>
+Za lokalno pokretanje aplikacije potrebni su:
 
-Ovaj nastavni primjer koristi klijentski dio temeljen na radnom okviru React/Vite (`frontend/`), poslužiteljski dio temeljen na Node.js okruženju (`backend/`) i PostgreSQL bazu podataka.
+- **Node.js v24.16.0** – inačica korištena tijekom razvoja projekta.
+- **npm** – upravitelj paketa koji dolazi uz Node.js.
+- **Git** – za preuzimanje i ažuriranje izvornog koda.
+- **Supabase projekt** – razvojni projekt s pripremljenom bazom podataka, pravilima pristupa i konfiguriranom autentifikacijom.
 
-#### 1. Inicijalizacija baze podataka
+U standardnom razvojnom postupku CoStay koristi udaljenu bazu podataka na Supabase platformi, zbog čega nije potrebno zasebno instalirati PostgreSQL na razvojno računalo.
 
-U terminalu stvorite razvojnu bazu podataka i pokrenite početnu SQL skriptu iz korijena repozitorija:
+Izvorni kod preuzima se iz javnog GitHub repozitorija. U terminalu, iz direktorija u koji se želi preuzeti projekt, izvršavaju se naredbe:
 
 ```bash
-createdb crisismap_dev
-psql -d crisismap_dev -f backend/db/001_create_schema.sql
-psql -d crisismap_dev -c '\dt'
+git clone https://github.com/MarkoZvonar/CoStay-Project.git
+cd CoStay-Project
 ```
 
-Verzionirana SQL datoteka u ovom primjeru stvara tablice u **novoj** bazi podataka; provjera `\dt` treba ih prikazati. Konfigurirajte lokalni PostgreSQL račun koji može koristiti tu shemu; ako je riječ o zasebnom računu, zabilježite naredbe za njegovo stvaranje i dodjelu prava. Node.js poslužiteljski dio čita `DATABASE_URL`: lokalno ga postavite tako da se putem PostgreSQL URL-a povezuje na `crisismap_dev`, a potrebne pristupne podatke čuvajte u lokalnoj postavci koja se ne uključuje u repozitorij. Nemojte objaviti puni URL veze ako sadrži lozinku. Ako druga aplikacija koristi automatske migracije, pokrenite je prema uputama i provjerite jesu li migracije provedene umjesto zasebnog izvršavanja skripte početne sheme. Ako ogledne prijave zahtijevaju početne podatke, navedite stvarnu naredbu tog projekta i objasnite kada se treba koristiti.
+Nakon preuzimanja repozitorija dobiva se struktura koja uključuje:
 
-#### 2. Konfiguracija i pokretanje poslužiteljskog dijela (backend)
+- `backend/` – poslužiteljski dio aplikacije, Express rute, kontrolere, middleware i konfiguraciju.
+- `frontend/` – EJS stranice, CSS, JavaScript i ostale datoteke korisničkog sučelja.
+- `docs/` – projektna dokumentacija.
+- `supabase/` – konfiguraciju Supabase okruženja.
+- `db/` – projektne datoteke povezane s bazom podataka.
 
-U prvom terminalu postavite ovisnosti, pripremite varijable okruženja i pokrenite poslužitelj:
+### 2. Instalacija ovisnosti
+
+Za instalaciju potrebnih programskih paketa prelazi se u direktorij `backend/`:
 
 ```bash
 cd backend
 npm ci
-cp .env.example .env
-# Uredite .env datoteku: postavite DATABASE_URL=postgresql://localhost:5432/crisismap_dev
+```
+
+Naredba `npm ci` instalira ovisnosti prema datoteci `package-lock.json` te omogućuje ponovljivu instalaciju paketa.
+
+Najvažnije ovisnosti poslužiteljskog dijela uključuju:
+
+- `express` – obradu HTTP zahtjeva i usmjeravanje.
+- `ejs` – generiranje dinamičkih HTML stranica.
+- `@supabase/supabase-js` – komunikaciju sa Supabase uslugama.
+- `express-session` – upravljanje korisničkim sesijama.
+- `openid-client` – podršku autentifikacijskim protokolima.
+- `dotenv` – učitavanje konfiguracijskih varijabli.
+- `multer` – obradu prijenosa datoteka.
+
+**Klijentski dio ne zahtijeva zasebnu instalaciju ovisnosti ni pokretanje dodatnog razvojnog poslužitelja.** Express poslužitelj koristi EJS predloške iz direktorija `frontend/src/pages/` i poslužuje statičke datoteke iz `frontend/src/`.
+
+Zbog toga se cijela web-aplikacija lokalno pokreće jednim Node.js procesom.
+
+### 3. Konfiguracijske varijable
+
+Prije pokretanja potrebno je konfigurirati pristup Supabase projektu i sesijama aplikacije.
+
+U direktoriju `backend/` stvara se datoteka `.env`, koja sadrži konfiguracijske vrijednosti za lokalno okruženje.
+
+Primjer sadržaja:
+
+```dotenv
+SUPABASE_URL=
+SUPABASE_ANON_KEY=
+SESSION_SECRET=
+BASE_URL=http://localhost:3000
+PORT=3000
+```
+
+| Varijabla | Namjena | Povjerljivost |
+| --- | --- | --- |
+| `SUPABASE_URL` | URL Supabase projekta s kojim aplikacija komunicira. | Nije tajna vrijednost. |
+| `SUPABASE_ANON_KEY` | Javni ključ Supabase projekta koji omogućuje pristup uz primjenu RLS pravila. | Javni ključ; ne daje administratorske ovlasti. |
+| `SESSION_SECRET` | Tajna vrijednost za potpisivanje i zaštitu Express sesije. | Povjerljiva vrijednost koja se ne smije javno objaviti. |
+| `BASE_URL` | Osnovna adresa aplikacije koja se koristi pri izradi poveznica i autentifikacijskim preusmjeravanjima. | Nije tajna vrijednost. |
+| `PORT` | Port na kojem se pokreće lokalni Express poslužitelj. | Nije tajna vrijednost. |
+
+Obavezne varijable `SUPABASE_URL`, `SUPABASE_ANON_KEY` i `SESSION_SECRET` provjeravaju se pri pokretanju aplikacije u datoteci `backend/src/config/env.js`.
+
+Vrijednosti vezane uz Supabase preuzimaju se iz postavki odgovarajućeg razvojnog projekta. Pristup projektu i potrebnim konfiguracijskim podacima omogućuje ovlašteni član tima.
+
+Za autentifikaciju putem Googlea i GitHuba odgovarajući pružatelji identiteta moraju biti konfigurirani unutar Supabase Autha. Potrebno je dopustiti odgovarajuće lokalne povratne adrese, kako bi autentifikacijski postupak mogao završiti povratkom u aplikaciju.
+
+Za funkcionalnosti karte koristi se Google Maps API, čija konfiguracija mora dopuštati pristup iz lokalnog razvojnog okruženja.
+
+**Sigurnosna napomena:** Datoteka `.env` ne smije se uključivati u Git commitove. Tajni ključevi, lozinke, pristupni tokeni i drugi povjerljivi podaci ne smiju se objavljivati u repozitoriju, dokumentaciji ni zapisima o radu aplikacije.
+
+U trenutačno provjerenoj inačici repozitorija nije potvrđena datoteka `.env.example`, pa se `.env` izrađuje ručno prema prethodno navedenoj strukturi. Za potpunu ponovljivost preporučuje se dodati verzioniranu datoteku `backend/.env.example` koja sadrži samo nazive varijabli i sigurne ogledne vrijednosti.
+
+### 4. Inicijalizacija baze podataka i početni podaci
+
+CoStay koristi PostgreSQL bazu podataka dostupnu putem Supabase platforme. U uobičajenom lokalnom razvojnom postupku aplikacija se povezuje s već konfiguriranim razvojnim Supabase projektom, umjesto da pokreće zasebnu lokalnu PostgreSQL instancu.
+
+Za ispravan rad aplikacije razvojni Supabase projekt mora sadržavati odgovarajuću relacijsku shemu, povezanost tablica i pravila pristupa (Row Level Security – RLS).
+
+Među važnijim tablicama nalaze se:
+
+- `KORISNIK` – podaci o registriranim korisnicima.
+- `OBJAVA` – objave planiranih putovanja.
+- `LOKACIJA` – lokacije povezane s objavama.
+- `TAG` – dostupne oznake i interesi.
+- `KORISNIK_TAGOVI` – povezanost korisnika i interesa.
+- `OBJAVA_TAG` – povezanost objava i oznaka.
+- `SPREMLJENA_OBJAVA` – objave koje su korisnici spremili.
+- `ZAHTJEV_ZA_PRIDRUZIVANJE` – zahtjevi korisnika za pridruživanje putovanjima.
+
+Aplikacija koristi i dodatne tablice potrebne za fotografije objava i komunikaciju među korisnicima.
+
+Autentifikacijskim identitetima upravlja Supabase Auth, dok se podaci potrebni za CoStay korisnički profil pohranjuju u aplikacijskoj tablici `KORISNIK`.
+
+**Postupak pripreme baze podataka:**
+
+1. Ovlašteni član tima osigurava pristup razvojnom Supabase projektu s pripremljenom shemom.
+2. Provjerava se postojanje potrebnih tablica, njihovih međusobnih odnosa i RLS pravila.
+3. Provjeravaju se početni podaci potrebni za rad funkcionalnosti, osobito lokacije i oznake.
+4. U lokalnu datoteku `.env` upisuju se odgovarajući URL i javni ključ razvojnog projekta.
+
+Prilikom kreiranja objava aplikacija očekuje postojanje podržanih lokacija u tablici `LOKACIJA`, a za prikaz interesa i filtriranje potrebni su odgovarajući zapisi u tablici `TAG` te njihove veze s korisnicima i objavama.
+
+**Migracije i početni podaci:** U repozitoriju postoji datoteka `supabase/config.toml` s konfiguracijom za lokalno Supabase okruženje i podrškom za migracije. Međutim, potpuni postupak automatske izgradnje zasebne baze iz čiste kopije repozitorija, uključujući sve verzionirane migracije, RLS pravila i početne podatke, još nije potvrđen. Pokretanje Node.js poslužitelja samo po sebi ne stvara tablice i ne izvršava migracije.
+
+Do dokumentiranja potpunog postupka inicijalizacije potrebno je koristiti prethodno pripremljen razvojni Supabase projekt. Početne skripte ne treba ponovno pokretati nad postojećom bazom bez prethodne provjere njihova učinka, kako ne bi nastali duplicirani podaci ili neželjene izmjene.
+
+Za potpuno neovisnu lokalnu instalaciju potrebno je dodatno verzionirati i dokumentirati sve potrebne migracije i početne podatke te osigurati njihovo sigurno izvođenje nad novom razvojnom bazom.
+
+### 5. Pokretanje aplikacije
+
+Nakon instalacije ovisnosti, konfiguriranja `.env` datoteke i provjere dostupnosti baze podataka moguće je pokrenuti aplikaciju.
+
+Iz direktorija `backend/` izvršava se:
+
+```bash
+node src/app.js
+```
+
+Alternativno se može koristiti naredba definirana u datoteci `backend/package.json`:
+
+```bash
 npm start
 ```
 
-*Poslužiteljski API pokreće se i sluša na:* `http://localhost:8080`
+Express poslužitelj pokreće se na portu 3000 ako nije postavljena druga vrijednost varijable `PORT`.
 
-#### 3. Pokretanje klijentskog dijela (frontend)
+Očekivana poruka u terminalu:
 
-U drugom terminalu instalirajte ovisnosti klijenta i pokrenite razvojni poslužitelj:
-
-```bash
-cd frontend
-npm ci
-VITE_API_BASE_URL=http://localhost:8080 npm run dev
+```text
+Server listening on 0.0.0.0:3000
 ```
 
-*Klijentska aplikacija dostupna je u pregledniku na:* `http://localhost:5173`
+Lokalna adresa aplikacije:
 
-#### 4. Provjera rada sustava
+**http://localhost:3000**
 
-Otvorite adresu klijenta koju ispiše Vite, podnesite probnu prijavu s odabranom lokacijom, provjerite prikazuje li se potvrda s novim identifikatorom prijave i ponovno je dohvatite. Samo učitavanje početne stranice klijenta bez slanja i dohvata podataka ne dokazuje ispravnost rada poslužiteljskog dijela i baze podataka.
+Poslužitelj obrađuje HTTP zahtjeve, prikazuje EJS stranice i komunicira sa Supabase uslugama.
 
-Ako se adresa poslužiteljskog dijela razlikuje od `http://localhost:8080`, koristite adresu koju aplikacija stvarno ispiše. Ako podnošenje ne uspije, pregledajte API zahtjev u pregledniku i zapis poslužiteljskog dijela; ako pokretanje ne uspije, provjerite postavke veze s bazom podataka i je li shema stvorena. Nemojte kopirati putanje ili naredbe iz ovog primjera ako se vaš repozitorij razlikuje.
+Nije potrebno zasebno pokretati klijentski dio, PostgreSQL poslužitelj ni Supabase Realtime proces jer se u opisanom postupku koriste postojeće usluge razvojnog Supabase projekta.
 
-**Analiza primjera:** Postupak ima jasan redoslijed: stvoriti bazu podataka, uspostaviti shemu i pristup, konfigurirati veze, pokrenuti oba procesa i provjeriti spremljenu prijavu. Naredbe i očekivani rezultati dovoljno su konkretni da se može dijagnosticirati nepotpuno postavljanje. Oni nadopunjuju kratki put iz README-a do pokrenute aplikacije umjesto da tvrde kako samo učitana web-stranica dokazuje uspješnu instalaciju.
-</details>
+### 6. Provjera rada sustava
 
----
+Uspješno pokretanje poslužitelja samo po sebi nije dovoljno za potvrdu ispravnog rada aplikacije. Potrebno je provjeriti komunikaciju između korisničkog sučelja, poslužitelja i baze podataka.
+
+**Provjera poslužitelja**
+
+U pregledniku otvorite:
+
+http://localhost:3000/health
+
+Očekivani odgovor:
+
+```json
+{
+  "status": "healthy"
+}
+```
+
+Ovaj odgovor potvrđuje da je Express poslužitelj dostupan i da obrađuje HTTP zahtjeve. Ne potvrđuje samostalno dostupnost baze podataka.
+
+**Provjera dohvaćanja podataka iz baze**
+
+1. Otvorite `http://localhost:3000`.
+2. Na početnoj stranici odaberite nastavak kao gost.
+3. Otvorite Discover i provjerite prikaz dostupnih objava.
+4. Otvorite Search i isprobajte pretraživanje prema lokaciji ili drugom kriteriju.
+5. Provjerite da se rezultati dobivaju iz podataka Supabase baze i da se pri dohvaćanju ne pojavljuje poslužiteljska pogreška.
+
+Za ovu provjeru razvojna baza mora sadržavati odgovarajuće podatke. Ako nema objava, prazan prikaz nije dovoljan dokaz uspješnog dohvaćanja.
+
+**Provjera autentifikacije i trajnog spremanja podataka**
+
+1. Na stranici Sign up izradite probni račun koristeći valjanu adresu e-pošte ili podržanog vanjskog pružatelja identiteta.
+2. Ako se koristi registracija e-poštom, otvorite poveznicu za potvrdu u istom pregledniku u kojem je postupak započet.
+3. Prijavite se i dovršite obavezne podatke korisničkog profila.
+4. U Supabase Table Editoru provjerite je li nastao odgovarajući zapis u tablici `KORISNIK`.
+5. Otvorite stranicu Create i izradite probnu objavu s valjanim podacima i podržanom lokacijom.
+6. Provjerite pojavljuje li se odgovarajući zapis u tablici `OBJAVA`.
+7. Osvježite aplikaciju ili ponovno dohvatite objavu te provjerite je li zapis i dalje dostupan.
+
+Ova provjera potvrđuje da korisničko sučelje šalje podatke poslužitelju, da ih poslužitelj obrađuje i da se oni trajno pohranjuju u Supabase bazu.
+
+Probne zapise potrebno je izrađivati u razvojnom okruženju, a ne u produkcijskoj bazi. Nakon ispitivanja mogu se ukloniti na kontroliran način uz poštovanje povezanih podataka.
+
+### 7. Dijagnostika pogrešaka
+
+Ako lokalno pokretanje ili neka funkcionalnost ne uspije, pogrešku treba provjeriti na odgovarajućem mjestu:
+
+- **Terminal u kojem je pokrenut Node.js** – pogreške pri pokretanju, obradi zahtjeva i komunikaciji sa Supabaseom.
+- **Preglednik – Developer Tools (Console i Network)** – neuspjeli HTTP zahtjevi, JavaScript pogreške i odgovori poslužitelja.
+- **Supabase Dashboard – Logs i Auth** – pogreške autentifikacije, ograničenja pokušaja prijave i problemi s pristupom podacima.
+- **Supabase Table Editor i RLS politike** – provjera postojanja podataka te dopuštenja za čitanje i upis.
+
+Ako se pri pokretanju pojavi poruka o nedostajućim obaveznim vrijednostima, potrebno je provjeriti datoteku `backend/.env`.
+
+Ako se stranica prikazuje, ali ne dohvaća objave, potrebno je provjeriti Supabase konfiguraciju, postojanje odgovarajućih podataka, veze među tablicama i RLS pravila.
+
+Ako autentifikacijska poveznica ne vraća korisnika u aplikaciju, treba provjeriti osnovnu adresu aplikacije i dopuštene povratne adrese u Supabase Auth konfiguraciji.
+
+Detaljni podaci o javnoj inačici aplikacije i osnovne upute za pokretanje dostupni su u [README-u projekta](../README.md).
+
 
 ## 6.3 Javno postavljanje i administracija
 
