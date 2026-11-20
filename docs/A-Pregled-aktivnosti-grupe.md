@@ -58,7 +58,8 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Definiranje ograničenja baze podataka | NU |  | Zadatak #20; |
 | Stavarnje uloga u bazi podataka | NU |  | Zadatak #21; |
 | Izrada ER dijagrama | NU |  | Zadatak #43; |
-| Izrada logoa | MZ |  | Zadatak #64; |
+| Izrada logotipa projekta | MZ | 1 | Zadatak #64; |
+| Podjela poslova | MZ | 2 | [Podjela odgovornosti po razvojnim fazama](./meeting-notes/sprint-01.md). |
 | Povezivanje ruta | DA | 2 | Zadatak #50; |
 | Podjela signupa na 3 dijela | LM | 2 | signup.ejs je zamjenjen sa signup1.ejs, signup2.ejs i signup3.ejs za lakšu autentifikaciju korisnika |
 | Ispis objava | LK | 4 | Zadatak #98; |
@@ -69,9 +70,9 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Izrada funkcionalnosti za Search | LM | 4 | Zadaci #134, #136 i #137; Funkcionalnost pretraživanja u /search i testiranje te funkcionalnosti |
 | Dodavanje karte u Search | LM | 4 | Zadatak #138; Funkcionalnost otvaranja karte u search/map i testiranje pretrage s kartom |
 | Izrada Createa | SP | 4 | Zadatak #140; |
-| Izrada direktnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #91; |
-| Izrada grupnih poruka u inboxu sa POST i GET metodama | MZ |  | Zadatak #92; |
-| Zamjena GET i POST metoda s WEBSOCKETom i implementacija WEBSOCKETA | MZ |  | Zadatak #93; |
+| Implementacija izravnih razgovora u Inboxu: prikaz, dohvat i slanje poruka, provjere pristupa i povezivanje s prijavom | MZ | 6 | Zadatak #91; [rute Inboxa](../backend/src/routes/inbox.js). |
+| Nadogradnja Inboxa za grupne razgovore i prikaz sudionika i pošiljatelja | MZ | 2 | Zadatak #92; [skripta Inboxa](../frontend/src/services/inbox.js). |
+| Uvođenje Supabase Realtimea za automatsko osvježavanje poruka u Inboxu | MZ | 5 | Zadatak #93; [Realtime pretplata](../frontend/src/services/inbox.js). |
 | Dohvat i prikaz podataka prijavljenog korisnika | IT | 5 | Zadatak #83; |
 | Dodavanje profilne slike | IT | 3 | Zadatak #96; |
 | Dodavanje i uklanjanje ključnih riječi | IT | 5 | Zadatak #84; |
@@ -92,6 +93,9 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
 | 4.1., 2.6. + prijava i registracija u 3.2. | DA | 2 | Dokumentacija pod 4.1., 2.6. i 3.2. |
 | 4.3.1. | NU |  | Dokumentacija pod 4.3.1. |
+| Postavljanje aplikacije na Render s IT: konfiguracija varijabli, povezivanje sa Supabaseom i provjera prijave | MZ | 2 | [Javno postavljena aplikacija](https://costayx.onrender.com/). |
+| Opis i provjera Inboxa u dokumentaciji | MZ | 3 | [Obrasci uporabe, 3.2.](./3-Obrasci-uporabe.md#32-specifikacije-obrazaca-uporabe), [oblikovanje Inboxa, 4.3.2.](./4-Arhitektura-i-oblikovanje.md#432-reprezentativni-uml-dijagram-razreda). |
+| Objedinjavanje dokumentacije prvog ciklusa u PDF i provjera prikaza | MZ | 1 | [PDF dokumentacije prvog ciklusa](./deliverables/PROINZ26_G10.1_CoStay_v1.pdf). |
 
 Koristite aktivnosti specifične za projekt umjesto obaveznog retka za svako poglavlje dokumentacije ili svaki UML dijagram. Tim treba dosljedno bilježiti sate i izbjegavati dvostruko brojanje zajedničkog rada; reprezentativni rezultat objašnjava što je prijavljeni trud proizveo. Sati su samoprijavljena procjena uloženog rada, a ne mjera kvalitete niti zamjena za pregled koda i artefakata.
 
