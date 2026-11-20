@@ -69,7 +69,8 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Slanje i povlačenje zahtjeva za pridruživanje | NU |  | Zadatak #129; |
 | Izrada funkcionalnosti za Search | LM | 4 | Zadaci #134, #136 i #137; Funkcionalnost pretraživanja u /search i testiranje te funkcionalnosti |
 | Dodavanje karte u Search | LM | 4 | Zadatak #138; Funkcionalnost otvaranja karte u search/map i testiranje pretrage s kartom |
-| Izrada Createa | SP | 4 | Zadatak #140; |
+| Izrada Createa (kod) | SP | 12 | Zadatak #140; |
+| Dokumentacija za Create stranicu | SP | 2 | Dokumentacija za Create stranicu |
 | Implementacija izravnih razgovora u Inboxu: prikaz, dohvat i slanje poruka, provjere pristupa i povezivanje s prijavom | MZ | 6 | Zadatak #91; [rute Inboxa](../backend/src/routes/inbox.js). |
 | Nadogradnja Inboxa za grupne razgovore i prikaz sudionika i pošiljatelja | MZ | 2 | Zadatak #92; [skripta Inboxa](../frontend/src/services/inbox.js). |
 | Uvođenje Supabase Realtimea za automatsko osvježavanje poruka u Inboxu | MZ | 5 | Zadatak #93; [Realtime pretplata](../frontend/src/services/inbox.js). |
@@ -88,7 +89,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Prijava/registracija email-om i lozinkom | DA | 6 | Zadatak #141; |
 | 3.1. + Discover u 3.2. | LK | 2 | Dokumentacija pod 3.1. i 3.2. |
 | A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
-| 3.3. + Create u 3.2. | SP | 9 | Dokumentacija pod 3.3. i 3.2. |
+| Dokumentacija 2.5., 2.7., 3.3. i 3.2. | SP | 4 | Dokumentacija pod 2.5., 2.7., 3.3. i 3.2. |
 | 2.5., 2.7. + Profile u 3.2. | IT | 1 | Dokumentacija pod 2.5., 2.7. i 3.2. |
 | 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
 | 4.1., 2.6. + prijava i registracija u 3.2. | DA | 2 | Dokumentacija pod 4.1., 2.6. i 3.2. |
