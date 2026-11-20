@@ -52,12 +52,12 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Izrada izgleda stranica za prijavu | LM | 3 | Zadatak #63; izgled stranica start.ejs, login.ejs, signup.ejs |
 | Dopuna dokumenta 1-Projekt.md | LM | 2 | 1-Projekt.md |
 | Dovršavanje dokumenta 1-Projekt.md | IT | 2 | 1-projekt.md |
-| Izrada relacijske sheme baze podataka | NU |  | Zadatak #17; |
-| Nomralozacija sheme i definiranje ključeva | NU |  | Zadatak #18; |
-| Kreiranje tablica u SQL-u | NU |  | Zadatak #19; |
-| Definiranje ograničenja baze podataka | NU |  | Zadatak #20; |
-| Stavarnje uloga u bazi podataka | NU |  | Zadatak #21; |
-| Izrada ER dijagrama | NU |  | Zadatak #43; |
+| Izrada relacijske sheme baze podataka | NU | 2 | Zadatak #17; |
+| Normalizacija sheme i definiranje ključeva | NU | 2 | Zadatak #18; |
+| Kreiranje tablica u SQL-u | NU | 2 | Zadatak #19; |
+| Definiranje ograničenja baze podataka | NU | 2 | Zadatak #20; |
+| Stavarnje uloga u bazi podataka | NU | 1 | Zadatak #21; |
+| Izrada ER dijagrama | NU | 1 | Zadatak #43; |
 | Izrada logotipa projekta | MZ | 1 | Zadatak #64; |
 | Podjela poslova | MZ | 2 | [Podjela odgovornosti po razvojnim fazama](./meeting-notes/sprint-01.md). |
 | Povezivanje ruta | DA | 2 | Zadatak #50; |
@@ -66,7 +66,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Posebni Discover za prijavljenog korisnika i za gosta | LK | 3 | Zadatak #99; |
 | Infinite scroll | LK | 2 | Zadatak #100; |
 | Spremanje objava | LK | 2 | Zadatak #107; |
-| Slanje i povlačenje zahtjeva za pridruživanje | NU |  | Zadatak #129; |
+| Slanje i povlačenje zahtjeva za pridruživanje | NU | 2 | Zadatak #129; |
 | Izrada funkcionalnosti za Search | LM | 4 | Zadaci #134, #136 i #137; Funkcionalnost pretraživanja u /search i testiranje te funkcionalnosti |
 | Dodavanje karte u Search | LM | 4 | Zadatak #138; Funkcionalnost otvaranja karte u search/map i testiranje pretrage s kartom |
 | Izrada Createa (kod) | SP | 12 | Zadatak #140; |
@@ -78,7 +78,7 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | Dodavanje profilne slike | IT | 3 | Zadatak #96; |
 | Dodavanje i uklanjanje ključnih riječi | IT | 5 | Zadatak #84; |
 | Dohvat i prikaz objavljenih i spremljenih objava korisnika | IT | 4 | Zadaci #85 i #88; |
-| Omogućiti pregled vlastitih recenzija | NU |  | Zadatak #130; |
+| Omogućiti pregled vlastitih recenzija | NU | 1 | Zadatak #130; |
 | OAuth 2.0: autorizacija za Google i Github | DA | 3 | Zadatak #34; |
 | OAuth 2.1: Konfiguracija Supabase Dashboarda i OAuth Providera | DA | 2 | Zadatak #55; |
 | OAuth 2.1: Inicijalizacija Backend okruženja i Supabase Klijenta | DA | 3 | Zadatak #56; |
@@ -91,9 +91,9 @@ Za svaki relevantan sastanak ili zapis tjedne koordinacije upišite jedan sažet
 | A.1 + Search u 3.2. | LM | 1 | Dokumentacija pod A.1. i 3.2. |
 | Dokumentacija 2.5., 2.7., 3.3. i 3.2. | SP | 4 | Dokumentacija pod 2.5., 2.7., 3.3. i 3.2. |
 | 2.5., 2.7. + Profile u 3.2. | IT | 1 | Dokumentacija pod 2.5., 2.7. i 3.2. |
-| 4.3.2. + Inbox u 3.2. | LK |  | Dokumentacija pod 4.3.2. i 3.2. |
+| 4.3.2. + Inbox u 3.2. | LK | 2 | Dokumentacija pod 4.3.2. i 3.2. |
 | 4.1., 2.6. + prijava i registracija u 3.2. | DA | 2 | Dokumentacija pod 4.1., 2.6. i 3.2. |
-| 4.3.1. | NU |  | Dokumentacija pod 4.3.1. |
+| 4.3.1. | NU | 2 | Dokumentacija pod 4.3.1. |
 | Postavljanje aplikacije na Render s IT: konfiguracija varijabli, povezivanje sa Supabaseom i provjera prijave | MZ | 2 | [Javno postavljena aplikacija](https://costayx.onrender.com/). |
 | Opis i provjera Inboxa u dokumentaciji | MZ | 3 | [Obrasci uporabe, 3.2.](./3-Obrasci-uporabe.md#32-specifikacije-obrazaca-uporabe), [oblikovanje Inboxa, 4.3.2.](./4-Arhitektura-i-oblikovanje.md#432-reprezentativni-uml-dijagram-razreda). |
 | Objedinjavanje dokumentacije prvog ciklusa u PDF i provjera prikaza | MZ | 1 | [PDF dokumentacije prvog ciklusa](./deliverables/PROINZ26_G10.1_CoStay_v1.pdf). |
